@@ -68,7 +68,7 @@
         <!--Bridges-->
         <scene sceneID="4km-ns-5fk">
             <objects>
-                <tableViewController id="XI1-7b-IyN" customClass="InitialTableViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="XI1-7b-IyN" customClass="BridgesTableViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0dg-60-1aU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -97,6 +97,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="EQK-1E-UAe" kind="show" identifier="ConnectedToBridgeSegue" id="IpR-oy-mTX"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -109,6 +112,53 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ysf-eo-wsQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2221.739130434783" y="-454.01785714285711"/>
+        </scene>
+        <!--Groups-->
+        <scene sceneID="5hB-1D-v0V">
+            <objects>
+                <tableViewController title="Groups" id="EQK-1E-UAe" customClass="LightGroupsTableViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3pv-SH-h6A">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="GroupsCellIdentifier" id="adZ-8Y-dKK">
+                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="adZ-8Y-dKK" id="0TL-Qz-ebA">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5xu-U6-Vom">
+                                            <rect key="frame" x="20" y="11" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OGx-0I-fwH">
+                                            <rect key="frame" x="357" y="6" width="51" height="31"/>
+                                        </switch>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="OGx-0I-fwH" firstAttribute="top" secondItem="0TL-Qz-ebA" secondAttribute="top" constant="6" id="01v-cf-vut"/>
+                                        <constraint firstAttribute="bottom" secondItem="OGx-0I-fwH" secondAttribute="bottom" constant="6.5" id="BMc-xs-bxk"/>
+                                        <constraint firstAttribute="trailing" secondItem="OGx-0I-fwH" secondAttribute="trailing" constant="8" id="Dw5-sK-Abw"/>
+                                        <constraint firstItem="5xu-U6-Vom" firstAttribute="leading" secondItem="0TL-Qz-ebA" secondAttribute="leadingMargin" id="KnR-vq-IHa"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="5xu-U6-Vom" secondAttribute="bottom" constant="1" id="OJt-KI-HVv"/>
+                                        <constraint firstItem="OGx-0I-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5xu-U6-Vom" secondAttribute="trailing" constant="8" id="lKl-7D-8gm"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="EQK-1E-UAe" id="Eav-je-fk6"/>
+                            <outlet property="delegate" destination="EQK-1E-UAe" id="D6N-dD-vzo"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fDt-ox-lg7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3236" y="-454"/>
         </scene>
         <!--First-->
         <scene sceneID="yge-fL-sKE">

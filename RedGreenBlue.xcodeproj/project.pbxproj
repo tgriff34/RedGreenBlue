@@ -10,15 +10,15 @@
 		22312DAF47E6FE51235D1AC8 /* Pods_RedGreenBlue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D37A15058741D24ED3DD3B /* Pods_RedGreenBlue.framework */; };
 		45B6C0AFDACD263DB6F68320 /* Pods_RedGreenBlueUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */; };
 		46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* BridgeModel.swift */; };
+		46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */; };
 		6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */; };
-		6FA9CDEC23062EF20011A2F8 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CDEB23062EF20011A2F8 /* FirstViewController.swift */; };
 		6FA9CDEE23062EF20011A2F8 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CDED23062EF20011A2F8 /* SecondViewController.swift */; };
 		6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA9CDEF23062EF20011A2F8 /* Main.storyboard */; };
 		6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FA9CDF223062EF30011A2F8 /* Assets.xcassets */; };
 		6FA9CDF623062EF30011A2F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA9CDF423062EF30011A2F8 /* LaunchScreen.storyboard */; };
 		6FA9CE0123062EF40011A2F8 /* RedGreenBlueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE0023062EF40011A2F8 /* RedGreenBlueTests.swift */; };
 		6FA9CE0C23062EF40011A2F8 /* RedGreenBlueUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE0B23062EF40011A2F8 /* RedGreenBlueUITests.swift */; };
-		6FA9CE1A230635E70011A2F8 /* InitialTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE19230635E70011A2F8 /* InitialTableViewController.swift */; };
+		6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */; };
 		D1C4E6685F2D264202C18A77 /* Pods_RedGreenBlueTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40FFE1F74C8594B37BA9BB6 /* Pods_RedGreenBlueTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,11 +42,11 @@
 /* Begin PBXFileReference section */
 		128E4C0BD168185191980114 /* Pods-RedGreenBlueTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.release.xcconfig"; sourceTree = "<group>"; };
 		46CCAA0A2307025C0054187A /* BridgeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeModel.swift; sourceTree = "<group>"; };
+		46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGroupsTableViewController.swift; sourceTree = "<group>"; };
 		66085FF42EEB085036083DC7 /* Pods-RedGreenBlueUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.release.xcconfig"; sourceTree = "<group>"; };
 		68B1AC65FE92B8C07F009E19 /* Pods-RedGreenBlue.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlue.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlue/Pods-RedGreenBlue.debug.xcconfig"; sourceTree = "<group>"; };
 		6FA9CDE623062EF20011A2F8 /* RedGreenBlue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedGreenBlue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6FA9CDEB23062EF20011A2F8 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		6FA9CDED23062EF20011A2F8 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		6FA9CDF023062EF20011A2F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA9CDF223062EF30011A2F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 		6FA9CE0723062EF40011A2F8 /* RedGreenBlueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedGreenBlueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA9CE0B23062EF40011A2F8 /* RedGreenBlueUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedGreenBlueUITests.swift; sourceTree = "<group>"; };
 		6FA9CE0D23062EF40011A2F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FA9CE19230635E70011A2F8 /* InitialTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialTableViewController.swift; sourceTree = "<group>"; };
+		6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTableViewController.swift; sourceTree = "<group>"; };
 		71396FC2CCD8C1D60CD630F5 /* Pods-RedGreenBlueTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RedGreenBlueUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B64E619D6B85D176217C6898 /* Pods-RedGreenBlueUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -106,9 +106,9 @@
 		46CCAA0D230705940054187A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				6FA9CDEB23062EF20011A2F8 /* FirstViewController.swift */,
 				6FA9CDED23062EF20011A2F8 /* SecondViewController.swift */,
-				6FA9CE19230635E70011A2F8 /* InitialTableViewController.swift */,
+				6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */,
+				46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -419,11 +419,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FA9CE1A230635E70011A2F8 /* InitialTableViewController.swift in Sources */,
+				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				6FA9CDEE23062EF20011A2F8 /* SecondViewController.swift in Sources */,
+				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
 				46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */,
-				6FA9CDEC23062EF20011A2F8 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
