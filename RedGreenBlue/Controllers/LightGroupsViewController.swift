@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  LightGroupsTableViewController.swift
 //  RedGreenBlue
 //
 //  Created by Dana Griffin on 8/15/19.
@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import SwiftyHue
 
-class FirstViewController: UIViewController {
+class LightGroupsTableViewController: UITableViewController {
+    
+    var rgbBridge: RGBHueBridge?
 
     override func viewDidLoad() {
         super.viewDidLoad()
