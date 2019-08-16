@@ -8,6 +8,7 @@ target 'RedGreenBlue' do
 
   # Pods for RedGreenBlue
   pod 'SwiftyHue', '0.5.2'
+  pod 'RealmSwift', '~> 3.17'
 
 
   target 'RedGreenBlueTests' do
