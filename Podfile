@@ -7,7 +7,7 @@ target 'RedGreenBlue' do
   inhibit_all_warnings!
 
   # Pods for RedGreenBlue
-  pod 'SwiftyHue', '0.5.2'
+  pod 'SwiftyHue', :git => 'https://github.com/Spriter/SwiftyHue.git', :branch => 'master' 
   pod 'RealmSwift', '~> 3.17'
 
 
