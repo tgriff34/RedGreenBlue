@@ -11,14 +11,20 @@ import SwiftyHue
 
 class InitialTableViewController: UITableViewController {
     var bridgeFinder = BridgeFinder()
-    var bridges: [HueBridge]?;
+    var bridges: [HueBridge]?
     var selectedBridge: HueBridge?
+    
+    var bridgeAuthenticator: BridgeAuthenticator?
+    
+    var user: String = "4g2CnLNQaVms-ZioUscRIeTaqjf6-9RocnDhYHcM"
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        bridgeFinder.delegate = self;
+        bridgeFinder.delegate = self
         bridgeFinder.start()
+        
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -95,11 +101,54 @@ class InitialTableViewController: UITableViewController {
 
 }
 
-extension InitialTableViewController : BridgeFinderDelegate {
+extension InitialTableViewController: BridgeFinderDelegate {
 
     func bridgeFinder(_ finder: BridgeFinder, didFinishWithResult bridges: [HueBridge]) {
 
-        self.bridges = bridges;
-        print("Dana: \(bridges)");
+        self.bridges = bridges
+        print("Dana: \(bridges)")
+        
+        /*
+        bridgeAuthenticator = BridgeAuthenticator(bridge: bridges[0], uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
+        bridgeAuthenticator?.delegate = self
+        bridgeAuthenticator?.start()
+        */
+        
+        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BrideId", ipAddress: self.bridges![0].ip, username: user)
+        
+        print(bridges[0].friendlyName)
+        
+        let swiftyHue = SwiftyHue()
+        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
+        
+        var lightState = LightState()
+        lightState.on = true
+        
+        
+        swiftyHue.bridgeSendAPI.updateLightStateForId("7", withLightState: lightState, completionHandler: {
+            (errors) in
+            
+            print(errors)
+        })
     }
+}
+
+extension InitialTableViewController: BridgeAuthenticatorDelegate {
+    func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFinishAuthentication username: String) {
+        print(username)
+    }
+    
+    func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
+        
+    }
+    
+    func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
+        
+    }
+    
+    func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
+        
+    }
+    
+    
 }
