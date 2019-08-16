@@ -1,0 +1,5 @@
+${PODS_ROOT}/Target Support Files/Pods-RedGreenBlue/Pods-RedGreenBlue-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework
+${BUILT_PRODUCTS_DIR}/Gloss/Gloss.framework
+${BUILT_PRODUCTS_DIR}/SwiftyHue/SwiftyHue.framework
