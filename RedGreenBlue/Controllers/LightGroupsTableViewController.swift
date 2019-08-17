@@ -31,38 +31,19 @@ class LightGroupsTableViewController: UITableViewController {
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId", ipAddress: rgbBridge.ipAddress, username: rgbBridge.username)
         
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
-        
-        fetchLightGroups()
+        fetchLightsAndGroups()
     }
     
-    func fetchLightGroups() {
-        let resourceAPI = swiftyHue.resourceAPI
-        resourceAPI.fetchGroups({ (result) in
-            guard let groups = result.value else {
-                return
-            }
-            print("LightsGroupTableViewController: \(groups)")
-
+    func fetchLightsAndGroups() {
+        APIFetchRequest.fetchLightGroups(swiftyHue: self.swiftyHue, completion: { (groupIdentifiers, groups) in
+            self.groupIdentifiers = groupIdentifiers
             self.groups = groups
-            for group in groups  {
-                self.groupIdentifiers.append(group.key)
-            }
-            self.groupIdentifiers.sort()
-            self.fetchLights()
+            
+            APIFetchRequest.fetchAllLights(swiftyHue: self.swiftyHue, completion: { lights in
+                self.lights = lights
+                self.tableView.reloadData()
+            })
         })
-    }
-    
-    func fetchLights() {
-        let resourceAPI = swiftyHue.resourceAPI
-        resourceAPI.fetchLights { (result) in
-            guard let lights = result.value else {
-                return
-            }
-            print("LightsGroupTableViewController: \(lights)")
-            self.lights = lights
-            print("LightsGroupTableViewController: \(self.lights)")
-            self.tableView.reloadData()
-        }
     }
     
     @objc func switchChanged(_ sender : UISwitch!) {
@@ -73,7 +54,10 @@ class LightGroupsTableViewController: UITableViewController {
         } else {
             lightState.on = false
         }
-        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(groupIdentifiers[sender.tag], withLightState: lightState, completionHandler: { _ in })
+        
+        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(groupIdentifiers[sender.tag], withLightState: lightState, completionHandler: { _ in
+            self.fetchLightsAndGroups()
+        })
     }
 }
 
@@ -90,15 +74,13 @@ extension LightGroupsTableViewController {
             return cell
         }
         
-        print("LightsGroupTableViewController: \(group)")
-        
         cell.label.text = group.name
         
-        cell.switch.isOn = false
+        cell.switch.setOn(false, animated: true)
         for lightIdentifer in group.lightIdentifiers! {
             if let light = lights[lightIdentifer] {
                 if light.state.on! {
-                    cell.switch.isOn = true
+                    cell.switch.setOn(true, animated: true)
                 }
             }
         }
