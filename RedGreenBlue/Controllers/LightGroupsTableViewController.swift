@@ -27,6 +27,10 @@ class LightGroupsTableViewController: UITableViewController {
         guard let rgbBridge = rgbBridge else {
             return
         }
+
+        tableView.estimatedRowHeight = 600
+        tableView.rowHeight = UITableView.automaticDimension
+
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: rgbBridge.ipAddress,
                                                     username: rgbBridge.username)
@@ -80,14 +84,30 @@ extension LightGroupsTableViewController {
 
         cell.label.text = group.name
 
+        var numberOfLightsOnIterator: Int = 0
         cell.switch.setOn(false, animated: true)
         for lightIdentifer in group.lightIdentifiers! {
             if let light = lights[lightIdentifer] {
                 if light.state.on! {
+                    numberOfLightsOnIterator += 1
                     cell.switch.setOn(true, animated: true)
                 }
             }
         }
+
+        // Displays how many lights currently on in group
+        if numberOfLightsOnIterator == group.lightIdentifiers?.count {
+            cell.numberOfLightsLabel.text = "All lights are on"
+        }
+        else if numberOfLightsOnIterator == 0 {
+            cell.numberOfLightsLabel.text = "All lights are off"
+        } else {
+            let middleString = numberOfLightsOnIterator == 1 ? " light" : " lights"
+            let endString = numberOfLightsOnIterator == 1 ? " is on" : " are on"
+            cell.numberOfLightsLabel.text = String(format: "%@%@%@",
+                                                   "\(numberOfLightsOnIterator)", middleString, endString)
+        }
+
         cell.switch.tag = indexPath.row
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
         return cell
