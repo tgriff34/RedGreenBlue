@@ -114,6 +114,7 @@ class BridgesTableViewController: UITableViewController {
         switch segue.identifier {
         case "ConnectedToBridgeSegue":
             guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
+                print("Error could not cast \(segue.destination) as LightGroupsTableViewController")
                 return
             }
 

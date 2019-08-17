@@ -27,6 +27,10 @@ class LightGroupsTableViewController: UITableViewController {
         guard let rgbBridge = rgbBridge else {
             return
         }
+
+        tableView.estimatedRowHeight = 600
+        tableView.rowHeight = UITableView.automaticDimension
+
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: rgbBridge.ipAddress,
                                                     username: rgbBridge.username)
@@ -61,6 +65,26 @@ class LightGroupsTableViewController: UITableViewController {
             self.fetchLightsAndGroups()
         })
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "SelectedLightGroupSegue":
+            guard let lightTableViewController = segue.destination as? LightTableViewController,
+                let index = tableView.indexPathForSelectedRow?.row else {
+                print("Error could not cast \(segue.destination) as LightTableViewController")
+                print("Error could not get index selected:",
+                      "\(String(describing: tableView.indexPathForSelectedRow?.row))",
+                      " from tableview.indexPathForSelectedRow?.row")
+                return
+            }
+            lightTableViewController.swiftyHue = swiftyHue
+            lightTableViewController.lights = lights
+            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
+
+        default:
+            print("Error performing segue: \(String(describing: segue.identifier))")
+        }
+    }
 }
 
 extension LightGroupsTableViewController {
@@ -80,14 +104,29 @@ extension LightGroupsTableViewController {
 
         cell.label.text = group.name
 
+        var numberOfLightsOnIterator: Int = 0
         cell.switch.setOn(false, animated: true)
         for lightIdentifer in group.lightIdentifiers! {
             if let light = lights[lightIdentifer] {
                 if light.state.on! {
+                    numberOfLightsOnIterator += 1
                     cell.switch.setOn(true, animated: true)
                 }
             }
         }
+
+        // Displays how many lights currently on in group
+        if numberOfLightsOnIterator == group.lightIdentifiers?.count {
+            cell.numberOfLightsLabel.text = "All lights are on"
+        } else if numberOfLightsOnIterator == 0 {
+            cell.numberOfLightsLabel.text = "All lights are off"
+        } else {
+            let middleString = numberOfLightsOnIterator == 1 ? " light" : " lights"
+            let endString = numberOfLightsOnIterator == 1 ? " is on" : " are on"
+            cell.numberOfLightsLabel.text = String(format: "%@%@%@",
+                                                   "\(numberOfLightsOnIterator)", middleString, endString)
+        }
+
         cell.switch.tag = indexPath.row
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
         return cell

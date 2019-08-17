@@ -10,5 +10,6 @@ import UIKit
 
 class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
 }
