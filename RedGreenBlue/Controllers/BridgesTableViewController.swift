@@ -9,11 +9,16 @@
 import UIKit
 import SwiftyHue
 import RealmSwift
+import SwiftMessages
 
 class BridgesTableViewController: UITableViewController {
     var bridgeFinder = BridgeFinder()
     var bridges: [HueBridge]?
     var selectedBridge: RGBHueBridge?
+    let linkBridgeMessageAlert = MessageView.viewFromNib(layout: .cardView)
+    let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
+    var warningAlertConfig = SwiftMessages.Config()
+    var errorAlertConfig = SwiftMessages.Config()
     
     var bridgeAuthenticator: BridgeAuthenticator?
     
@@ -26,11 +31,30 @@ class BridgesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // set up warning message card
+        warningAlertConfig.duration = .forever
+        linkBridgeMessageAlert.configureTheme(.warning)
+        linkBridgeMessageAlert.configureDropShadow()
+        linkBridgeMessageAlert.configureContent(title: "", body: "Please press the button on your bridge to link")
+        linkBridgeMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        linkBridgeMessageAlert.button?.isHidden = true
+        (linkBridgeMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
+
+        // set up error message card
+        errorAlertConfig.duration = .forever
+        errorAlertConfig.dimMode = .gray(interactive: true)
+        linkFailMessageAlert.configureTheme(.error)
+        linkFailMessageAlert.configureDropShadow()
+        linkFailMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        linkFailMessageAlert.button?.isHidden = true;
+        (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
+
         bridgeFinder.delegate = self
         bridgeFinder.start()
-        
-        //let defaultPath = Realm.Configuration.defaultConfiguration.fileURL?.path
-        //print(defaultPath)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -71,6 +95,12 @@ class BridgesTableViewController: UITableViewController {
         }
         
         guard let realmBridge = realm.object(ofType: RGBHueBridge.self, forPrimaryKey: bridges?[index].ip) else {
+            // Couldnt find the bridge so lets display the alert
+            SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
+            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index], uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
+            selectedBridge = RGBHueBridge(hueBridge: bridges![index])
+            bridgeAuthenticator?.delegate = self
+            bridgeAuthenticator?.start()
             return false
         }
         
@@ -89,20 +119,6 @@ class BridgesTableViewController: UITableViewController {
             lightGroupsTableViewController.rgbBridge = selectedBridge
         default:
             print("Error with segue: \(String(describing: segue.identifier))")
-        }
-    }
-    
-    override func performSegue(withIdentifier identifier: String, sender: Any?) {
-        if shouldPerformSegue(withIdentifier: identifier, sender: sender) {
-            super.performSegue(withIdentifier: identifier, sender: sender)
-        } else {
-            guard let index = tableView.indexPathForSelectedRow?.row else {
-                return
-            }
-            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index], uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
-            selectedBridge = RGBHueBridge(hueBridge: bridges![index])
-            bridgeAuthenticator?.delegate = self
-            bridgeAuthenticator?.start()
         }
     }
 }
@@ -139,6 +155,9 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFinishAuthentication username: String) {
         //bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BrideId", ipAddress: self.bridges.ip, username: username)
         
+        // Authenticated so hide the warning
+        SwiftMessages.hideAll()
+
         guard let selectedBridge = selectedBridge else {
             return
         }
@@ -153,7 +172,9 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
     }
     
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
-        
+        SwiftMessages.hideAll()
+        linkFailMessageAlert.configureContent(title: "", body: "Bridge link failed with error: \(error)")
+        SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
     }
     
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
@@ -166,6 +187,8 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
     }
     
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
-        
+        SwiftMessages.hideAll()
+        linkFailMessageAlert.configureContent(title: "", body: "Bridge link timed out.\nPlease press bridge button within 30 seconds of selecting a bridge")
+        SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
     }
 }

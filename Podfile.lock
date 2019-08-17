@@ -7,6 +7,9 @@ PODS:
   - Realm/Headers (3.17.3)
   - RealmSwift (3.17.3):
     - Realm (= 3.17.3)
+  - SwiftMessages (7.0.0):
+    - SwiftMessages/App (= 7.0.0)
+  - SwiftMessages/App (7.0.0)
   - SwiftyHue (0.5.2):
     - SwiftyHue/Base (= 0.5.2)
     - SwiftyHue/BridgeServices (= 0.5.2)
@@ -20,6 +23,7 @@ PODS:
 
 DEPENDENCIES:
   - RealmSwift (~> 3.17)
+  - SwiftMessages
   - SwiftyHue (from `https://github.com/Spriter/SwiftyHue.git`, branch `master`)
 
 SPEC REPOS:
@@ -29,6 +33,7 @@ SPEC REPOS:
     - Gloss
     - Realm
     - RealmSwift
+    - SwiftMessages
 
 EXTERNAL SOURCES:
   SwiftyHue:
@@ -46,8 +51,9 @@ SPEC CHECKSUMS:
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
   Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
-  SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
+  SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
+  SwiftyHue: 0bde1b315eb17ba206fb3250a6cf724fc4d4f71d
 
-PODFILE CHECKSUM: 11be833088711788f35969eb2a569427971db3f0
+PODFILE CHECKSUM: aee95fd12080b8ec0cb6d84223246350eef868bc
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.7.3
