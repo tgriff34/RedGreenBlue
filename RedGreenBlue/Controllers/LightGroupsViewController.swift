@@ -10,7 +10,7 @@ import UIKit
 import SwiftyHue
 
 class LightGroupsTableViewController: UITableViewController {
-    
+
     var rgbBridge: RGBHueBridge?
 
     override func viewDidLoad() {
@@ -18,6 +18,4 @@ class LightGroupsTableViewController: UITableViewController {
         // Do any additional setup after loading the view.
     }
 
-
 }
-
