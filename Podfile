@@ -9,6 +9,7 @@ target 'RedGreenBlue' do
   # Pods for RedGreenBlue
   pod 'SwiftyHue', :git => 'https://github.com/Spriter/SwiftyHue.git', :branch => 'master' 
   pod 'RealmSwift', '~> 3.17'
+  pod 'SwiftMessages'
 
 
   target 'RedGreenBlueTests' do
