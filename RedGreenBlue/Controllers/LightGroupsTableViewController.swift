@@ -65,6 +65,26 @@ class LightGroupsTableViewController: UITableViewController {
             self.fetchLightsAndGroups()
         })
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "SelectedLightGroupSegue":
+            guard let lightTableViewController = segue.destination as? LightTableViewController,
+                let index = tableView.indexPathForSelectedRow?.row else {
+                print("Error could not cast \(segue.destination) as LightTableViewController")
+                print("Error could not get index selected:",
+                      "\(String(describing: tableView.indexPathForSelectedRow?.row))",
+                      " from tableview.indexPathForSelectedRow?.row")
+                return
+            }
+            lightTableViewController.swiftyHue = swiftyHue
+            lightTableViewController.lights = lights
+            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
+
+        default:
+            print("Error performing segue: \(String(describing: segue.identifier))")
+        }
+    }
 }
 
 extension LightGroupsTableViewController {
@@ -98,8 +118,7 @@ extension LightGroupsTableViewController {
         // Displays how many lights currently on in group
         if numberOfLightsOnIterator == group.lightIdentifiers?.count {
             cell.numberOfLightsLabel.text = "All lights are on"
-        }
-        else if numberOfLightsOnIterator == 0 {
+        } else if numberOfLightsOnIterator == 0 {
             cell.numberOfLightsLabel.text = "All lights are off"
         } else {
             let middleString = numberOfLightsOnIterator == 1 ? " light" : " lights"
