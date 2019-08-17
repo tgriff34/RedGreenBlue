@@ -10,7 +10,7 @@ import SwiftyHue
 import RealmSwift
 
 class RGBHueBridge: Object {
-    
+
     @objc dynamic var username: String = ""
     @objc dynamic var ipAddress: String = ""
     @objc dynamic var deviceType: String = ""
@@ -18,7 +18,7 @@ class RGBHueBridge: Object {
     @objc dynamic var modelDescription: String = ""
     @objc dynamic var modelName: String = ""
     @objc dynamic var serialNumber: String = ""
-    
+
     convenience init(hueBridge: HueBridge) {
         self.init()
         self.ipAddress = hueBridge.ip
@@ -28,9 +28,9 @@ class RGBHueBridge: Object {
         self.modelName = hueBridge.modelName
         self.serialNumber = hueBridge.serialNumber
     }
-    
+
     override static func primaryKey() -> String? {
         return "ipAddress"
     }
-    
+
 }

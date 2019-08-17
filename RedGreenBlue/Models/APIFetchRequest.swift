@@ -10,7 +10,6 @@ import Foundation
 import SwiftyHue
 
 class APIFetchRequest {
-    
     static func fetchLightGroups(swiftyHue: SwiftyHue, completion: @escaping ([String], [String: Group]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchGroups({ (result) in
@@ -18,7 +17,7 @@ class APIFetchRequest {
                 return
             }
             var groupIdentifiers: [String] = []
-            for group in groups  {
+            for group in groups {
                 groupIdentifiers.append(group.key)
             }
             groupIdentifiers.sort()
@@ -26,14 +25,13 @@ class APIFetchRequest {
             completion(groupIdentifiers, groups)
         })
     }
-    
+
     static func fetchAllLights(swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchLights({ (result) in
             guard let groups = result.value else {
                 return
             }
-            
             completion(groups)
         })
     }
