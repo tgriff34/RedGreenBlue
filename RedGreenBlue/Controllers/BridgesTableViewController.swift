@@ -19,13 +19,14 @@ class BridgesTableViewController: UITableViewController {
     let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
     var warningAlertConfig = SwiftMessages.Config()
     var errorAlertConfig = SwiftMessages.Config()
-    
+
     var bridgeAuthenticator: BridgeAuthenticator?
-    
+
+    // swiftlint:disable:next force_try
     let realm = try! Realm()
-    
+
     //var bridgeAccessConfig: BridgeAccessConfig?
-    
+
     //let username: String = "4g2CnLNQaVms-ZioUscRIeTaqjf6-9RocnDhYHcM"
 
     override func viewDidLoad() {
@@ -46,7 +47,7 @@ class BridgesTableViewController: UITableViewController {
         linkFailMessageAlert.configureTheme(.error)
         linkFailMessageAlert.configureDropShadow()
         linkFailMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        linkFailMessageAlert.button?.isHidden = true;
+        linkFailMessageAlert.button?.isHidden = true
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
 
         bridgeFinder.delegate = self
@@ -66,7 +67,6 @@ class BridgesTableViewController: UITableViewController {
         return bridges.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier", for: indexPath)
 
@@ -81,11 +81,11 @@ class BridgesTableViewController: UITableViewController {
 
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
     }
-    
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -93,29 +93,30 @@ class BridgesTableViewController: UITableViewController {
         guard let index = tableView.indexPathForSelectedRow?.row else {
             return false
         }
-        
+
         guard let realmBridge = realm.object(ofType: RGBHueBridge.self, forPrimaryKey: bridges?[index].ip) else {
             // Couldnt find the bridge so lets display the alert
             SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
-            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index], uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
+            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index],
+                                                      uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
             selectedBridge = RGBHueBridge(hueBridge: bridges![index])
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()
             return false
         }
-        
+
         selectedBridge = realmBridge
-        
+
         return true
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch(segue.identifier) {
+        switch segue.identifier {
         case "ConnectedToBridgeSegue":
             guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
                 return
             }
-            
+
             lightGroupsTableViewController.rgbBridge = selectedBridge
         default:
             print("Error with segue: \(String(describing: segue.identifier))")
@@ -128,55 +129,36 @@ extension BridgesTableViewController: BridgeFinderDelegate {
     func bridgeFinder(_ finder: BridgeFinder, didFinishWithResult bridges: [HueBridge]) {
 
         self.bridges = bridges
-        //print("Dana: \(bridges)")
-        
+
         tableView.reloadData()
-        
-        /*
-        print(bridges[0].friendlyName)
-        
-        let swiftyHue = SwiftyHue()
-        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
-        
-        var lightState = LightState()
-        lightState.on = false
-        
-        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId("8", withLightState: lightState, completionHandler: { _ in })
-        swiftyHue.bridgeSendAPI.updateLightStateForId("7", withLightState: lightState, completionHandler: {
-            (errors) in
-            
-            print(errors)
-        })
-        */
     }
 }
 
 extension BridgesTableViewController: BridgeAuthenticatorDelegate {
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFinishAuthentication username: String) {
-        //bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BrideId", ipAddress: self.bridges.ip, username: username)
-        
+
         // Authenticated so hide the warning
         SwiftMessages.hideAll()
 
         guard let selectedBridge = selectedBridge else {
             return
         }
-        
+
         selectedBridge.username = username
-        
+        // swiftlint:disable:next force_try
         try! realm.write {
             realm.add(selectedBridge)
         }
-    
+
         performSegue(withIdentifier: "ConnectedToBridgeSegue", sender: self)
     }
-    
+
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
         SwiftMessages.hideAll()
         linkFailMessageAlert.configureContent(title: "", body: "Bridge link failed with error: \(error)")
         SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
     }
-    
+
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
         print(secondsLeft)
         /*
@@ -185,10 +167,12 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         self.present(alert, animated: true, completion: nil)
         */
     }
-    
+
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
         SwiftMessages.hideAll()
-        linkFailMessageAlert.configureContent(title: "", body: "Bridge link timed out.\nPlease press bridge button within 30 seconds of selecting a bridge")
+        linkFailMessageAlert.configureContent(title: "",
+                                              body: "Bridge link timed out.\nPlease press bridge " +
+                                                    "button within 30 seconds of selecting a bridge")
         SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
     }
 }
