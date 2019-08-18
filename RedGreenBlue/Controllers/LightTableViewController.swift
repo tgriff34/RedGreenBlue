@@ -17,6 +17,11 @@ class LightTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        APIFetchRequest.fetchAllLights(swiftyHue: swiftyHue!, completion: { (lights) in
+            self.lights = lights
+            self.tableView.reloadData()
+        })
     }
 
     @objc func switchChanged(_ sender: UISwitch!) {

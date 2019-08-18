@@ -29,10 +29,10 @@ class APIFetchRequest {
     static func fetchAllLights(swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchLights({ (result) in
-            guard let groups = result.value else {
+            guard let lights = result.value else {
                 return
             }
-            completion(groups)
+            completion(lights)
         })
     }
 }
