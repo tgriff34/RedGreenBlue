@@ -14,7 +14,8 @@ class LightGroupsTableViewController: UITableViewController {
     var rgbBridge: RGBHueBridge?
     var groupIdentifiers: [String] = []
 
-    var groups: [String: Group] = [:]
+    var lightGroups: [String: Group] = [:]
+    var allLights: [String: Light] = [:]
     let swiftyHue = SwiftyHue()
 
     override func viewDidLoad() {
@@ -41,9 +42,21 @@ class LightGroupsTableViewController: UITableViewController {
     func fetchGroups() {
         APIFetchRequest.fetchLightGroups(swiftyHue: self.swiftyHue, completion: { (groupIdentifiers, groups) in
             self.groupIdentifiers = groupIdentifiers
-            self.groups = groups
+            self.lightGroups = groups
             self.tableView.reloadData()
         })
+    }
+
+    func numberOfLightsOn(in group: Group) -> Int {
+        var result = 0
+        APIFetchRequest.fetchAllLights(swiftyHue: swiftyHue, completion: { (lights) in
+            for identifier in group.lightIdentifiers ?? [] {
+                if lights[identifier]?.state.on ?? false {
+                    result += 1
+                }
+            }
+        })
+        return result
     }
 
     // TODO: MODULARIZE
@@ -63,37 +76,38 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     // TODO: MODULARIZE
-    private var pendingRequestWorkItem: DispatchWorkItem?
-    @IBAction func sliderChanged(_ sender: UISlider!) {
-        // Cancel current pending work item
-        pendingRequestWorkItem?.cancel()
-        
-        let requestWorkItem = DispatchWorkItem { [weak self] in
-            var lightState = LightState()
-            lightState.brightness = Int(sender.value * 2.54)
-            self?.swiftyHue.bridgeSendAPI.setLightStateForGroupWithId((self?.groupIdentifiers[sender.tag])!,
-                                                                withLightState: lightState, completionHandler: { _ in
-            })
+    private var previousTimer: Timer? = nil {
+        willSet {
+            previousTimer?.invalidate()
         }
-        
-        pendingRequestWorkItem = requestWorkItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: requestWorkItem)
+    }
+    @IBAction func sliderChanged(_ sender: UISlider!) {
+        guard previousTimer == nil else { return }
+        previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+            var lightState = LightState()
+            lightState.brightness = Int(sender.value * 25.4)
+            self.swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(self.groupIdentifiers[sender.tag],
+                                                                     withLightState: lightState,
+                                                                     completionHandler: { _ in
+                                                                     self.previousTimer = nil
+            })
+        })
     }
 }
 
 // MARK: - TABLEVIEW
 extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return lightGroups.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupsCellIdentifier") as! LightsGroupCustomCell
 
-        guard let group = groups[groupIdentifiers[indexPath.row]] else {
+        guard let group = lightGroups[groupIdentifiers[indexPath.row]] else {
             print("LightsGroupTableViewController: Error",
-                String(describing: groups[groupIdentifiers[indexPath.row]]))
+                String(describing: lightGroups[groupIdentifiers[indexPath.row]]))
             return cell
         }
 
@@ -106,25 +120,25 @@ extension LightGroupsTableViewController {
         }
 
         // Displays how many lights currently on in group
-        let numberOfLightsOn = 0
-        if numberOfLightsOn == group.lightIdentifiers?.count {
+        let lightsOn = numberOfLightsOn(in: group)
+        if lightsOn == group.lightIdentifiers?.count {
             cell.numberOfLightsLabel.text = "All lights are on"
-        } else if numberOfLightsOn == 0 {
+        } else if lightsOn == 0 {
             cell.numberOfLightsLabel.text = "All lights are off"
         } else {
-            let middleString = numberOfLightsOn == 1 ? " light" : " lights"
-            let endString = numberOfLightsOn == 1 ? " is on" : " are on"
+            let middleString = lightsOn == 1 ? " light" : " lights"
+            let endString = lightsOn == 1 ? " is on" : " are on"
             cell.numberOfLightsLabel.text = String(format: "%@%@%@",
-                                                   "\(numberOfLightsOn)", middleString, endString)
+                                                   "\(lightsOn)", middleString, endString)
         }
 
         cell.switch.tag = indexPath.row
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
 
         cell.lightBrightnessSlider.tag = indexPath.row
-        cell.lightBrightnessSlider.setValue(Float(group.action.brightness!) / 2.54, animated: true)
+        cell.lightBrightnessSlider.setValue(Float(group.action.brightness!) / 25.4, animated: true)
         cell.lightBrightnessSlider.addTarget(self, action: #selector(sliderChanged(_:)), for: .valueChanged)
- 
+
         return cell
     }
 }
@@ -143,11 +157,13 @@ extension LightGroupsTableViewController {
                     return
             }
             lightTableViewController.swiftyHue = swiftyHue
-            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
-            lightTableViewController.title = groups[groupIdentifiers[index]]?.name
+            lightTableViewController.lightIdentifiers = lightGroups[groupIdentifiers[index]]?.lightIdentifiers
+            lightTableViewController.title = lightGroups[groupIdentifiers[index]]?.name
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }
     }
 }
+
+//extension Array where Element ==
