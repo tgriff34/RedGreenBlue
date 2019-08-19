@@ -12,12 +12,15 @@ import Gloss
 
 class LightGroupsTableViewController: UITableViewController {
 
-    fileprivate let bridgeAccessConfigUserDefaultsKey = "BridgeAccessConfig"
-    
     var rgbBridge: RGBHueBridge?
     var groupIdentifiers: [String] = []
 
-    var lightGroups: [String: Group] = [:]
+    var lightGroups: [String: Group] = [:] {
+        didSet {
+            print("lightGroups: Value Set")
+            tableView.reloadData()
+        }
+    }
     var allLights: [String: Light] = [:]
     let swiftyHue = SwiftyHue()
 
@@ -68,7 +71,7 @@ class LightGroupsTableViewController: UITableViewController {
             for group in lightGroups {
                 groupIdentifiers.append(group.key)
             }
-            
+            groupIdentifiers.sort()
             self.tableView.reloadData()
         }
     }
@@ -98,8 +101,8 @@ class LightGroupsTableViewController: UITableViewController {
         }
 
         swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(groupIdentifiers[sender.tag],
-                                                            withLightState: lightState, completionHandler: { _ in
-            //self.fetchGroups()
+                                                            withLightState: lightState, completionHandler: { (error) in
+            print("Error sending setLightStateForGroupWithId: \(String(describing: error?.description))")
         })
     }
 

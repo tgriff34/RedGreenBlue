@@ -26,7 +26,7 @@ DEPENDENCIES:
   - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
-  - SwiftyHue (from `https://github.com/Spriter/SwiftyHue.git`, branch `master`)
+  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, branch `master`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -41,12 +41,12 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   SwiftyHue:
     :branch: master
-    :git: https://github.com/Spriter/SwiftyHue.git
+    :git: https://github.com/griffind/SwiftyHue.git
 
 CHECKOUT OPTIONS:
   SwiftyHue:
-    :commit: 1311059386470c75d323d3bda008a7b23cf8222f
-    :git: https://github.com/Spriter/SwiftyHue.git
+    :commit: 64bba891e7afd5788861f7cdc82cbfd9735d4655
+    :git: https://github.com/griffind/SwiftyHue.git
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -58,6 +58,6 @@ SPEC CHECKSUMS:
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
 
-PODFILE CHECKSUM: d7b1a8e9435a9fd32879c55f76a842c23128428c
+PODFILE CHECKSUM: 105a614de313f9d1faacd7d658b22f3080a611d9
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.7.3
