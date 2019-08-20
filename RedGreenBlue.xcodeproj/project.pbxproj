@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		22312DAF47E6FE51235D1AC8 /* Pods_RedGreenBlue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D37A15058741D24ED3DD3B /* Pods_RedGreenBlue.framework */; };
 		45B6C0AFDACD263DB6F68320 /* Pods_RedGreenBlueUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */; };
+		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
 		46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* BridgeModel.swift */; };
 		46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */; };
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
-		46CCAA142307870B0054187A /* APIFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* APIFetchRequest.swift */; };
+		46CCAA142307870B0054187A /* RGBRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* RGBRequest.swift */; };
 		46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA15230848F90054187A /* LightTableViewController.swift */; };
 		46CCAA182308667B0054187A /* FetchLightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA172308667B0054187A /* FetchLightState.swift */; };
 		6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */; };
@@ -45,10 +46,11 @@
 
 /* Begin PBXFileReference section */
 		128E4C0BD168185191980114 /* Pods-RedGreenBlueTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.release.xcconfig"; sourceTree = "<group>"; };
+		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
 		46CCAA0A2307025C0054187A /* BridgeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeModel.swift; sourceTree = "<group>"; };
 		46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGroupsTableViewController.swift; sourceTree = "<group>"; };
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
-		46CCAA132307870B0054187A /* APIFetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIFetchRequest.swift; sourceTree = "<group>"; };
+		46CCAA132307870B0054187A /* RGBRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBRequest.swift; sourceTree = "<group>"; };
 		46CCAA15230848F90054187A /* LightTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTableViewController.swift; sourceTree = "<group>"; };
 		46CCAA172308667B0054187A /* FetchLightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLightState.swift; sourceTree = "<group>"; };
 		66085FF42EEB085036083DC7 /* Pods-RedGreenBlueUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -108,8 +110,9 @@
 			children = (
 				46CCAA0A2307025C0054187A /* BridgeModel.swift */,
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
-				46CCAA132307870B0054187A /* APIFetchRequest.swift */,
+				46CCAA132307870B0054187A /* RGBRequest.swift */,
 				46CCAA172308667B0054187A /* FetchLightState.swift */,
+				460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -450,13 +453,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */,
-				46CCAA142307870B0054187A /* APIFetchRequest.swift in Sources */,
+				46CCAA142307870B0054187A /* RGBRequest.swift in Sources */,
 				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				6FA9CDEE23062EF20011A2F8 /* SecondViewController.swift in Sources */,
 				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
 				46CCAA182308667B0054187A /* FetchLightState.swift in Sources */,
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
+				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

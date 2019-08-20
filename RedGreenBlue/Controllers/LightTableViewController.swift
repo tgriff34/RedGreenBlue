@@ -18,7 +18,12 @@ class LightTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        APIFetchRequest.fetchAllLights(swiftyHue: swiftyHue!, completion: { (lights) in
+        guard let swiftyHue = swiftyHue else {
+            print("Error retrieving swiftyHue from segue.")
+            return
+        }
+
+        RGBRequest.getLights(with: swiftyHue, completion: { (lights) in
             self.lights = lights
             self.tableView.reloadData()
         })

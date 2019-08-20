@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyHue
 
-class FetchLightState {
+struct FetchLightState {
     static func ofGroup(withLights: [String: Light], withGroupLightIdentifiers: [String]) -> [LightState]? {
         var result: [LightState] = []
         for lightIdentifier in withGroupLightIdentifiers {
