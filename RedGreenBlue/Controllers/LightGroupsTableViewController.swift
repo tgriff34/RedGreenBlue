@@ -50,13 +50,13 @@ class LightGroupsTableViewController: UITableViewController {
 
         fetchGroupsAndLights {
             self.tableView.reloadData()
-            self.updateCells(from: self.CACHE_KEY, completion: nil)
+            self.updateCells(ignoring: nil, from: self.CACHE_KEY, completion: nil)
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.updateCells(from: CACHE_KEY, completion: nil)
+        self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,13 +68,14 @@ class LightGroupsTableViewController: UITableViewController {
         if let cache = swiftyHue.resourceCache {
             self.lightGroups = cache.groups
             self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
-            self.updateCells(from: CACHE_KEY, completion: nil)
+            self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
 
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
             self.allLights = cache.lights
+            self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
 
@@ -85,24 +86,30 @@ class LightGroupsTableViewController: UITableViewController {
             self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
             RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
                 self.allLights = lights
+                self.swiftyHue.startHeartbeat()
                 completion()
             })
         })
     }
 
-    func updateCells(from KEY: String, completion: (() -> Void)?) {
+    func updateCells(ignoring cell: String?, from KEY: String, completion: (() -> Void)?) {
         switch KEY {
         case API_KEY:
-            fetchGroupsAndLights(completion: updateCellsToScreen)
+            fetchGroupsAndLights(completion: {
+                print("Updating cells from api")
+                self.updateCellsToScreen(ignoring: cell)
+            })
         case CACHE_KEY:
-            updateCellsToScreen()
+            print("Updating cells from cache")
+            updateCellsToScreen(ignoring: cell)
         default:
             print("Error updating cells from KEY: ", KEY)
         }
     }
 
-    func updateCellsToScreen() {
+    func updateCellsToScreen(ignoring cell: String?) {
         for groupIdentifier in self.groupIdentifiers {
+            if cell == groupIdentifier { continue }
             guard let cell =
                 self.tableView.cellForRow(at: IndexPath(row: self.groupIdentifiers.index(of: groupIdentifier)!,
                                                         section: 0)) as? LightsGroupCustomCell
@@ -137,7 +144,7 @@ class LightGroupsTableViewController: UITableViewController {
                 cell.lightBrightnessSlider.setValue(Float(averageBrightnessOfLightsOn / numberOfLightsOn) / 2.54,
                                                     animated: true)
             } else {
-                cell.lightBrightnessSlider.setValue(0, animated: true)
+                cell.lightBrightnessSlider.setValue(1, animated: true)
             }
         }
     }
@@ -171,7 +178,9 @@ class LightGroupsTableViewController: UITableViewController {
                                                                       "\(String(describing: error?.description))")
                                                                 return
                                                             }
-                                                            self.updateCells(from: self.API_KEY, completion: nil)
+                                                            self.updateCells(ignoring: nil,
+                                                                             from: self.API_KEY,
+                                                                             completion: nil)
         })
     }
 
@@ -192,10 +201,10 @@ class LightGroupsTableViewController: UITableViewController {
                     self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 })
             case .ended:
-                swiftyHue.startHeartbeat()
                 print("Slider: starting heartbeat")
                 self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
-                updateCells(from: API_KEY, completion: nil)
+                print("Slider: \(sender.tag) \(sender.value)")
+                self.updateCells(ignoring: self.groupIdentifiers[sender.tag], from: self.API_KEY, completion: nil)
             default:
                 break
             }
