@@ -18,4 +18,13 @@ class RGBGroupsAndLightsHelper {
         groupIdentifiers.sort()
         return groupIdentifiers
     }
+    static func retrieveLightState(from sender: UISwitch) -> LightState {
+        var lightState = LightState()
+        if sender.isOn {
+            lightState.on = true
+        } else {
+            lightState.on = false
+        }
+        return lightState
+    }
 }

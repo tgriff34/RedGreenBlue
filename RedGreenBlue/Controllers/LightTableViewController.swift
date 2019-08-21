@@ -30,17 +30,14 @@ class LightTableViewController: UITableViewController {
     }
 
     @objc func switchChanged(_ sender: UISwitch!) {
-        var lightState = LightState()
-
-        if sender.isOn {
-            lightState.on = true
-        } else {
-            lightState.on = false
-        }
-
         swiftyHue?.bridgeSendAPI.updateLightStateForId(lightIdentifiers![sender.tag],
-                                                       withLightState: lightState, completionHandler: { _ in
-            return
+                                                       withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
+                                                       completionHandler: { (error) in
+                                                        guard error == nil else {
+                                                            print("Error sending setLightStateForGroupWithId:",
+                                                                  "\(String(describing: error?.description))")
+                                                            return
+                                                        }
         })
     }
 }

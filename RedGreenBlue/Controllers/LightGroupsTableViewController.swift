@@ -86,7 +86,6 @@ class LightGroupsTableViewController: UITableViewController {
             self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
             RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
                 self.allLights = lights
-                self.swiftyHue.startHeartbeat()
                 completion()
             })
         })
@@ -98,6 +97,7 @@ class LightGroupsTableViewController: UITableViewController {
             fetchGroupsAndLights(completion: {
                 print("Updating cells from api")
                 self.updateCellsToScreen(ignoring: cell)
+                completion?()
             })
         case CACHE_KEY:
             print("Updating cells from cache")
@@ -167,15 +167,8 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     @objc func switchChanged(_ sender: UISwitch!) {
-        print("setGroupLights: switched \(Date.init())")
-        var lightState = LightState()
-        if sender.isOn {
-            lightState.on = true
-        } else {
-            lightState.on = false
-        }
         swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(groupIdentifiers[sender.tag],
-                                                            withLightState: lightState,
+                                                            withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
                                                             completionHandler: { (error) in
                                                             guard error == nil else {
                                                                 print("Error sending setLightStateForGroupWithId:",
@@ -205,10 +198,12 @@ class LightGroupsTableViewController: UITableViewController {
                     self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 })
             case .ended:
-                print("Slider: starting heartbeat")
+                //print("Slider: starting heartbeat")
                 self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 print("Slider: \(sender.tag) \(sender.value)")
-                self.updateCells(ignoring: self.groupIdentifiers[sender.tag], from: self.API_KEY, completion: nil)
+                self.updateCells(ignoring: self.groupIdentifiers[sender.tag], from: self.API_KEY, completion: {
+                    self.swiftyHue.startHeartbeat()
+                })
             default:
                 break
             }
