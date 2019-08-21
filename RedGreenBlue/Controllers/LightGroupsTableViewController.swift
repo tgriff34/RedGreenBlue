@@ -141,10 +141,14 @@ class LightGroupsTableViewController: UITableViewController {
                                                                        numberOfLightsOn)
 
             if numberOfLightsOn > 0 {
-                cell.lightBrightnessSlider.setValue(Float(averageBrightnessOfLightsOn / numberOfLightsOn) / 2.54,
-                                                    animated: true)
+                UIView.animate(withDuration: 1, animations: {
+                    cell.lightBrightnessSlider.setValue(Float(averageBrightnessOfLightsOn / numberOfLightsOn) / 2.54,
+                                                        animated: true)
+                })
             } else {
-                cell.lightBrightnessSlider.setValue(1, animated: true)
+                UIView.animate(withDuration: 1, animations: {
+                    cell.lightBrightnessSlider.setValue(1, animated: true)
+                })
             }
         }
     }
