@@ -15,7 +15,10 @@ class BridgesTableViewController: UITableViewController {
     var bridgeFinder = BridgeFinder()
     var bridges: [HueBridge]?
     var selectedBridge: RGBHueBridge?
-    let linkBridgeMessageAlert = MessageView.viewFromNib(layout: .cardView)
+    // swift
+    // swiftlint:disable:next force_try
+    let linkBridgeMessageAlert: MessageView = try! SwiftMessages.viewFromNib(named: "CustomMessageView")
+//    let linkBridgeMessageAlert = MessageView.viewFromNib(layout: .customMessageView)
     let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
     var warningAlertConfig = SwiftMessages.Config()
     var errorAlertConfig = SwiftMessages.Config()
@@ -35,6 +38,8 @@ class BridgesTableViewController: UITableViewController {
         // set up warning message card
         warningAlertConfig.duration = .forever
         linkBridgeMessageAlert.configureTheme(.warning)
+        warningAlertConfig.dimMode = .gray(interactive: false)
+        warningAlertConfig.interactiveHide = false
         linkBridgeMessageAlert.configureDropShadow()
         linkBridgeMessageAlert.configureContent(title: "", body: "Please press the button on your bridge to link")
         linkBridgeMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
