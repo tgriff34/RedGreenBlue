@@ -11,10 +11,15 @@ import SwiftyHue
 
 class LightTableViewController: UITableViewController {
 
+    private let API_KEY: String = "API_KEY" //swiftlint:disable:this identifier_name
+    private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
+
     var groupIdentifier: String?
     var lights: [String: Light]?
     var lightIdentifiers: [String]?
-    var swiftyHue: SwiftyHue?
+    var rgbBridge: RGBHueBridge?
+
+    let swiftyHue = SwiftyHue()
 
     var navigationSwitch: UISwitch?
 
@@ -24,7 +29,72 @@ class LightTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 400
         tableView.rowHeight = UITableView.automaticDimension
 
+        guard let rgbBridge = rgbBridge else {
+            return
+        }
+
+        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
+
+        swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
+        swiftyHue.startHeartbeat()
+
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(onDidLightUpdate(_:)),
+                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+                         object: nil)
+
         setupNavigationSwitch()
+        updateCells(from: API_KEY, completion: nil)
+    }
+
+    // MARK: - Private funcs
+    @objc func onDidLightUpdate(_ notification: Notification) {
+        if let cache = swiftyHue.resourceCache {
+            self.lights = cache.lights
+            updateCells(from: CACHE_KEY, completion: nil)
+        }
+    }
+
+    func updateCells(from KEY: String, completion: (() -> Void)?) {
+        switch KEY {
+        case API_KEY:
+            RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
+                self.lights = lights
+                self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
+                self.updateCellsToScreen()
+                completion?()
+            })
+        case CACHE_KEY:
+            updateCellsToScreen()
+        default:
+            break
+        }
+    }
+
+    func updateCellsToScreen() {
+        for identifier in lightIdentifiers! {
+            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers!.index(of: identifier)!,
+                                                                section: 0)) as? LightsCustomCell else {
+                                                                    return
+            }
+
+            guard let lightState = lights?[identifier]?.state else {
+                return
+            }
+
+            cell.switch.setOn(lightState.on!, animated: true)
+            if lightState.on! {
+                UIView.animate(withDuration: 1, animations: {
+                    cell.slider.setValue(Float(lightState.brightness!) / 2.54, animated: true)
+                })
+            } else {
+                UIView.animate(withDuration: 1, animations: {
+                    cell.slider.setValue(1, animated: true)
+                })
+            }
+        }
     }
 
     @objc func navigationSwitchChanged(_ sender: UISwitch!) {
@@ -32,7 +102,7 @@ class LightTableViewController: UITableViewController {
             print("Error retrieving groupIdentifier")
             return
         }
-        swiftyHue?
+        swiftyHue
             .bridgeSendAPI
             .setLightStateForGroupWithId(groupIdentifier,
                                          withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
@@ -42,11 +112,24 @@ class LightTableViewController: UITableViewController {
                                                       String(describing: error?.description))
                                                 return
                                             }
+                                            self.updateCellsFromNavigationSwitch(with:
+                                                RGBGroupsAndLightsHelper.retrieveLightState(from: sender))
         })
     }
 
+    func updateCellsFromNavigationSwitch(with lightState: LightState) {
+        for identifier in lightIdentifiers! {
+            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers!.index(of: identifier)!,
+                                                                section: 0)) as? LightsCustomCell else {
+                                                                    return
+            }
+            cell.switch.setOn(lightState.on!, animated: true)
+            updateCells(from: API_KEY, completion: nil)
+        }
+    }
+
     @objc func cellSwitchChanged(_ sender: UISwitch!) {
-        swiftyHue?
+        swiftyHue
             .bridgeSendAPI
             .updateLightStateForId(lightIdentifiers![sender.tag],
                                    withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
@@ -56,10 +139,7 @@ class LightTableViewController: UITableViewController {
                                               "\(String(describing: error?.description))")
                                         return
                                     }
-                                    RGBRequest.getLights(with: self.swiftyHue!, completion: { (lights) in
-                                        self.lights = lights
-                                        self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
-                                    })
+                                    self.updateCells(from: self.API_KEY, completion: nil)
         })
     }
 
@@ -73,6 +153,7 @@ class LightTableViewController: UITableViewController {
             switch touchEvent.phase {
             case .began:
                 print("Slider began")
+                swiftyHue.stopHeartbeat()
             case .moved:
                 guard previousTimer == nil else { return }
                 previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
@@ -80,6 +161,10 @@ class LightTableViewController: UITableViewController {
                 })
             case .ended:
                 print("Slider ended")
+                self.setBrightnessForLight(at: sender.tag, with: sender.value)
+                updateCells(from: API_KEY, completion: {
+                    self.swiftyHue.startHeartbeat()
+                })
             default:
                 break
             }
@@ -90,7 +175,7 @@ class LightTableViewController: UITableViewController {
         var lightState = LightState()
         lightState.brightness = Int(value * 2.54)
         print(self.lightIdentifiers![index])
-        self.swiftyHue?
+        self.swiftyHue
             .bridgeSendAPI
             .updateLightStateForId(self.lightIdentifiers![index],
                                    withLightState: lightState,
@@ -126,6 +211,7 @@ class LightTableViewController: UITableViewController {
     }
 }
 
+// MARK: - Tableview
 extension LightTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let count = lightIdentifiers?.count else {
@@ -149,7 +235,6 @@ extension LightTableViewController {
         cell.switch.setOn(light.state.on! ? true : false, animated: true)
 
         cell.slider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
-        cell.slider.value = Float(light.state.brightness!) / 2.54
         cell.slider.tag = indexPath.row
 
         return cell

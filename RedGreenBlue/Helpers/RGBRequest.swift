@@ -28,4 +28,10 @@ class RGBRequest {
             completion(lights)
         })
     }
+    static func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
+        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
+                                                    ipAddress: RGBHueBridge.ipAddress,
+                                                    username: RGBHueBridge.username)
+        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
+    }
 }

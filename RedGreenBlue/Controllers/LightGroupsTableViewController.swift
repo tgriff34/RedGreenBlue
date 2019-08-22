@@ -27,14 +27,10 @@ class LightGroupsTableViewController: UITableViewController {
             return
         }
 
+        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
+
         tableView.estimatedRowHeight = 600
         tableView.rowHeight = UITableView.automaticDimension
-
-        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
-                                                    ipAddress: rgbBridge.ipAddress,
-                                                    username: rgbBridge.username)
-
-        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
 
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .groups)
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
@@ -62,7 +58,7 @@ class LightGroupsTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
+        self.updateCells(ignoring: nil, from: API_KEY, completion: nil)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -281,7 +277,9 @@ extension LightGroupsTableViewController {
                         " from tableview.indexPathForSelectedRow?.row")
                     return
             }
-            lightTableViewController.swiftyHue = swiftyHue
+            swiftyHue.stopHeartbeat()
+            //lightTableViewController.swiftyHue = swiftyHue
+            lightTableViewController.rgbBridge = rgbBridge
             lightTableViewController.lightIdentifiers = lightGroups[groupIdentifiers[index]]?.lightIdentifiers
             lightTableViewController.lights = allLights
             lightTableViewController.title = lightGroups[groupIdentifiers[index]]?.name

@@ -116,8 +116,6 @@
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
 				46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */,
 				46CCAA172308667B0054187A /* FetchLightState.swift */,
-				46CCAA132307870B0054187A /* RGBRequest.swift */,
-				460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -141,6 +139,15 @@
 				6F4B3E1A2308528A000F44DA /* CustomMessageView.xib */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		46EF2DAD230EF5FC0021B28B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				46CCAA132307870B0054187A /* RGBRequest.swift */,
+				460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		6FA9CDDD23062EF20011A2F8 = {
@@ -170,6 +177,7 @@
 			children = (
 				6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */,
 				46CCAA0C2307058A0054187A /* Models */,
+				46EF2DAD230EF5FC0021B28B /* Helpers */,
 				46CCAA0D230705940054187A /* Controllers */,
 				46CCAA0E230705A30054187A /* Storyboards */,
 				6FA9CDF223062EF30011A2F8 /* Assets.xcassets */,
