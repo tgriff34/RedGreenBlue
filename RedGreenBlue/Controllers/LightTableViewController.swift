@@ -240,6 +240,7 @@ extension LightTableViewController {
         cell.switch.setOn(light.state.on! ? true : false, animated: true)
 
         cell.slider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
+        cell.slider.value = Float(light.state.brightness!) / 2.54
         cell.slider.tag = indexPath.row
 
         return cell

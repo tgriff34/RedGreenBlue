@@ -126,34 +126,37 @@ class LightGroupsTableViewController: UITableViewController {
                 return
             }
 
-            var flag: Bool = false
-            var numberOfLightsOn: Int = 0
-            var averageBrightnessOfLightsOn: Int = 0
-            for identifier in group.lightIdentifiers! {
-                guard let state = self.allLights[identifier]?.state else {
-                    return
-                }
-                if state.on! == true {
-                    averageBrightnessOfLightsOn += state.brightness!
-                    numberOfLightsOn += 1
-                    flag = true
-                }
-            }
-            cell.switch.setOn(flag, animated: true)
+            let (averageBrightnessOfLightsOn, numberOfLightsOn) = getAverageBrightnessAndNumberOfLightsOn(from: group)
+
+            numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: true) : cell.switch.setOn(false, animated: true)
+
             cell.numberOfLightsLabel.text = self.parseNumberOfLightsOn(for: self.lightGroups[groupIdentifier]!,
                                                                        numberOfLightsOn)
 
-            if numberOfLightsOn > 0 {
-                UIView.animate(withDuration: 1, animations: {
+            UIView.animate(withDuration: 1, animations: {
+                if numberOfLightsOn > 0 {
                     cell.lightBrightnessSlider.setValue(Float(averageBrightnessOfLightsOn / numberOfLightsOn) / 2.54,
                                                         animated: true)
-                })
-            } else {
-                UIView.animate(withDuration: 1, animations: {
+                } else {
                     cell.lightBrightnessSlider.setValue(1, animated: true)
-                })
+                }
+            })
+        }
+    }
+
+    func getAverageBrightnessAndNumberOfLightsOn(from group: Group) -> (Int, Int) {
+        var numberOfLightsOn: Int = 0
+        var averageBrightnessOfLightsOn: Int = 0
+        for identifier in group.lightIdentifiers! {
+            guard let state = self.allLights[identifier]?.state else {
+                return (0, 0)
+            }
+            if state.on! == true {
+                averageBrightnessOfLightsOn += state.brightness!
+                numberOfLightsOn += 1
             }
         }
+        return (averageBrightnessOfLightsOn, numberOfLightsOn)
     }
 
     func parseNumberOfLightsOn(for group: Group, _ number: Int) -> String {
@@ -203,7 +206,6 @@ class LightGroupsTableViewController: UITableViewController {
                     self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 })
             case .ended:
-                //print("Slider: starting heartbeat")
                 self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 print("Slider: \(sender.tag) \(sender.value)")
                 self.updateCells(ignoring: self.groupIdentifiers[sender.tag], from: self.API_KEY, completion: {
@@ -253,12 +255,21 @@ extension LightGroupsTableViewController {
             return cell
         }
 
+        let (averageBrightness, numberOfLightsOn) = getAverageBrightnessAndNumberOfLightsOn(from: group)
+
         cell.label.text = group.name
+        cell.numberOfLightsLabel.text = parseNumberOfLightsOn(for: group, numberOfLightsOn)
 
         cell.switch.tag = indexPath.row
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
 
         cell.lightBrightnessSlider.tag = indexPath.row
+        if numberOfLightsOn > 0 {
+            cell.lightBrightnessSlider.setValue(Float(averageBrightness / numberOfLightsOn) / 2.54,
+                                                animated: true)
+        } else {
+            cell.lightBrightnessSlider.setValue(1, animated: true)
+        }
         cell.lightBrightnessSlider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
 
         return cell
@@ -279,7 +290,6 @@ extension LightGroupsTableViewController {
                     return
             }
             swiftyHue.stopHeartbeat()
-            //lightTableViewController.swiftyHue = swiftyHue
             lightTableViewController.rgbBridge = rgbBridge
             lightTableViewController.lightIdentifiers = lightGroups[groupIdentifiers[index]]?.lightIdentifiers
             lightTableViewController.lights = allLights
