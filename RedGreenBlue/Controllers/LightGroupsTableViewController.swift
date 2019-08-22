@@ -41,12 +41,18 @@ class LightGroupsTableViewController: UITableViewController {
 
         swiftyHue.startHeartbeat()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidGroupUpdate(_:)),
-                                               name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.groupsUpdated.rawValue), // swiftlint:disable:this line_length
-            object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
-                                               name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue), // swiftlint:disable:this line_length
-            object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(onDidGroupUpdate(_:)),
+                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.groupsUpdated.rawValue),
+                         object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(onDidLightUpdate(_:)),
+                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+                         object: nil)
 
         fetchGroupsAndLights {
             self.tableView.reloadData()
@@ -167,17 +173,19 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     @objc func switchChanged(_ sender: UISwitch!) {
-        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(groupIdentifiers[sender.tag],
-                                                            withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
-                                                            completionHandler: { (error) in
-                                                            guard error == nil else {
-                                                                print("Error sending setLightStateForGroupWithId:",
-                                                                      "\(String(describing: error?.description))")
-                                                                return
-                                                            }
-                                                            self.updateCells(ignoring: nil,
-                                                                             from: self.API_KEY,
-                                                                             completion: nil)
+        swiftyHue
+            .bridgeSendAPI
+            .setLightStateForGroupWithId(groupIdentifiers[sender.tag],
+                                         withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
+                                         completionHandler: { (error) in
+                                            guard error == nil else {
+                                                print("Error sending setLightStateForGroupWithId:",
+                                                      "\(String(describing: error?.description))")
+                                                return
+                                            }
+                                            self.updateCells(ignoring: nil,
+                                                             from: self.API_KEY,
+                                                             completion: nil)
         })
     }
 
@@ -224,7 +232,9 @@ class LightGroupsTableViewController: UITableViewController {
                 self.swiftyHue.bridgeSendAPI.updateLightStateForId(identifier,
                                                                    withLightState: lightState,
                                                                    transitionTime: nil,
-                                                                   completionHandler: { _ in self.previousTimer = nil })
+                                                                   completionHandler: { _ in
+                                                                    self.previousTimer = nil
+                })
             }
         }
     }
@@ -273,7 +283,9 @@ extension LightGroupsTableViewController {
             }
             lightTableViewController.swiftyHue = swiftyHue
             lightTableViewController.lightIdentifiers = lightGroups[groupIdentifiers[index]]?.lightIdentifiers
+            lightTableViewController.lights = allLights
             lightTableViewController.title = lightGroups[groupIdentifiers[index]]?.name
+            lightTableViewController.groupIdentifier = groupIdentifiers[index]
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
