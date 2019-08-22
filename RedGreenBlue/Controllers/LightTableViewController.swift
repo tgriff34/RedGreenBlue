@@ -72,6 +72,7 @@ class LightTableViewController: UITableViewController {
                 completion?()
             })
         case CACHE_KEY:
+            self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
             updateCellsToScreen()
         default:
             break
