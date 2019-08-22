@@ -49,6 +49,11 @@ class LightTableViewController: UITableViewController {
         updateCells(from: API_KEY, completion: nil)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        swiftyHue.stopHeartbeat()
+    }
+
     // MARK: - Private funcs
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {

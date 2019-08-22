@@ -35,8 +35,6 @@ class LightGroupsTableViewController: UITableViewController {
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .groups)
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
 
-        swiftyHue.startHeartbeat()
-
         NotificationCenter
             .default
             .addObserver(self,
@@ -58,10 +56,13 @@ class LightGroupsTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.updateCells(ignoring: nil, from: API_KEY, completion: nil)
+        self.updateCells(ignoring: nil, from: API_KEY, completion: {
+            self.swiftyHue.startHeartbeat()
+        })
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
         swiftyHue.stopHeartbeat()
     }
 
