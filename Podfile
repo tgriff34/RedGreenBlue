@@ -11,6 +11,7 @@ target 'RedGreenBlue' do
   pod 'RealmSwift', '~> 3.17'
   pod 'SwiftMessages'
   pod 'SwiftLint'
+  pod 'FlexColorPicker'
 
 
   target 'RedGreenBlueTests' do

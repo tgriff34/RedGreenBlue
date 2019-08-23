@@ -36,7 +36,6 @@ class LightTableViewController: UITableViewController {
         RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
 
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
-        swiftyHue.startHeartbeat()
 
         NotificationCenter
             .default
@@ -47,6 +46,13 @@ class LightTableViewController: UITableViewController {
 
         setupNavigationSwitch()
         updateCells(from: API_KEY, completion: nil)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        updateCells(from: API_KEY, completion: {
+            self.swiftyHue.startHeartbeat()
+        })
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -245,5 +251,32 @@ extension LightTableViewController {
         cell.slider.tag = indexPath.row
 
         return cell
+    }
+}
+
+// MARK: - Navigation
+extension LightTableViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "ShowColorPickerSegue":
+            print("")
+            guard let colorPickerViewController = segue.destination as? ColorPickerViewController,
+                let index = tableView.indexPathForSelectedRow?.row else {
+                    print("Error could not cast \(segue.destination) as LightTableViewController")
+                    print("Error could not get index selected:",
+                          "\(String(describing: tableView.indexPathForSelectedRow?.row))",
+                        " from tableview.indexPathForSelectedRow?.row")
+                    return
+            }
+            let light = lights![lightIdentifiers![index]]
+
+            colorPickerViewController.lightState = light?.state
+            colorPickerViewController.title = light?.name
+            colorPickerViewController.swiftyHue = swiftyHue
+            colorPickerViewController.light = lightIdentifiers![index]
+
+        default:
+            print("Error performing segue: \(String(describing: segue.identifier))")
+        }
     }
 }

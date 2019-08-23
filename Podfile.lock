@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.8.0)
   - CocoaAsyncSocket (7.6.3)
+  - FlexColorPicker (1.2.1)
   - Gloss (2.1.0)
   - Realm (3.17.3):
     - Realm/Headers (= 3.17.3)
@@ -23,6 +24,7 @@ PODS:
     - Gloss (= 2.1.0)
 
 DEPENDENCIES:
+  - FlexColorPicker
   - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
@@ -32,6 +34,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - CocoaAsyncSocket
+    - FlexColorPicker
     - Gloss
     - Realm
     - RealmSwift
@@ -51,6 +54,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  FlexColorPicker: 2c6fe41cb33a650d5934fad75ab0e25df4b5af2f
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
   Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
@@ -58,6 +62,6 @@ SPEC CHECKSUMS:
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
 
-PODFILE CHECKSUM: 105a614de313f9d1faacd7d658b22f3080a611d9
+PODFILE CHECKSUM: b943bf7d4f7e36009fc838722c14822ec2ce1fd8
 
 COCOAPODS: 1.7.0

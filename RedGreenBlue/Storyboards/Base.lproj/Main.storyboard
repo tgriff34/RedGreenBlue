@@ -228,6 +228,7 @@
                                     <outlet property="label" destination="Ybe-ly-Kea" id="hOh-5Z-vTN"/>
                                     <outlet property="slider" destination="iDc-Mj-s64" id="s6a-Lb-b76"/>
                                     <outlet property="switch" destination="dmV-yD-6dG" id="55C-jT-RVX"/>
+                                    <segue destination="ola-6L-n2P" kind="show" identifier="ShowColorPickerSegue" id="r1E-Uk-PPa"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -240,6 +241,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rz2-YH-a5O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4244.927536231884" y="-454.01785714285711"/>
+        </scene>
+        <!--Color Picker View Controller-->
+        <scene sceneID="og0-4g-AEK">
+            <objects>
+                <viewController id="ola-6L-n2P" customClass="ColorPickerViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ihQ-4S-kUN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="OOD-eP-1kZ"/>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="6qF-Rt-WBe"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ebY-1Y-gJn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5378" y="-454"/>
         </scene>
         <!--First-->
         <scene sceneID="yge-fL-sKE">
