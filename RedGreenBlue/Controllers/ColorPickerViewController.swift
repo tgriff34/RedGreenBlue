@@ -49,6 +49,7 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
 
         var lightState = LightState()
+        lightState.on = true
         lightState.hue = Int(hue * 65280)
         lightState.saturation = Int(saturation * 254)
 

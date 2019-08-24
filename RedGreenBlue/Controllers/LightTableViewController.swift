@@ -45,11 +45,11 @@ class LightTableViewController: UITableViewController {
                          object: nil)
 
         setupNavigationSwitch()
-        updateCells(from: API_KEY, completion: nil)
+        //updateCells(from: API_KEY, completion: nil)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         updateCells(from: API_KEY, completion: {
             self.swiftyHue.startHeartbeat()
         })
@@ -247,8 +247,12 @@ extension LightTableViewController {
         cell.switch.setOn(light.state.on! ? true : false, animated: true)
 
         cell.slider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
-        cell.slider.value = Float(light.state.brightness!) / 2.54
         cell.slider.tag = indexPath.row
+        if light.state.on! {
+            cell.slider.value = Float(light.state.brightness!) / 2.54
+        } else {
+            cell.slider.value = 1
+        }
 
         return cell
     }
