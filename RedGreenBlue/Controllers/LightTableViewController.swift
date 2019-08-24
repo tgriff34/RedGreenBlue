@@ -157,12 +157,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                                     self.updateCells(from: self.API_KEY, completion: nil)
         })
     }
-
-    private var previousTimer: Timer? = nil {
-        willSet {
-            previousTimer?.invalidate()
-        }
-    }
     @objc func sliderChanged(_ sender: UISlider!, _ event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -170,10 +164,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                 print("Slider began")
                 swiftyHue.stopHeartbeat()
             case .moved:
-                guard previousTimer == nil else { return }
-                previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+                RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
                     self.setBrightnessForLight(at: sender.tag, with: sender.value)
-                })
+                }
             case .ended:
                 print("Slider ended")
                 self.setBrightnessForLight(at: sender.tag, with: sender.value)
@@ -201,7 +194,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                                               String(describing: error?.description))
                                         return
                                     }
-                                    self.previousTimer = nil
         })
     }
 

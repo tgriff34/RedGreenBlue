@@ -189,11 +189,6 @@ class LightGroupsTableViewController: UITableViewController {
         })
     }
 
-    private var previousTimer: Timer? = nil {
-        willSet {
-            previousTimer?.invalidate()
-        }
-    }
     @objc func sliderChanged(_ sender: UISlider!, _ event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -201,10 +196,9 @@ class LightGroupsTableViewController: UITableViewController {
                 print("Slider: stopping hearbeat")
                 swiftyHue.stopHeartbeat()
             case .moved:
-                guard previousTimer == nil else { return }
-                previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+                RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
                     self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
-                })
+                }
             case .ended:
                 self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
                 print("Slider: \(sender.tag) \(sender.value)")
@@ -228,12 +222,8 @@ class LightGroupsTableViewController: UITableViewController {
             if state.on! == true {
                 var lightState = LightState()
                 lightState.brightness = Int(value * 2.54)
-                self.swiftyHue.bridgeSendAPI.updateLightStateForId(identifier,
-                                                                   withLightState: lightState,
-                                                                   transitionTime: nil,
-                                                                   completionHandler: { _ in
-                                                                    self.previousTimer = nil
-                })
+                self.swiftyHue.bridgeSendAPI.updateLightStateForId(identifier, withLightState: lightState,
+                                                                   transitionTime: nil, completionHandler: { _ in })
             }
         }
     }
