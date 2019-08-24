@@ -9,23 +9,27 @@
 import UIKit
 import SwiftyHue
 
-class LightTableViewController: UITableViewController {
+class LightTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let API_KEY: String = "API_KEY" //swiftlint:disable:this identifier_name
     private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
 
     var groupIdentifier: String?
+    var group: Group?
     var lights: [String: Light]?
     var lightIdentifiers: [String]?
     var rgbBridge: RGBHueBridge?
 
     let swiftyHue = SwiftyHue()
 
+    @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.estimatedRowHeight = 400
         tableView.rowHeight = UITableView.automaticDimension
 
@@ -45,7 +49,6 @@ class LightTableViewController: UITableViewController {
                          object: nil)
 
         setupNavigationSwitch()
-        //updateCells(from: API_KEY, completion: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -225,14 +228,15 @@ class LightTableViewController: UITableViewController {
 
 // MARK: - Tableview
 extension LightTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let count = lightIdentifiers?.count else {
             print("Error retrieving lightIdentifiers?.count - returning 0")
             return 0
         }
         return count
     }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
 
@@ -262,8 +266,7 @@ extension LightTableViewController {
 extension LightTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
-        case "ShowColorPickerSegue":
-            print("")
+        case "SingleLightColorPickerSegue":
             guard let colorPickerViewController = segue.destination as? ColorPickerViewController,
                 let index = tableView.indexPathForSelectedRow?.row else {
                     print("Error could not cast \(segue.destination) as LightTableViewController")
@@ -277,8 +280,17 @@ extension LightTableViewController {
             colorPickerViewController.lightState = light?.state
             colorPickerViewController.title = light?.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.light = lightIdentifiers![index]
+            colorPickerViewController.lights = [lightIdentifiers![index]]
+        case "GroupColorPickerSegue":
+            guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
+                print("Error could not cast \(segue.destination) as LightTableViewController")
+                return
+            }
 
+            colorPickerViewController.lightState = group?.action
+            colorPickerViewController.title = group?.name
+            colorPickerViewController.swiftyHue = swiftyHue
+            colorPickerViewController.lights = lightIdentifiers!
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }

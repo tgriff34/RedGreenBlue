@@ -295,6 +295,7 @@ extension LightGroupsTableViewController {
             lightTableViewController.lights = allLights
             lightTableViewController.title = lightGroups[groupIdentifiers[index]]?.name
             lightTableViewController.groupIdentifier = groupIdentifiers[index]
+            lightTableViewController.group = lightGroups[groupIdentifiers[index]]
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")

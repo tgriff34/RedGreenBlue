@@ -13,7 +13,7 @@ import SwiftyHue
 class ColorPickerViewController: DefaultColorPickerViewController {
 
     var swiftyHue: SwiftyHue?
-    var light: String?
+    var lights: [String]?
     var lightState: LightState?
 
     override func viewDidLoad() {
@@ -29,40 +29,48 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         colorPicker.radialHsbPalette?.addTarget(self, action: #selector(touchUpInside(_:)), for: .valueChanged)
     }
 
-    private var previousTimer: Timer? = nil {
-        willSet {
-            previousTimer?.invalidate()
+    // Only send a request to the lights
+    @objc func touchUpInside(_ sender: RadialPaletteControl) {
+        RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
+            self.setLightColor(color: sender.selectedColor)
         }
     }
-    @objc func touchUpInside(_ sender: RadialPaletteControl) {
-        guard previousTimer == nil else { return }
-        previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
-            self.setLightColor(color: sender.selectedColor)
-        })
-    }
 
+    // Setting light colors
     func setLightColor(color: UIColor) {
+        guard let lights = lights else {
+            print("Error receiving lights from LightTableViewController, lights are nil")
+            return
+        }
+
+        // Get Hue and Saturation from UIColor being passed in
         var hue: CGFloat = 0
         var saturation: CGFloat = 0
         var brightness: CGFloat = 0
         var alpha: CGFloat = 0
         color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
 
+        // Create light state
         var lightState = LightState()
-        lightState.on = true
+        if lights.count == 1 { // If only one light is selected turn it on, if its a group don't turn on off lights
+            lightState.on = true
+        }
+        // Convert hue and saturation to a number the API understands
         lightState.hue = Int(hue * 65280)
         lightState.saturation = Int(saturation * 254)
 
-        swiftyHue?
-            .bridgeSendAPI
-            .updateLightStateForId(light!, withLightState: lightState,
-                                   completionHandler: { (error) in
-                                    guard error == nil else {
-                                        print("Error updateLightStateForId in setLightColor(_:_:) - ",
-                                              String(describing: error?.description))
-                                        return
-                                    }
-                                    self.previousTimer = nil
-        })
+        // For every light in lights send the API request to bridge and set the lightstate of the light
+        for light in lights {
+            swiftyHue?
+                .bridgeSendAPI
+                .updateLightStateForId(light, withLightState: lightState,
+                                       completionHandler: { (error) in
+                                        guard error == nil else {
+                                            print("Error updateLightStateForId in setLightColor(_:_:) - ",
+                                                  String(describing: error?.description))
+                                            return
+                                        }
+            })
+        }
     }
 }

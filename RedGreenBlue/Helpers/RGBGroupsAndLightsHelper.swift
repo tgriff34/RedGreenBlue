@@ -27,4 +27,16 @@ class RGBGroupsAndLightsHelper {
         }
         return lightState
     }
+    private static var previousTimer: Timer? = nil {
+        willSet {
+            previousTimer?.invalidate()
+        }
+    }
+    static func sendTimeSensistiveAPIRequest(completion: @escaping () -> Void) {
+        guard previousTimer == nil else { return }
+        previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+            previousTimer = nil
+            completion()
+        })
+    }
 }
