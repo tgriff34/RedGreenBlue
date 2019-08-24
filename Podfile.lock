@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.8.0)
   - CocoaAsyncSocket (7.6.3)
+  - FlexColorPicker (1.2.1)
   - Gloss (2.1.0)
   - Realm (3.17.3):
     - Realm/Headers (= 3.17.3)
@@ -23,15 +24,17 @@ PODS:
     - Gloss (= 2.1.0)
 
 DEPENDENCIES:
+  - FlexColorPicker
   - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
-  - SwiftyHue (from `https://github.com/Spriter/SwiftyHue.git`, branch `master`)
+  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, branch `master`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - CocoaAsyncSocket
+    - FlexColorPicker
     - Gloss
     - Realm
     - RealmSwift
@@ -41,23 +44,24 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   SwiftyHue:
     :branch: master
-    :git: https://github.com/Spriter/SwiftyHue.git
+    :git: https://github.com/griffind/SwiftyHue.git
 
 CHECKOUT OPTIONS:
   SwiftyHue:
-    :commit: 1311059386470c75d323d3bda008a7b23cf8222f
-    :git: https://github.com/Spriter/SwiftyHue.git
+    :commit: 64bba891e7afd5788861f7cdc82cbfd9735d4655
+    :git: https://github.com/griffind/SwiftyHue.git
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  FlexColorPicker: 2c6fe41cb33a650d5934fad75ab0e25df4b5af2f
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
   Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
-  SwiftyHue: 0bde1b315eb17ba206fb3250a6cf724fc4d4f71d
+  SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
 
-PODFILE CHECKSUM: d7b1a8e9435a9fd32879c55f76a842c23128428c
+PODFILE CHECKSUM: b943bf7d4f7e36009fc838722c14822ec2ce1fd8
 
-COCOAPODS: 1.7.3
+COCOAPODS: 1.7.0
