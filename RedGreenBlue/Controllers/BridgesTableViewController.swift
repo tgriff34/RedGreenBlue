@@ -15,22 +15,15 @@ class BridgesTableViewController: UITableViewController {
     var bridgeFinder = BridgeFinder()
     var bridges: [HueBridge]?
     var selectedBridge: RGBHueBridge?
-    // swift
     // swiftlint:disable:next force_try
     let linkBridgeMessageAlert: MessageView = try! SwiftMessages.viewFromNib(named: "CustomMessageView")
-//    let linkBridgeMessageAlert = MessageView.viewFromNib(layout: .customMessageView)
     let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
     var warningAlertConfig = SwiftMessages.Config()
     var errorAlertConfig = SwiftMessages.Config()
 
     var bridgeAuthenticator: BridgeAuthenticator?
 
-    // swiftlint:disable:next force_try
-    let realm = try! Realm()
-
-    //var bridgeAccessConfig: BridgeAccessConfig?
-
-    //let username: String = "4g2CnLNQaVms-ZioUscRIeTaqjf6-9RocnDhYHcM"
+    let realm: Realm? = RGBDatabaseManager.realm()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,7 +68,7 @@ class BridgesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier", for: indexPath)
 
-        let realmBridge = realm.object(ofType: RGBHueBridge.self, forPrimaryKey: self.bridges?[indexPath.row].ip)
+        let realmBridge = realm?.object(ofType: RGBHueBridge.self, forPrimaryKey: self.bridges?[indexPath.row].ip)
         cell.textLabel?.text = self.bridges?[indexPath.row].friendlyName
 
         if realmBridge != nil {
@@ -99,7 +92,7 @@ class BridgesTableViewController: UITableViewController {
             return false
         }
 
-        guard let realmBridge = realm.object(ofType: RGBHueBridge.self, forPrimaryKey: bridges?[index].ip) else {
+        guard let realmBridge = realm?.object(ofType: RGBHueBridge.self, forPrimaryKey: bridges?[index].ip) else {
             // Couldnt find the bridge so lets display the alert
             SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
             bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index],
@@ -151,9 +144,11 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         }
 
         selectedBridge.username = username
-        // swiftlint:disable:next force_try
-        try! realm.write {
-            realm.add(selectedBridge)
+
+        if let realm = realm {
+            RGBDatabaseManager.write(to: realm, closure: {
+                realm.add(selectedBridge)
+            })
         }
 
         performSegue(withIdentifier: "ConnectedToBridgeSegue", sender: self)
@@ -167,11 +162,6 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
 
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
         print(secondsLeft)
-        /*
-        let alert = UIAlertController(title: "Link", message: "Press the Hue link.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction.init(title: "Done", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        */
     }
 
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
