@@ -267,12 +267,14 @@ extension LightTableViewController {
                         " from tableview.indexPathForSelectedRow?.row")
                     return
             }
-            let light = lights![lightIdentifiers![index]]
+            guard let light = lights![lightIdentifiers![index]] else {
+                return
+            }
 
-            colorPickerViewController.lightState = light?.state
-            colorPickerViewController.title = light?.name
+            colorPickerViewController.lightState = light.state
+            colorPickerViewController.title = light.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.lights = [lightIdentifiers![index]]
+            colorPickerViewController.lights = [lightIdentifiers![index]: light]
         case "GroupColorPickerSegue":
             guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
                 print("Error could not cast \(segue.destination) as LightTableViewController")
@@ -282,7 +284,7 @@ extension LightTableViewController {
             colorPickerViewController.lightState = group?.action
             colorPickerViewController.title = group?.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.lights = lightIdentifiers!
+            colorPickerViewController.lights = lights
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }

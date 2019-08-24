@@ -13,7 +13,8 @@ import SwiftyHue
 class ColorPickerViewController: DefaultColorPickerViewController {
 
     var swiftyHue: SwiftyHue?
-    var lights: [String]?
+    var lights: [String: Light]?
+    var lightIdentifiers: [String]?
     var lightState: LightState?
 
     override func viewDidLoad() {
@@ -22,9 +23,18 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         brightnessSlider.isHidden = true
         colorPreview.isHidden = true
 
-        colorPicker.selectedColor = UIColor(hue: CGFloat(lightState!.hue!) / 65280,
-                                            saturation: CGFloat(lightState!.saturation!) / 254,
-                                            brightness: 1, alpha: 1)
+        guard let lights = lights else {
+            return
+        }
+
+        guard let lightState = lightState else {
+            return
+        }
+
+        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveLightIds(from: lights)
+
+        colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lightState.xy![0], y: lightState.xy![1]),
+                                                             forModel: lights[lightIdentifiers![0]]!.modelId)
 
         colorPicker.radialHsbPalette?.addTarget(self, action: #selector(touchUpInside(_:)), for: .valueChanged)
     }
@@ -43,34 +53,27 @@ class ColorPickerViewController: DefaultColorPickerViewController {
             return
         }
 
-        // Get Hue and Saturation from UIColor being passed in
-        var hue: CGFloat = 0
-        var saturation: CGFloat = 0
-        var brightness: CGFloat = 0
-        var alpha: CGFloat = 0
-        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-
-        // Create light state
-        var lightState = LightState()
-        if lights.count == 1 { // If only one light is selected turn it on, if its a group don't turn on off lights
-            lightState.on = true
+        guard let lightIdentifiers = lightIdentifiers else {
+            return
         }
-        // Convert hue and saturation to a number the API understands
-        lightState.hue = Int(hue * 65280)
-        lightState.saturation = Int(saturation * 254)
 
-        // For every light in lights send the API request to bridge and set the lightstate of the light
-        for light in lights {
+        for identifier in lightIdentifiers {
+            guard let light = lights[identifier] else {
+                return
+            }
+            let xyPoint: CGPoint = HueUtilities.calculateXY(selectedColor, forModel: light.modelId)
+            var lightState = LightState()
+            lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
             swiftyHue?
                 .bridgeSendAPI
-                .updateLightStateForId(light, withLightState: lightState,
+                .updateLightStateForId(identifier, withLightState: lightState,
                                        completionHandler: { (error) in
                                         guard error == nil else {
                                             print("Error updateLightStateForId in setLightColor(_:_:) - ",
                                                   String(describing: error?.description))
                                             return
                                         }
-            })
+                })
         }
     }
 }
