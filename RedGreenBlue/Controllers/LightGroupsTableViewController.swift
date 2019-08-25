@@ -48,6 +48,9 @@ class LightGroupsTableViewController: UITableViewController {
                          name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                          object: nil)
 
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
+                                                            target: self, action: #selector(addGroup))
+
         fetchGroupsAndLights {
             self.tableView.reloadData()
             self.updateCells(ignoring: nil, from: self.CACHE_KEY, completion: nil)
@@ -55,7 +58,7 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+        super.viewWillAppear(true)
         self.updateCells(ignoring: nil, from: API_KEY, completion: {
             self.swiftyHue.startHeartbeat()
         })
@@ -227,6 +230,47 @@ class LightGroupsTableViewController: UITableViewController {
             }
         }
     }
+
+    @IBAction func showEditDeleteMenu(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            let point = gestureRecognizer.location(in: self.tableView)
+            guard let indexPath = self.tableView.indexPathForRow(at: point) else {
+                print("Error get long press indexPath at point: ", point)
+                return
+            }
+
+            let menu = UIAlertController(title: lightGroups[groupIdentifiers[indexPath.row]]?.name,
+                                         message: nil, preferredStyle: .actionSheet)
+
+            let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
+                self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.groupIdentifiers[indexPath.row],
+                                                               completionHandler: { _ in
+                                                                self.deleteRowFromTableView(at: indexPath.row)
+                })
+            })
+
+            let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
+                guard let group = self.lightGroups[self.groupIdentifiers[indexPath.row]] else {
+                    print("Error getting group from long press")
+                    return
+                }
+                self.addOrEditView(group)
+            })
+
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+                menu.dismiss(animated: true, completion: nil)
+            })
+
+            menu.addAction(editAction)
+            menu.addAction(deleteAction)
+            menu.addAction(cancelAction)
+
+            present(menu, animated: true, completion: nil)
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - TABLEVIEW
@@ -264,6 +308,24 @@ extension LightGroupsTableViewController {
 
         return cell
     }
+
+    func deleteRowFromTableView(at row: Int) {
+        fetchGroupsAndLights {
+            self.tableView.beginUpdates()
+            self.tableView.deleteRows(at: [IndexPath(row: row, section: 0)],
+                                      with: .automatic)
+            self.tableView.endUpdates()
+        }
+    }
+
+    func insertRowToTableView() {
+        fetchGroupsAndLights {
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [IndexPath(row: self.lightGroups.count - 1, section: 0)],
+                                      with: .automatic)
+            self.tableView.endUpdates()
+        }
+    }
 }
 
 // MARK: - NAVIGATION
@@ -289,6 +351,31 @@ extension LightGroupsTableViewController {
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
+        }
+    }
+
+    @objc func addGroup() {
+        addOrEditView(nil)
+    }
+
+    func addOrEditView(_ group: Group?) {
+        guard let lightGroupsAddEditViewController = storyboard?.instantiateViewController(withIdentifier: "addGroup")
+            as? LightGroupsAddEditViewController else {
+                print("Error could not instantiateViewController: addGroup as? LightGroupsAddEditViewController")
+                return
+        }
+        lightGroupsAddEditViewController.group = group
+        lightGroupsAddEditViewController.lights = allLights
+        lightGroupsAddEditViewController.swiftyHue = swiftyHue
+        lightGroupsAddEditViewController.name = group?.name ?? ""
+        lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
+        let navigationController = UINavigationController(rootViewController: lightGroupsAddEditViewController)
+        present(navigationController, animated: true, completion: nil)
+
+        lightGroupsAddEditViewController.onSave = { (result) in
+            if result {
+                self.insertRowToTableView()
+            }
         }
     }
 }
