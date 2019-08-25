@@ -74,7 +74,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
             swiftyHue?.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
                                                        newLightIdentifiers: selectedLights,
                                                        completionHandler: { _ in
-                                                        self.save()
+                                                        self.cancel()
             })
         } else {
             swiftyHue?.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,

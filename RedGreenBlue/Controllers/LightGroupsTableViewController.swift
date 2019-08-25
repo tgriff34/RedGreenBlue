@@ -370,6 +370,7 @@ extension LightGroupsTableViewController {
         lightGroupsAddEditViewController.name = group?.name ?? ""
         lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
         let navigationController = UINavigationController(rootViewController: lightGroupsAddEditViewController)
+
         present(navigationController, animated: true, completion: nil)
 
         lightGroupsAddEditViewController.onSave = { (result) in
