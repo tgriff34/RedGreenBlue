@@ -16,8 +16,8 @@ class LightGroupsTableViewController: UITableViewController {
 
     var rgbBridge: RGBHueBridge?
     var groupIdentifiers: [String] = []
-    var lightGroups: [String: Group] = [:]
-    var allLights: [String: Light] = [:]
+    var groups: [String: Group] = [:]
+    var lights: [String: Light] = [:]
     let swiftyHue = SwiftyHue()
 
     override func viewDidLoad() {
@@ -49,7 +49,7 @@ class LightGroupsTableViewController: UITableViewController {
                          object: nil)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self, action: #selector(addGroup))
+                                                            target: self, action: #selector(addOrEditGroup))
 
         fetchGroupsAndLights {
             self.tableView.reloadData()
@@ -72,8 +72,8 @@ class LightGroupsTableViewController: UITableViewController {
     // MARK: - Private Funcs
     @objc func onDidGroupUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
-            self.lightGroups = cache.groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
+            self.groups = cache.groups
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
             print(self.groupIdentifiers)
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
@@ -81,7 +81,7 @@ class LightGroupsTableViewController: UITableViewController {
 
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
-            self.allLights = cache.lights
+            self.lights = cache.lights
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
@@ -89,10 +89,10 @@ class LightGroupsTableViewController: UITableViewController {
     // Fetch all groups and lights and update cells
     func fetchGroupsAndLights(completion: @escaping () -> Void) {
         RGBRequest.getGroups(with: self.swiftyHue, completion: { (groups) in
-            self.lightGroups = groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
+            self.groups = groups
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
             RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
-                self.allLights = lights
+                self.lights = lights
                 completion()
             })
         })
@@ -126,16 +126,19 @@ class LightGroupsTableViewController: UITableViewController {
                     continue
             }
 
-            guard let group = self.lightGroups[groupIdentifier] else {
+            guard let group = self.groups[groupIdentifier] else {
                 print("Error getting group at lightGroups[groupIdentifier]")
                 continue
             }
 
-            let (averageBrightnessOfLightsOn, numberOfLightsOn) = getAverageBrightnessAndNumberOfLightsOn(from: group)
+            let averageBrightnessOfLightsOn = RGBGroupsAndLightsHelper
+                .getAverageBrightnessOfLightsInGroup(group.lightIdentifiers!, lights)
+            let numberOfLightsOn = RGBGroupsAndLightsHelper
+                .getNumberOfLightsOnInGroup(group.lightIdentifiers!, lights)
 
             numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: true) : cell.switch.setOn(false, animated: true)
 
-            cell.numberOfLightsLabel.text = self.parseNumberOfLightsOn(for: self.lightGroups[groupIdentifier]!,
+            cell.numberOfLightsLabel.text = self.parseNumberOfLightsOn(for: self.groups[groupIdentifier]!,
                                                                        numberOfLightsOn)
 
             UIView.animate(withDuration: 1, animations: {
@@ -147,21 +150,6 @@ class LightGroupsTableViewController: UITableViewController {
                 }
             })
         }
-    }
-
-    func getAverageBrightnessAndNumberOfLightsOn(from group: Group) -> (Int, Int) {
-        var numberOfLightsOn: Int = 0
-        var averageBrightnessOfLightsOn: Int = 0
-        for identifier in group.lightIdentifiers! {
-            guard let state = self.allLights[identifier]?.state else {
-                return (0, 0)
-            }
-            if state.on! == true {
-                averageBrightnessOfLightsOn += state.brightness!
-                numberOfLightsOn += 1
-            }
-        }
-        return (averageBrightnessOfLightsOn, numberOfLightsOn)
     }
 
     func parseNumberOfLightsOn(for group: Group, _ number: Int) -> String {
@@ -217,11 +205,11 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     func updateLightsBrightnessForGroup(at index: Int, with value: Float) {
-        guard let group = self.lightGroups[self.groupIdentifiers[index]] else {
+        guard let group = self.groups[self.groupIdentifiers[index]] else {
             return
         }
         for identifier in group.lightIdentifiers! {
-            guard let state = self.allLights[identifier]?.state else {
+            guard let state = self.lights[identifier]?.state else {
                 return
             }
             if state.on! == true {
@@ -242,7 +230,7 @@ class LightGroupsTableViewController: UITableViewController {
                 return
             }
 
-            let menu = UIAlertController(title: lightGroups[groupIdentifiers[indexPath.row]]?.name,
+            let menu = UIAlertController(title: groups[groupIdentifiers[indexPath.row]]?.name,
                                          message: nil, preferredStyle: .actionSheet)
 
             let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
@@ -253,7 +241,7 @@ class LightGroupsTableViewController: UITableViewController {
             })
 
             let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
-                guard let group = self.lightGroups[self.groupIdentifiers[indexPath.row]] else {
+                guard let group = self.groups[self.groupIdentifiers[indexPath.row]] else {
                     print("Error getting group from long press")
                     return
                 }
@@ -278,20 +266,23 @@ class LightGroupsTableViewController: UITableViewController {
 // MARK: - TABLEVIEW
 extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lightGroups.count
+        return groups.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupsCellIdentifier") as! LightsGroupCustomCell
 
-        guard let group = lightGroups[groupIdentifiers[indexPath.row]] else {
+        guard let group = groups[groupIdentifiers[indexPath.row]] else {
             print("LightsGroupTableViewController: Error",
-                String(describing: lightGroups[groupIdentifiers[indexPath.row]]))
+                String(describing: groups[groupIdentifiers[indexPath.row]]))
             return cell
         }
 
-        let (averageBrightness, numberOfLightsOn) = getAverageBrightnessAndNumberOfLightsOn(from: group)
+        let averageBrightness = RGBGroupsAndLightsHelper.getAverageBrightnessOfLightsInGroup(group.lightIdentifiers!,
+                                                                                             lights)
+        let numberOfLightsOn = RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(group.lightIdentifiers!,
+                                                                                   lights)
 
         cell.label.text = group.name
         cell.numberOfLightsLabel.text = parseNumberOfLightsOn(for: group, numberOfLightsOn)
@@ -321,13 +312,22 @@ extension LightGroupsTableViewController {
         }
     }
 
-    func insertRowToTableView() {
+    func insertRowToTableView(with name: String) {
         fetchGroupsAndLights {
+            let index = self.getIndexOfGroup(with: name)
             self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(row: self.lightGroups.count - 1, section: 0)],
+            self.tableView.insertRows(at: [IndexPath(row: index, section: 0)],
                                       with: .automatic)
             self.tableView.endUpdates()
         }
+    }
+
+    func getIndexOfGroup(with name: String) -> Int {
+        for identifier in self.groupIdentifiers where groups[identifier]?.name == name {
+            return groupIdentifiers.index(of: identifier)!
+        }
+        print("Error getIndexOfGroup with name: ", name)
+        return 0
     }
 }
 
@@ -346,18 +346,18 @@ extension LightGroupsTableViewController {
             }
             swiftyHue.stopHeartbeat()
             lightTableViewController.rgbBridge = rgbBridge
-            lightTableViewController.lightIdentifiers = lightGroups[groupIdentifiers[index]]?.lightIdentifiers
-            lightTableViewController.lights = allLights
-            lightTableViewController.title = lightGroups[groupIdentifiers[index]]?.name
+            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
+            lightTableViewController.lights = lights
+            lightTableViewController.title = groups[groupIdentifiers[index]]?.name
             lightTableViewController.groupIdentifier = groupIdentifiers[index]
-            lightTableViewController.group = lightGroups[groupIdentifiers[index]]
+            lightTableViewController.group = groups[groupIdentifiers[index]]
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }
     }
 
-    @objc func addGroup() {
+    @objc func addOrEditGroup() {
         addOrEditView(nil)
     }
 
@@ -369,7 +369,7 @@ extension LightGroupsTableViewController {
                 return
         }
         lightGroupsAddEditViewController.group = group
-        lightGroupsAddEditViewController.lights = allLights
+        lightGroupsAddEditViewController.lights = lights
         lightGroupsAddEditViewController.swiftyHue = swiftyHue
         lightGroupsAddEditViewController.name = group?.name ?? ""
         lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
@@ -379,7 +379,7 @@ extension LightGroupsTableViewController {
 
         lightGroupsAddEditViewController.onSave = { (result) in
             if result {
-                self.insertRowToTableView()
+                self.insertRowToTableView(with: lightGroupsAddEditViewController.name)
             }
         }
     }

@@ -57,12 +57,15 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
 
     func save() {
         dismiss(animated: true, completion: nil)
-        onSave!(true)
+        if userEditing {
+            onSave?(false)
+        } else {
+            onSave?(true)
+        }
     }
 
     @objc func cancel() {
         dismiss(animated: true, completion: nil)
-        onSave!(false)
     }
 
     @objc func add() {
@@ -74,7 +77,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
             swiftyHue?.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
                                                        newLightIdentifiers: selectedLights,
                                                        completionHandler: { _ in
-                                                        self.cancel()
+                                                        self.save()
             })
         } else {
             swiftyHue?.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
@@ -82,6 +85,14 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
                                                          completionHandler: { _ in
                                                             self.save()
             })
+        }
+    }
+
+    func enableOrDisableSaveButton() {
+        if selectedLights.isEmpty || textField.text?.isEmpty ?? true {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
 }
@@ -118,7 +129,7 @@ extension LightGroupsAddEditViewController {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .checkmark
         selectedLights.append(lightIdentifiers![indexPath.row])
-        navigationItem.rightBarButtonItem?.isEnabled = true
+        enableOrDisableSaveButton()
         print(selectedLights)
     }
 
@@ -126,11 +137,7 @@ extension LightGroupsAddEditViewController {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .none
         selectedLights.remove(at: selectedLights.index(of: lightIdentifiers![indexPath.row])!)
-        if selectedLights.isEmpty {
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        } else {
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        }
+        enableOrDisableSaveButton()
         print(selectedLights)
     }
 }
@@ -143,5 +150,6 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         name = textField.text ?? ""
+        enableOrDisableSaveButton()
     }
 }

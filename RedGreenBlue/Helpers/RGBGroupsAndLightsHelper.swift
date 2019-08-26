@@ -35,6 +35,32 @@ class RGBGroupsAndLightsHelper {
         }
         return lightState
     }
+    static func getAverageBrightnessOfLightsInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
+        var averageBrightnessOfLightsOn: Int = 0
+        for identifier in lightIds {
+            guard let state = allLights[identifier]?.state else {
+                print("Error getting state of all lights")
+                return 0
+            }
+            if state.on! == true {
+                averageBrightnessOfLightsOn += state.brightness!
+            }
+        }
+        return averageBrightnessOfLightsOn
+    }
+    static func getNumberOfLightsOnInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
+        var numberOfLightsOn: Int = 0
+        for identifier in lightIds {
+            guard let state = allLights[identifier]?.state else {
+                print("Error getting state of all lights")
+                return 0
+            }
+            if state.on! == true {
+                numberOfLightsOn += 1
+            }
+        }
+        return numberOfLightsOn
+    }
     private static var previousTimer: Timer? = nil {
         willSet {
             previousTimer?.invalidate()

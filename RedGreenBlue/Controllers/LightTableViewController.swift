@@ -206,13 +206,8 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func ifAnyLightsAreOnInGroup() -> Bool {
-        for identifier in lightIdentifiers! {
-            guard let lightState = lights?[identifier]?.state else {
-                return false
-            }
-            if lightState.on! {
-                return true
-            }
+        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers!, lights!) > 0 {
+            return true
         }
         return false
     }

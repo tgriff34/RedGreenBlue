@@ -279,8 +279,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzp-jz-NcU">
-                                <rect key="frame" x="8" y="160" width="398" height="30"/>
-                                <state key="normal" title="All Lights Color"/>
+                                <rect key="frame" x="322" y="160" width="84" height="30"/>
+                                <state key="normal" title="Group Color"/>
                                 <connections>
                                     <segue destination="ola-6L-n2P" kind="show" identifier="GroupColorPickerSegue" id="MfQ-Xa-CmW"/>
                                 </connections>
@@ -334,7 +334,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="nzp-jz-NcU" firstAttribute="leading" secondItem="HYj-HM-BAm" secondAttribute="leading" constant="8" id="7Vs-1r-msm"/>
+                            <constraint firstItem="nzp-jz-NcU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="HYj-HM-BAm" secondAttribute="leading" constant="20" id="0es-7A-WMj"/>
                             <constraint firstItem="HYj-HM-BAm" firstAttribute="trailing" secondItem="nzp-jz-NcU" secondAttribute="trailing" constant="8" id="RTu-Pn-62k"/>
                             <constraint firstItem="Kwi-jE-obP" firstAttribute="leading" secondItem="HYj-HM-BAm" secondAttribute="leading" id="YnC-R3-L9V"/>
                             <constraint firstItem="Kwi-jE-obP" firstAttribute="top" secondItem="nzp-jz-NcU" secondAttribute="bottom" constant="20" id="YsR-cg-o9j"/>
