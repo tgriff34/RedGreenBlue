@@ -74,6 +74,7 @@ class LightGroupsTableViewController: UITableViewController {
         if let cache = swiftyHue.resourceCache {
             self.lightGroups = cache.groups
             self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.lightGroups)
+            print(self.groupIdentifiers)
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
@@ -122,11 +123,12 @@ class LightGroupsTableViewController: UITableViewController {
                 else {
                     print("Error getting cell for row at:",
                           "\(String(describing: self.groupIdentifiers.index(of: groupIdentifier)))")
-                    return
+                    continue
             }
 
             guard let group = self.lightGroups[groupIdentifier] else {
-                return
+                print("Error getting group at lightGroups[groupIdentifier]")
+                continue
             }
 
             let (averageBrightnessOfLightsOn, numberOfLightsOn) = getAverageBrightnessAndNumberOfLightsOn(from: group)
@@ -295,6 +297,7 @@ extension LightGroupsTableViewController {
         cell.numberOfLightsLabel.text = parseNumberOfLightsOn(for: group, numberOfLightsOn)
 
         cell.switch.tag = indexPath.row
+        numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: false) : cell.switch.setOn(false, animated: false)
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
 
         cell.lightBrightnessSlider.tag = indexPath.row
@@ -358,6 +361,7 @@ extension LightGroupsTableViewController {
         addOrEditView(nil)
     }
 
+    // Modularize
     func addOrEditView(_ group: Group?) {
         guard let lightGroupsAddEditViewController = storyboard?.instantiateViewController(withIdentifier: "addGroup")
             as? LightGroupsAddEditViewController else {

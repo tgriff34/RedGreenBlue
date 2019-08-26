@@ -15,7 +15,7 @@ class RGBGroupsAndLightsHelper {
         for group in groups {
             groupIdentifiers.append(group.key)
         }
-        groupIdentifiers.sort()
+        groupIdentifiers.sort(by: { Double($0)! < Double($1)! })
         return groupIdentifiers
     }
     static func retrieveLightIds(from lights: [String: Light]) -> [String] {
@@ -23,7 +23,7 @@ class RGBGroupsAndLightsHelper {
         for light in lights {
             lightIdentifiers.append(light.key)
         }
-        lightIdentifiers.sort()
+        lightIdentifiers.sort(by: { Double($0)! < Double($1)! })
         return lightIdentifiers
     }
     static func retrieveLightState(from sender: UISwitch) -> LightState {
