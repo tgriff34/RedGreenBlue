@@ -74,7 +74,6 @@ class LightGroupsTableViewController: UITableViewController {
         if let cache = swiftyHue.resourceCache {
             self.groups = cache.groups
             self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
-            print(self.groupIdentifiers)
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
@@ -311,24 +310,6 @@ extension LightGroupsTableViewController {
             self.tableView.endUpdates()
         }
     }
-
-    func insertRowToTableView(with name: String) {
-        fetchGroupsAndLights {
-            let index = self.getIndexOfGroup(with: name)
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(row: index, section: 0)],
-                                      with: .automatic)
-            self.tableView.endUpdates()
-        }
-    }
-
-    func getIndexOfGroup(with name: String) -> Int {
-        for identifier in self.groupIdentifiers where groups[identifier]?.name == name {
-            return groupIdentifiers.index(of: identifier)!
-        }
-        print("Error getIndexOfGroup with name: ", name)
-        return 0
-    }
 }
 
 // MARK: - NAVIGATION
@@ -379,7 +360,9 @@ extension LightGroupsTableViewController {
 
         lightGroupsAddEditViewController.onSave = { (result) in
             if result {
-                self.insertRowToTableView(with: lightGroupsAddEditViewController.name)
+                self.fetchGroupsAndLights {
+                    self.tableView.reloadData()
+                }
             }
         }
     }
