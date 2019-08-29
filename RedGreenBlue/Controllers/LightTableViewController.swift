@@ -276,10 +276,16 @@ extension LightTableViewController {
                 return
             }
 
+            var groupLights = [String: Light]()
+            for identifier in lightIdentifiers! {
+                groupLights[identifier] = lights![identifier]
+            }
+
             colorPickerViewController.lightState = group?.action
             colorPickerViewController.title = group?.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.lights = lights
+            colorPickerViewController.lights = groupLights
+            colorPickerViewController.lightIdentifiers = lightIdentifiers
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }

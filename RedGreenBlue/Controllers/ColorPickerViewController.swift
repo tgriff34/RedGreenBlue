@@ -57,12 +57,20 @@ class ColorPickerViewController: DefaultColorPickerViewController {
             return
         }
 
+        var turnOnLights: Bool = false
+        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers, lights) == 0 {
+            turnOnLights = true
+        }
+
+        print(lightIdentifiers)
+
         for identifier in lightIdentifiers {
             guard let light = lights[identifier] else {
                 return
             }
             let xyPoint: CGPoint = HueUtilities.calculateXY(selectedColor, forModel: light.modelId)
             var lightState = LightState()
+            if turnOnLights { lightState.on = true }
             lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
             swiftyHue?
                 .bridgeSendAPI

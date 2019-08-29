@@ -23,11 +23,9 @@ class LightGroupsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let rgbBridge = rgbBridge else {
-            return
-        }
+        rgbBridge = RGBDatabaseManager.realm()?.objects(RGBHueBridge.self).first
 
-        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
+        RGBRequest.setBridgeConfiguration(for: rgbBridge!, with: swiftyHue)
 
         tableView.estimatedRowHeight = 600
         tableView.rowHeight = UITableView.automaticDimension
@@ -266,6 +264,13 @@ class LightGroupsTableViewController: UITableViewController {
 extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return groups.count
+    }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+                            forRowAt indexPath: IndexPath) {
+        cell.contentView.layer.masksToBounds = true
+        let radius = cell.contentView.layer.cornerRadius
+        cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
