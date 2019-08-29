@@ -16,6 +16,7 @@ PODS:
   - SwiftMessages (7.0.0):
     - SwiftMessages/App (= 7.0.0)
   - SwiftMessages/App (7.0.0)
+  - SwiftSVG (2.3.0)
   - SwiftyHue (0.5.2):
     - SwiftyHue/Base (= 0.5.2)
     - SwiftyHue/BridgeServices (= 0.5.2)
@@ -35,6 +36,7 @@ DEPENDENCIES:
   - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
+  - SwiftSVG (from `https://github.com/matejukmar/SwiftSVG.git`, branch `cached_svg_layer_fix`)
   - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, branch `master`)
   - TORoundedButton
 
@@ -53,11 +55,17 @@ SPEC REPOS:
     - TORoundedButton
 
 EXTERNAL SOURCES:
+  SwiftSVG:
+    :branch: cached_svg_layer_fix
+    :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :branch: master
     :git: https://github.com/griffind/SwiftyHue.git
 
 CHECKOUT OPTIONS:
+  SwiftSVG:
+    :commit: 1287e7fd41d587f3d8c59daa93c9254294f9c937
+    :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :commit: 64bba891e7afd5788861f7cdc82cbfd9735d4655
     :git: https://github.com/griffind/SwiftyHue.git
@@ -73,9 +81,10 @@ SPEC CHECKSUMS:
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
+  SwiftSVG: 564783017fd4aec7f6edf124f894b14d360c6bee
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
   TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: ba4b5824a900661c0dcd433c15c89aa944570c7b
+PODFILE CHECKSUM: 6a6a69b33f432526a5eb85b7023445fe0e5efe72
 
 COCOAPODS: 1.7.0

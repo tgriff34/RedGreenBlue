@@ -7,19 +7,17 @@
 //
 
 import UIKit
+import SwiftSVG
 
 class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var subView: UIView!
+    @IBOutlet weak var lightImage: SVGView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         subView.layer.cornerRadius = 20.0
-//        subView.layer.shadowColor = UIColor.gray.cgColor
-//        subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-//        subView.layer.shadowRadius = 7.0
-//        subView.layer.shadowOpacity = 0.4
     }
 }

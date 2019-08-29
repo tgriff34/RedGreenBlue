@@ -15,6 +15,7 @@ target 'RedGreenBlue' do
   pod 'TORoundedButton'
   pod 'NVActivityIndicatorView'
   pod 'Canvas', '~> 0.1.2'
+  pod 'SwiftSVG', :git => 'https://github.com/matejukmar/SwiftSVG.git', :branch => 'cached_svg_layer_fix'
 
 
   target 'RedGreenBlueTests' do

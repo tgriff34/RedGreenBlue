@@ -53,9 +53,14 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        updateCells(from: API_KEY, completion: {
+        RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
+            self.lights = lights
+            self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
             self.swiftyHue.startHeartbeat()
         })
+//        updateCells(from: API_KEY, completion: {
+//            self.swiftyHue.startHeartbeat()
+//        })
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -250,6 +255,13 @@ extension LightTableViewController {
         } else {
             cell.slider.value = 1
         }
+
+        let image = UIView(SVGNamed: RGBGroupsAndLightsHelper.getLightImageName(modelId: light.modelId)) { (svgLayer) in
+            svgLayer.fillColor = UIColor.white.cgColor
+            svgLayer.resizeToFit(cell.lightImage.bounds)
+        }
+
+        cell.lightImage.addSubview(image)
 
         return cell
     }

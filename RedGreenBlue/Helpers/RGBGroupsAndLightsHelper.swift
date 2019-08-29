@@ -73,4 +73,25 @@ class RGBGroupsAndLightsHelper {
             completion()
         })
     }
+
+    static func getLightImageName(modelId: String) -> String {
+        switch modelId {
+        case "LCT001", "LCT007", // E27/A19/B22, Classic bulbs
+             "LCT010", "LCT014",
+             "LCT015", "LCT016",
+             "LTW004", "LTW010",
+             "LTW015", "LTW001":
+            return "bulbsSultan"
+        case "LCT002", "LCT011", // BR30 ceiling bulbs, Flood Bulbs
+             "LTW011":
+            return "bulbFlood"
+        case "LCT003":           // GU/PAR Bulbs, spot-like lights
+            return "bulbsSpot"
+        case "LST001", "LST002": // LightStrips
+            return "heroesLightstrip"
+        default:
+            print("Error getting image from modelId", modelId)
+            return ""
+        }
+    }
 }

@@ -292,23 +292,31 @@
                                                             <rect key="frame" x="18" y="170" width="362" height="31"/>
                                                         </slider>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0X-z6-44w">
-                                                            <rect key="frame" x="13" y="20" width="42" height="31"/>
+                                                            <rect key="frame" x="58" y="25.5" width="42" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wBN-gC-vtO" customClass="SVGView" customModule="SwiftSVG">
+                                                            <rect key="frame" x="20" y="20.5" width="30" height="30"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="30" id="p3z-eq-vdw"/>
+                                                                <constraint firstAttribute="width" constant="30" id="vMA-sP-EkZ"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.18823529411764706" green="0.20000000000000001" blue="0.22352941176470587" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="66q-3I-dhD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Q0X-z6-44w" secondAttribute="bottom" constant="8" id="7sj-jC-IdT"/>
-                                                        <constraint firstItem="Q0X-z6-44w" firstAttribute="leading" secondItem="vEQ-SG-Ue0" secondAttribute="leading" constant="13" id="Cqn-bL-Nh0"/>
+                                                        <constraint firstItem="wBN-gC-vtO" firstAttribute="centerY" secondItem="Q0X-z6-44w" secondAttribute="centerY" id="B2Y-gn-Yrx"/>
+                                                        <constraint firstItem="wBN-gC-vtO" firstAttribute="leading" secondItem="vEQ-SG-Ue0" secondAttribute="leading" constant="20" id="EXf-rn-GsG"/>
                                                         <constraint firstItem="66q-3I-dhD" firstAttribute="leading" secondItem="vEQ-SG-Ue0" secondAttribute="leading" constant="20" id="Ksn-b2-Msl"/>
-                                                        <constraint firstItem="VVP-AV-dne" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q0X-z6-44w" secondAttribute="trailing" constant="20" id="McH-q6-EdG"/>
                                                         <constraint firstAttribute="trailing" secondItem="66q-3I-dhD" secondAttribute="trailing" constant="20" id="Xig-dl-xpb"/>
                                                         <constraint firstItem="Q0X-z6-44w" firstAttribute="centerY" secondItem="VVP-AV-dne" secondAttribute="centerY" id="dEn-j0-URi"/>
-                                                        <constraint firstItem="Q0X-z6-44w" firstAttribute="top" secondItem="vEQ-SG-Ue0" secondAttribute="top" constant="20" id="eX9-Yi-N28"/>
+                                                        <constraint firstItem="Q0X-z6-44w" firstAttribute="leading" secondItem="wBN-gC-vtO" secondAttribute="trailing" constant="8" id="hWb-ne-vZ7"/>
+                                                        <constraint firstItem="VVP-AV-dne" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q0X-z6-44w" secondAttribute="trailing" constant="20" id="haN-fm-kri"/>
                                                         <constraint firstItem="VVP-AV-dne" firstAttribute="top" secondItem="vEQ-SG-Ue0" secondAttribute="top" constant="20" id="jJM-Bn-NFz"/>
                                                         <constraint firstAttribute="bottom" secondItem="66q-3I-dhD" secondAttribute="bottom" constant="20" id="sA4-8L-Gpx"/>
+                                                        <constraint firstItem="66q-3I-dhD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="wBN-gC-vtO" secondAttribute="bottom" constant="8" id="zLh-BX-oXQ"/>
                                                         <constraint firstAttribute="trailing" secondItem="VVP-AV-dne" secondAttribute="trailing" constant="20" id="zzk-Sl-3lP"/>
                                                     </constraints>
                                                 </view>
@@ -325,6 +333,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="label" destination="Q0X-z6-44w" id="1RY-7M-1LD"/>
+                                            <outlet property="lightImage" destination="wBN-gC-vtO" id="JUz-AY-vCn"/>
                                             <outlet property="slider" destination="66q-3I-dhD" id="s5t-7b-8zq"/>
                                             <outlet property="subView" destination="vEQ-SG-Ue0" id="WHh-6Y-z2C"/>
                                             <outlet property="switch" destination="VVP-AV-dne" id="ltq-C8-sGx"/>
