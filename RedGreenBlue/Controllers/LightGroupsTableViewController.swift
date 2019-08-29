@@ -360,6 +360,7 @@ extension LightGroupsTableViewController {
         lightGroupsAddEditViewController.name = group?.name ?? ""
         lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
         let navigationController = UINavigationController(rootViewController: lightGroupsAddEditViewController)
+        navigationController.navigationBar.barStyle = .black
 
         present(navigationController, animated: true, completion: nil)
 
