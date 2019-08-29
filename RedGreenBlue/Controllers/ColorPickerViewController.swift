@@ -13,7 +13,8 @@ import SwiftyHue
 class ColorPickerViewController: DefaultColorPickerViewController {
 
     var swiftyHue: SwiftyHue?
-    var light: String?
+    var lights: [String: Light]?
+    var lightIdentifiers: [String]?
     var lightState: LightState?
 
     override func viewDidLoad() {
@@ -22,47 +23,65 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         brightnessSlider.isHidden = true
         colorPreview.isHidden = true
 
-        colorPicker.selectedColor = UIColor(hue: CGFloat(lightState!.hue!) / 65280,
-                                            saturation: CGFloat(lightState!.saturation!) / 254,
-                                            brightness: 1, alpha: 1)
+        guard let lights = lights else {
+            return
+        }
+
+        guard let lightState = lightState else {
+            return
+        }
+
+        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveLightIds(from: lights)
+
+        colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lightState.xy![0], y: lightState.xy![1]),
+                                                             forModel: lights[lightIdentifiers![0]]!.modelId)
 
         colorPicker.radialHsbPalette?.addTarget(self, action: #selector(touchUpInside(_:)), for: .valueChanged)
     }
 
-    private var previousTimer: Timer? = nil {
-        willSet {
-            previousTimer?.invalidate()
+    // Only send a request to the lights
+    @objc func touchUpInside(_ sender: RadialPaletteControl) {
+        RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
+            self.setLightColor(color: sender.selectedColor)
         }
     }
-    @objc func touchUpInside(_ sender: RadialPaletteControl) {
-        guard previousTimer == nil else { return }
-        previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
-            self.setLightColor(color: sender.selectedColor)
-        })
-    }
 
+    // Setting light colors
     func setLightColor(color: UIColor) {
-        var hue: CGFloat = 0
-        var saturation: CGFloat = 0
-        var brightness: CGFloat = 0
-        var alpha: CGFloat = 0
-        color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        guard let lights = lights else {
+            print("Error receiving lights from LightTableViewController, lights are nil")
+            return
+        }
 
-        var lightState = LightState()
-        lightState.on = true
-        lightState.hue = Int(hue * 65280)
-        lightState.saturation = Int(saturation * 254)
+        guard let lightIdentifiers = lightIdentifiers else {
+            return
+        }
 
-        swiftyHue?
-            .bridgeSendAPI
-            .updateLightStateForId(light!, withLightState: lightState,
-                                   completionHandler: { (error) in
-                                    guard error == nil else {
-                                        print("Error updateLightStateForId in setLightColor(_:_:) - ",
-                                              String(describing: error?.description))
-                                        return
-                                    }
-                                    self.previousTimer = nil
-        })
+        var turnOnLights: Bool = false
+        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers, lights) == 0 {
+            turnOnLights = true
+        }
+
+        print(lightIdentifiers)
+
+        for identifier in lightIdentifiers {
+            guard let light = lights[identifier] else {
+                return
+            }
+            let xyPoint: CGPoint = HueUtilities.calculateXY(selectedColor, forModel: light.modelId)
+            var lightState = LightState()
+            if turnOnLights { lightState.on = true }
+            lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
+            swiftyHue?
+                .bridgeSendAPI
+                .updateLightStateForId(identifier, withLightState: lightState,
+                                       completionHandler: { (error) in
+                                        guard error == nil else {
+                                            print("Error updateLightStateForId in setLightColor(_:_:) - ",
+                                                  String(describing: error?.description))
+                                            return
+                                        }
+                })
+        }
     }
 }

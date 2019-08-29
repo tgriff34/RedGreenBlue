@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import SwiftSVG
 
 class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var subView: UIView!
+    @IBOutlet weak var lightImage: SVGView!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        subView.layer.cornerRadius = 20.0
+    }
 }

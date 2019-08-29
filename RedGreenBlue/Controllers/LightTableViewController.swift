@@ -9,23 +9,27 @@
 import UIKit
 import SwiftyHue
 
-class LightTableViewController: UITableViewController {
+class LightTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let API_KEY: String = "API_KEY" //swiftlint:disable:this identifier_name
     private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
 
     var groupIdentifier: String?
+    var group: Group?
     var lights: [String: Light]?
     var lightIdentifiers: [String]?
     var rgbBridge: RGBHueBridge?
 
     let swiftyHue = SwiftyHue()
 
+    @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.estimatedRowHeight = 400
         tableView.rowHeight = UITableView.automaticDimension
 
@@ -45,14 +49,18 @@ class LightTableViewController: UITableViewController {
                          object: nil)
 
         setupNavigationSwitch()
-        //updateCells(from: API_KEY, completion: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        updateCells(from: API_KEY, completion: {
+        RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
+            self.lights = lights
+            self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
             self.swiftyHue.startHeartbeat()
         })
+//        updateCells(from: API_KEY, completion: {
+//            self.swiftyHue.startHeartbeat()
+//        })
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -154,12 +162,6 @@ class LightTableViewController: UITableViewController {
                                     self.updateCells(from: self.API_KEY, completion: nil)
         })
     }
-
-    private var previousTimer: Timer? = nil {
-        willSet {
-            previousTimer?.invalidate()
-        }
-    }
     @objc func sliderChanged(_ sender: UISlider!, _ event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -167,10 +169,9 @@ class LightTableViewController: UITableViewController {
                 print("Slider began")
                 swiftyHue.stopHeartbeat()
             case .moved:
-                guard previousTimer == nil else { return }
-                previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+                RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
                     self.setBrightnessForLight(at: sender.tag, with: sender.value)
-                })
+                }
             case .ended:
                 print("Slider ended")
                 self.setBrightnessForLight(at: sender.tag, with: sender.value)
@@ -198,7 +199,6 @@ class LightTableViewController: UITableViewController {
                                               String(describing: error?.description))
                                         return
                                     }
-                                    self.previousTimer = nil
         })
     }
 
@@ -211,13 +211,8 @@ class LightTableViewController: UITableViewController {
     }
 
     func ifAnyLightsAreOnInGroup() -> Bool {
-        for identifier in lightIdentifiers! {
-            guard let lightState = lights?[identifier]?.state else {
-                return false
-            }
-            if lightState.on! {
-                return true
-            }
+        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers!, lights!) > 0 {
+            return true
         }
         return false
     }
@@ -225,14 +220,21 @@ class LightTableViewController: UITableViewController {
 
 // MARK: - Tableview
 extension LightTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let count = lightIdentifiers?.count else {
             print("Error retrieving lightIdentifiers?.count - returning 0")
             return 0
         }
         return count
     }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.contentView.layer.masksToBounds = true
+        let radius = cell.contentView.layer.cornerRadius
+        cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
 
@@ -254,6 +256,13 @@ extension LightTableViewController {
             cell.slider.value = 1
         }
 
+        let image = UIView(SVGNamed: RGBGroupsAndLightsHelper.getLightImageName(modelId: light.modelId)) { (svgLayer) in
+            svgLayer.fillColor = UIColor.white.cgColor
+            svgLayer.resizeToFit(cell.lightImage.bounds)
+        }
+
+        cell.lightImage.addSubview(image)
+
         return cell
     }
 }
@@ -262,8 +271,7 @@ extension LightTableViewController {
 extension LightTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
-        case "ShowColorPickerSegue":
-            print("")
+        case "SingleLightColorPickerSegue":
             guard let colorPickerViewController = segue.destination as? ColorPickerViewController,
                 let index = tableView.indexPathForSelectedRow?.row else {
                     print("Error could not cast \(segue.destination) as LightTableViewController")
@@ -272,13 +280,30 @@ extension LightTableViewController {
                         " from tableview.indexPathForSelectedRow?.row")
                     return
             }
-            let light = lights![lightIdentifiers![index]]
+            guard let light = lights![lightIdentifiers![index]] else {
+                return
+            }
 
-            colorPickerViewController.lightState = light?.state
-            colorPickerViewController.title = light?.name
+            colorPickerViewController.lightState = light.state
+            colorPickerViewController.title = light.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.light = lightIdentifiers![index]
+            colorPickerViewController.lights = [lightIdentifiers![index]: light]
+        case "GroupColorPickerSegue":
+            guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
+                print("Error could not cast \(segue.destination) as LightTableViewController")
+                return
+            }
 
+            var groupLights = [String: Light]()
+            for identifier in lightIdentifiers! {
+                groupLights[identifier] = lights![identifier]
+            }
+
+            colorPickerViewController.lightState = group?.action
+            colorPickerViewController.title = group?.name
+            colorPickerViewController.swiftyHue = swiftyHue
+            colorPickerViewController.lights = groupLights
+            colorPickerViewController.lightIdentifiers = lightIdentifiers
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
         }

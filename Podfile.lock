@@ -1,8 +1,12 @@
 PODS:
   - Alamofire (4.8.0)
+  - Canvas (0.1.2)
   - CocoaAsyncSocket (7.6.3)
   - FlexColorPicker (1.2.1)
   - Gloss (2.1.0)
+  - NVActivityIndicatorView (4.7.0):
+    - NVActivityIndicatorView/Presenter (= 4.7.0)
+  - NVActivityIndicatorView/Presenter (4.7.0)
   - Realm (3.17.3):
     - Realm/Headers (= 3.17.3)
   - Realm/Headers (3.17.3)
@@ -12,6 +16,7 @@ PODS:
   - SwiftMessages (7.0.0):
     - SwiftMessages/App (= 7.0.0)
   - SwiftMessages/App (7.0.0)
+  - SwiftSVG (2.3.0)
   - SwiftyHue (0.5.2):
     - SwiftyHue/Base (= 0.5.2)
     - SwiftyHue/BridgeServices (= 0.5.2)
@@ -22,46 +27,64 @@ PODS:
     - Alamofire (= 4.8.0)
     - CocoaAsyncSocket (= 7.6.3)
     - Gloss (= 2.1.0)
+  - TORoundedButton (1.1.2)
 
 DEPENDENCIES:
+  - Canvas (~> 0.1.2)
   - FlexColorPicker
+  - NVActivityIndicatorView
   - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
+  - SwiftSVG (from `https://github.com/matejukmar/SwiftSVG.git`, branch `cached_svg_layer_fix`)
   - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, branch `master`)
+  - TORoundedButton
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - Canvas
     - CocoaAsyncSocket
     - FlexColorPicker
     - Gloss
+    - NVActivityIndicatorView
     - Realm
     - RealmSwift
     - SwiftLint
     - SwiftMessages
+    - TORoundedButton
 
 EXTERNAL SOURCES:
+  SwiftSVG:
+    :branch: cached_svg_layer_fix
+    :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :branch: master
     :git: https://github.com/griffind/SwiftyHue.git
 
 CHECKOUT OPTIONS:
+  SwiftSVG:
+    :commit: 1287e7fd41d587f3d8c59daa93c9254294f9c937
+    :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :commit: 64bba891e7afd5788861f7cdc82cbfd9735d4655
     :git: https://github.com/griffind/SwiftyHue.git
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   FlexColorPicker: 2c6fe41cb33a650d5934fad75ab0e25df4b5af2f
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
+  NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
+  SwiftSVG: 564783017fd4aec7f6edf124f894b14d360c6bee
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
+  TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: b943bf7d4f7e36009fc838722c14822ec2ce1fd8
+PODFILE CHECKSUM: 6a6a69b33f432526a5eb85b7023445fe0e5efe72
 
 COCOAPODS: 1.7.0

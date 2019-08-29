@@ -13,4 +13,10 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var lightBrightnessSlider: UISlider!
+    @IBOutlet weak var subView: UIView!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        subView.layer.cornerRadius = 20.0
+    }
 }
