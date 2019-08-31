@@ -90,9 +90,11 @@ extension InitialBridgeFinderViewController: BridgeAuthenticatorDelegate {
 
         if let realm = realm {
             RGBDatabaseManager.write(to: realm, closure: {
-                realm.add(rgbBridge!)
+                realm.add(rgbBridge!, update: .modified)
             })
         }
+
+        UserDefaults.standard.set(rgbBridge?.ipAddress, forKey: "DefaultBridge")
 
         activityIndicatorView?.stopAnimating()
         showStartButton()

@@ -52,7 +52,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
             return
         }
 
-        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveLightIds(from: lights)
+        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(lights)
     }
 
     func save() {

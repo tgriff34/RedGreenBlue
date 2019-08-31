@@ -11,16 +11,39 @@ import SwiftyHue
 
 class LightTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    enum TypeOfCell {
+        case lights
+        case scenes
+    }
+
     private let API_KEY: String = "API_KEY" //swiftlint:disable:this identifier_name
     private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
+
+    var rgbBridge: RGBHueBridge?
+    let swiftyHue = SwiftyHue()
 
     var groupIdentifier: String?
     var group: Group?
     var lights: [String: Light]?
     var lightIdentifiers: [String]?
-    var rgbBridge: RGBHueBridge?
 
-    let swiftyHue = SwiftyHue()
+    var scenes: [String: PartialScene]?
+    var sceneIdentifiers: [String]?
+
+    var tableCell = TypeOfCell.lights
+
+    @IBAction func lightsButton(_ sender: Any) {
+        if tableCell != .lights {
+            tableCell = .lights
+            tableView.reloadData()
+        }
+    }
+    @IBAction func scenesButton(_ sender: Any) {
+        if tableCell != .scenes {
+            tableCell = .scenes
+            tableView.reloadData()
+        }
+    }
 
     @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
@@ -58,6 +81,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
             self.swiftyHue.startHeartbeat()
         })
+
+        swiftyHue.resourceAPI.fetchScenes({ (result) in
+            self.scenes = result.value
+            self.sceneIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.scenes!)
+        })
+
 //        updateCells(from: API_KEY, completion: {
 //            self.swiftyHue.startHeartbeat()
 //        })
@@ -235,35 +264,63 @@ extension LightTableViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
+        switch tableCell {
+        case .lights:
+            //swiftlint:disable:next force_cast
+            let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
 
-        guard let light = lights?[lightIdentifiers![indexPath.row]] else {
-            print("Error could not retrieve light from lights group")
+            guard let light = lights?[lightIdentifiers![indexPath.row]] else {
+                print("Error could not retrieve light from lights group")
+                return cell
+            }
+
+            cell.label.text = light.name
+            cell.switch.tag = indexPath.row
+            cell.switch.addTarget(self, action: #selector(cellSwitchChanged(_:)), for: .valueChanged)
+            cell.switch.setOn(light.state.on! ? true : false, animated: true)
+
+            cell.slider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
+            cell.slider.tag = indexPath.row
+            if light.state.on! {
+                cell.slider.value = Float(light.state.brightness!) / 2.54
+            } else {
+                cell.slider.value = 1
+            }
+
+            let image =
+                UIView(SVGNamed: RGBGroupsAndLightsHelper.getLightImageName(modelId: light.modelId)) { (svgLayer) in
+                svgLayer.fillColor = UIColor.white.cgColor
+                svgLayer.resizeToFit(cell.lightImage.bounds)
+            }
+
+            cell.lightImage.addSubview(image)
+
+            return cell
+
+        case .scenes:
+            // swiftlint:disable:next force_cast
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
+
+            guard let scene = scenes?[sceneIdentifiers![indexPath.row]] else {
+                print("Error could not retrieve scene from scenes group")
+                return cell
+            }
+
+            cell.label.text = scene.name
+
             return cell
         }
+    }
 
-        cell.label.text = light.name
-        cell.switch.tag = indexPath.row
-        cell.switch.addTarget(self, action: #selector(cellSwitchChanged(_:)), for: .valueChanged)
-        cell.switch.setOn(light.state.on! ? true : false, animated: true)
-
-        cell.slider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
-        cell.slider.tag = indexPath.row
-        if light.state.on! {
-            cell.slider.value = Float(light.state.brightness!) / 2.54
-        } else {
-            cell.slider.value = 1
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch tableCell {
+        case .lights:
+            return
+        case .scenes:
+            swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(sceneIdentifiers![indexPath.row],
+                                                              inGroupWithIdentifier: group!.identifier,
+                                                              completionHandler: { _ in })
         }
-
-        let image = UIView(SVGNamed: RGBGroupsAndLightsHelper.getLightImageName(modelId: light.modelId)) { (svgLayer) in
-            svgLayer.fillColor = UIColor.white.cgColor
-            svgLayer.resizeToFit(cell.lightImage.bounds)
-        }
-
-        cell.lightImage.addSubview(image)
-
-        return cell
     }
 }
 

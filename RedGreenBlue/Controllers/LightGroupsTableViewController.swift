@@ -23,9 +23,13 @@ class LightGroupsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        rgbBridge = RGBDatabaseManager.realm()?.objects(RGBHueBridge.self).first
+        let ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
+        rgbBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
 
-        RGBRequest.setBridgeConfiguration(for: rgbBridge!, with: swiftyHue)
+        guard let rgbBridge = rgbBridge else {
+            return
+        }
+        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
 
         tableView.estimatedRowHeight = 600
         tableView.rowHeight = UITableView.automaticDimension
@@ -71,7 +75,7 @@ class LightGroupsTableViewController: UITableViewController {
     @objc func onDidGroupUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
             self.groups = cache.groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
@@ -87,7 +91,7 @@ class LightGroupsTableViewController: UITableViewController {
     func fetchGroupsAndLights(completion: @escaping () -> Void) {
         RGBRequest.getGroups(with: self.swiftyHue, completion: { (groups) in
             self.groups = groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
             RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
                 self.lights = lights
                 completion()

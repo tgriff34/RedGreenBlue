@@ -10,22 +10,15 @@ import Foundation
 import SwiftyHue
 
 class RGBGroupsAndLightsHelper {
-    static func retrieveGroupIds(from groups: [String: Group]) -> [String] {
-        var groupIdentifiers: [String] = []
-        for group in groups {
-            groupIdentifiers.append(group.key)
+    static func retrieveIds(_ objects: [String: Any]) -> [String] {
+        var identifiers: [String] = []
+        for object in objects {
+            identifiers.append(object.key)
         }
-        groupIdentifiers.sort(by: { Double($0)! < Double($1)! })
-        return groupIdentifiers
+        identifiers.sort(by: { $0 < $1 })
+        return identifiers
     }
-    static func retrieveLightIds(from lights: [String: Light]) -> [String] {
-        var lightIdentifiers: [String] = []
-        for light in lights {
-            lightIdentifiers.append(light.key)
-        }
-        lightIdentifiers.sort(by: { Double($0)! < Double($1)! })
-        return lightIdentifiers
-    }
+
     static func retrieveLightState(from sender: UISwitch) -> LightState {
         var lightState = LightState()
         if sender.isOn {
@@ -35,6 +28,7 @@ class RGBGroupsAndLightsHelper {
         }
         return lightState
     }
+
     static func getAverageBrightnessOfLightsInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
         var averageBrightnessOfLightsOn: Int = 0
         for identifier in lightIds {
@@ -48,6 +42,7 @@ class RGBGroupsAndLightsHelper {
         }
         return averageBrightnessOfLightsOn
     }
+
     static func getNumberOfLightsOnInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
         var numberOfLightsOn: Int = 0
         for identifier in lightIds {
@@ -61,6 +56,7 @@ class RGBGroupsAndLightsHelper {
         }
         return numberOfLightsOn
     }
+
     private static var previousTimer: Timer? = nil {
         willSet {
             previousTimer?.invalidate()
