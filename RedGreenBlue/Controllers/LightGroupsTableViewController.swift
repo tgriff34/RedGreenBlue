@@ -50,6 +50,8 @@ class LightGroupsTableViewController: UITableViewController {
                          name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                          object: nil)
 
+        RGBRequest.setUpConnectionListeners()
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
 
@@ -62,6 +64,7 @@ class LightGroupsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.updateCells(ignoring: nil, from: API_KEY, completion: {
+            self.tableView.reloadData()
             self.swiftyHue.startHeartbeat()
         })
     }

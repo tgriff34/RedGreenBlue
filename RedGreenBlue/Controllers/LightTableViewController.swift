@@ -71,6 +71,8 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                          name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                          object: nil)
 
+        RGBRequest.setUpConnectionListeners()
+
         setupNavigationSwitch()
     }
 
@@ -84,7 +86,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
         swiftyHue.resourceAPI.fetchScenes({ (result) in
             self.scenes = result.value
-            self.sceneIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.scenes!)
+            guard let scenes = self.scenes else {
+                return
+            }
+            self.sceneIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(scenes)
         })
 
 //        updateCells(from: API_KEY, completion: {
