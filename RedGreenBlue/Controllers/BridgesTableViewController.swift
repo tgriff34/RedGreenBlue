@@ -12,18 +12,19 @@ import RealmSwift
 import SwiftMessages
 
 class BridgesTableViewController: UITableViewController {
+
     var bridgeFinder = BridgeFinder()
-    var bridges: [HueBridge]?
+    var bridges = [HueBridge]()
+    var authorizedBridges = [RGBHueBridge]()
     var selectedBridge: RGBHueBridge?
+    var bridgeAuthenticator: BridgeAuthenticator?
+    let realm: Realm? = RGBDatabaseManager.realm()
+
     // swiftlint:disable:next force_try
     let linkBridgeMessageAlert: MessageView = try! SwiftMessages.viewFromNib(named: "CustomMessageView")
     let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
     var warningAlertConfig = SwiftMessages.Config()
     var errorAlertConfig = SwiftMessages.Config()
-
-    var bridgeAuthenticator: BridgeAuthenticator?
-
-    let realm: Realm? = RGBDatabaseManager.realm()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,19 +49,35 @@ class BridgesTableViewController: UITableViewController {
         linkFailMessageAlert.button?.isHidden = true
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
 
+        guard let results = realm?.objects(RGBHueBridge.self) else {
+            print("Error no bridges")
+            return
+        }
+        authorizedBridges = Array(results)
+
         bridgeFinder.delegate = self
         bridgeFinder.start()
     }
+}
 
-    override func viewWillAppear(_ animated: Bool) {
-        tableView.reloadData()
+// MARK: - Table view data source
+extension BridgesTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
 
-    // MARK: - Table view data source
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Authorized Bridges"
+        } else if section == 1 && bridges.count > 0 {
+            return "Found Bridges"
+        }
+        return ""
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        guard let bridges = bridges else {
-            return 0
+        if section == 0 {
+            return authorizedBridges.count
         }
         return bridges.count
     }
@@ -68,64 +85,61 @@ class BridgesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier", for: indexPath)
 
-        let realmBridge = realm?.object(ofType: RGBHueBridge.self, forPrimaryKey: self.bridges?[indexPath.row].ip)
-        cell.textLabel?.text = self.bridges?[indexPath.row].friendlyName
-
-        if realmBridge != nil {
+        switch indexPath.section {
+        case 0:
+            if let selectedBridge = UserDefaults.standard.object(forKey: "DefaultBridge"),
+                self.authorizedBridges[indexPath.row].ipAddress == selectedBridge as? String {
+                cell.setSelected(true, animated: false)
+            }
+            cell.textLabel?.text = self.authorizedBridges[indexPath.row].friendlyName
             cell.detailTextLabel?.text = "Connected"
-        } else {
+        case 1:
+            cell.textLabel?.text = self.bridges[indexPath.row].friendlyName
             cell.detailTextLabel?.text = "Not connected"
+        default:
+            break
         }
 
         return cell
     }
 
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        guard let index = tableView.indexPathForSelectedRow?.row else {
-            return false
-        }
-
-        guard let realmBridge = realm?.object(ofType: RGBHueBridge.self, forPrimaryKey: bridges?[index].ip) else {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            UserDefaults.standard.set(authorizedBridges[indexPath.row].ipAddress, forKey: "DefaultBridge")
+        case 1:
             // Couldnt find the bridge so lets display the alert
             SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
-            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges![index],
+            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges[indexPath.row],
                                                       uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
-            selectedBridge = RGBHueBridge(hueBridge: bridges![index])
+            selectedBridge = RGBHueBridge(hueBridge: bridges[indexPath.row])
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()
-            return false
-        }
-
-        selectedBridge = realmBridge
-
-        return true
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "ConnectedToBridgeSegue":
-            guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
-                print("Error could not cast \(segue.destination) as LightGroupsTableViewController")
-                return
-            }
-
-            lightGroupsTableViewController.rgbBridge = selectedBridge
         default:
-            print("Error with segue: \(String(describing: segue.identifier))")
+            break
         }
     }
 }
 
 extension BridgesTableViewController: BridgeFinderDelegate {
-
     func bridgeFinder(_ finder: BridgeFinder, didFinishWithResult bridges: [HueBridge]) {
+        for bridge in bridges {
+            let contains = authorizedBridges.filter({ $0.ipAddress == bridge.ip })
+            if contains.isEmpty {
+                self.bridges.append(bridge)
+            }
+        }
 
-        self.bridges = bridges
-
-        tableView.reloadData()
+        if self.bridges.isEmpty {
+            let emptyMessage = MessageView.viewFromNib(layout: .cardView)
+            emptyMessage.configureTheme(backgroundColor: view.tintColor, foregroundColor: .white)
+            emptyMessage.configureContent(title: "", body: "No new bridges found")
+            emptyMessage.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+            emptyMessage.button?.isHidden = true
+            (emptyMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
+            SwiftMessages.show(view: emptyMessage)
+        }
+        tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
     }
 }
 
@@ -147,7 +161,10 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
             })
         }
 
-        performSegue(withIdentifier: "ConnectedToBridgeSegue", sender: self)
+        authorizedBridges.append(selectedBridge)
+        bridges = bridges.filter { $0.ip == selectedBridge.ipAddress }
+
+        tableView.reloadSections(IndexSet(arrayLiteral: 0, 1), with: .automatic)
     }
 
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {

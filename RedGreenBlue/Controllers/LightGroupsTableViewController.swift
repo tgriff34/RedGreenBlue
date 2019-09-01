@@ -15,17 +15,23 @@ class LightGroupsTableViewController: UITableViewController {
     private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
 
     var rgbBridge: RGBHueBridge?
-    var groupIdentifiers: [String] = []
-    var groups: [String: Group] = [:]
-    var lights: [String: Light] = [:]
+    var groupIdentifiers = [String]()
+    var groups = [String: Group]()
+    var lights = [String: Light]()
     let swiftyHue = SwiftyHue()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        rgbBridge = RGBDatabaseManager.realm()?.objects(RGBHueBridge.self).first
+        let ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
+        rgbBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
 
-        RGBRequest.setBridgeConfiguration(for: rgbBridge!, with: swiftyHue)
+        guard let rgbBridge = rgbBridge else {
+            return
+        }
+        print(rgbBridge.username)
+
+        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
 
         tableView.estimatedRowHeight = 600
         tableView.rowHeight = UITableView.automaticDimension
@@ -46,6 +52,8 @@ class LightGroupsTableViewController: UITableViewController {
                          name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                          object: nil)
 
+        RGBRequest.setUpConnectionListeners()
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
 
@@ -58,6 +66,7 @@ class LightGroupsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.updateCells(ignoring: nil, from: API_KEY, completion: {
+            self.tableView.reloadData()
             self.swiftyHue.startHeartbeat()
         })
     }
@@ -71,7 +80,7 @@ class LightGroupsTableViewController: UITableViewController {
     @objc func onDidGroupUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
             self.groups = cache.groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
             self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
         }
     }
@@ -87,7 +96,7 @@ class LightGroupsTableViewController: UITableViewController {
     func fetchGroupsAndLights(completion: @escaping () -> Void) {
         RGBRequest.getGroups(with: self.swiftyHue, completion: { (groups) in
             self.groups = groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveGroupIds(from: self.groups)
+            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
             RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
                 self.lights = lights
                 completion()
@@ -332,7 +341,7 @@ extension LightGroupsTableViewController {
             }
             swiftyHue.stopHeartbeat()
             lightTableViewController.rgbBridge = rgbBridge
-            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
+            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]!.lightIdentifiers!
             lightTableViewController.lights = lights
             lightTableViewController.title = groups[groupIdentifiers[index]]?.name
             lightTableViewController.groupIdentifier = groupIdentifiers[index]

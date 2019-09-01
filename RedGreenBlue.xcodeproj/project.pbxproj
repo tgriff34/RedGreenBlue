@@ -12,6 +12,7 @@
 		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
+		46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */; };
 		46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* BridgeModel.swift */; };
 		46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */; };
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
@@ -54,6 +55,7 @@
 		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
+		46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsSceneCustomCell.swift; sourceTree = "<group>"; };
 		46CCAA0A2307025C0054187A /* BridgeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeModel.swift; sourceTree = "<group>"; };
 		46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGroupsTableViewController.swift; sourceTree = "<group>"; };
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				46CCAA0A2307025C0054187A /* BridgeModel.swift */,
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
 				46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */,
+				46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
+				46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */,
 				46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

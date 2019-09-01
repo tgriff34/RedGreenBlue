@@ -31,7 +31,7 @@ class ColorPickerViewController: DefaultColorPickerViewController {
             return
         }
 
-        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveLightIds(from: lights)
+        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(lights)
 
         colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lightState.xy![0], y: lightState.xy![1]),
                                                              forModel: lights[lightIdentifiers![0]]!.modelId)
