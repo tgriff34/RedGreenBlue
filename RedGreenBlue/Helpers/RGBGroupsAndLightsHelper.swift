@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyHue
+import fluid_slider
 
 class RGBGroupsAndLightsHelper {
     static func retrieveIds(_ objects: [String: Any]) -> [String] {
@@ -55,6 +56,28 @@ class RGBGroupsAndLightsHelper {
             }
         }
         return numberOfLightsOn
+    }
+
+    static func setupBrightnessSlider(_ slider: Slider) {
+        let labelTextAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12, weight: .bold),
+                                                                  .foregroundColor: UIColor.white]
+        slider.attributedTextForFraction = { fraction in
+            let formatter = NumberFormatter()
+            formatter.maximumIntegerDigits = 3
+            formatter.maximumFractionDigits = 0
+            let formattedString = formatter.string(from: (fraction * 100) as NSNumber) ?? ""
+            let string = String(format: "%@%@", formattedString, "%")
+            return NSAttributedString(string: string, attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .bold),
+                                                                   .foregroundColor: UIColor.black])
+        }
+        slider.backgroundColor = .clear
+        slider.setMinimumLabelAttributedText(NSAttributedString(string: "0%", attributes: labelTextAttributes))
+        slider.setMaximumLabelAttributedText(NSAttributedString(string: "100%", attributes: labelTextAttributes))
+        slider.fraction = 0.5
+        slider.shadowOffset = CGSize(width: 0, height: 10)
+        slider.shadowBlur = 5
+        slider.shadowColor = UIColor(white: 0, alpha: 0.1)
+        slider.valueViewColor = .white
     }
 
     private static var previousTimer: Timer? = nil {

@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import fluid_slider
 
 class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
-    @IBOutlet weak var lightBrightnessSlider: UISlider!
+    @IBOutlet weak var slider: Slider!
     @IBOutlet weak var subView: UIView!
 
     override func awakeFromNib() {

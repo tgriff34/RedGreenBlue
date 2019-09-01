@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyHue
+import fluid_slider
 
 class LightGroupsTableViewController: UITableViewController {
 
@@ -149,10 +150,9 @@ class LightGroupsTableViewController: UITableViewController {
 
             UIView.animate(withDuration: 1, animations: {
                 if numberOfLightsOn > 0 {
-                    cell.lightBrightnessSlider.setValue(Float(averageBrightnessOfLightsOn / numberOfLightsOn) / 2.54,
-                                                        animated: true)
+                    cell.slider.fraction = CGFloat(averageBrightnessOfLightsOn / numberOfLightsOn) / 254
                 } else {
-                    cell.lightBrightnessSlider.setValue(1, animated: true)
+                    cell.slider.fraction = 0
                 }
             })
         }
@@ -188,25 +188,9 @@ class LightGroupsTableViewController: UITableViewController {
         })
     }
 
-    @objc func sliderChanged(_ sender: UISlider!, _ event: UIEvent) {
-        if let touchEvent = event.allTouches?.first {
-            switch touchEvent.phase {
-            case .began:
-                print("Slider: stopping hearbeat")
-                swiftyHue.stopHeartbeat()
-            case .moved:
-                RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
-                    self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
-                }
-            case .ended:
-                self.updateLightsBrightnessForGroup(at: sender.tag, with: sender.value)
-                print("Slider: \(sender.tag) \(sender.value)")
-                self.updateCells(ignoring: self.groupIdentifiers[sender.tag], from: self.API_KEY, completion: {
-                    self.swiftyHue.startHeartbeat()
-                })
-            default:
-                break
-            }
+    @objc func sliderChanged(_ sender: Slider!) {
+        RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
+            self.updateLightsBrightnessForGroup(at: sender.tag, with: Float(sender.fraction * 100))
         }
     }
 
@@ -304,14 +288,24 @@ extension LightGroupsTableViewController {
         numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: false) : cell.switch.setOn(false, animated: false)
         cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
 
-        cell.lightBrightnessSlider.tag = indexPath.row
-        if numberOfLightsOn > 0 {
-            cell.lightBrightnessSlider.setValue(Float(averageBrightness / numberOfLightsOn) / 2.54,
-                                                animated: true)
-        } else {
-            cell.lightBrightnessSlider.setValue(1, animated: true)
+        cell.slider.tag = indexPath.row
+        cell.slider.contentViewColor = view.tintColor
+        RGBGroupsAndLightsHelper.setupBrightnessSlider(cell.slider)
+        cell.slider.addTarget(self, action: #selector(sliderChanged(_:)), for: .valueChanged)
+        cell.slider.didBeginTracking = { (slider) in
+            self.swiftyHue.stopHeartbeat()
         }
-        cell.lightBrightnessSlider.addTarget(self, action: #selector(sliderChanged(_:_:)), for: .valueChanged)
+        cell.slider.didEndTracking = { (slider) in
+            self.updateLightsBrightnessForGroup(at: slider.tag, with: Float(slider.fraction * 100))
+            self.updateCells(ignoring: nil, from: self.API_KEY, completion: {
+                self.swiftyHue.startHeartbeat()
+            })
+        }
+        if numberOfLightsOn > 0 {
+            cell.slider.fraction = CGFloat(averageBrightness / numberOfLightsOn) / 254
+        } else {
+            cell.slider.fraction = 0
+        }
 
         return cell
     }
