@@ -15,9 +15,9 @@ class LightGroupsTableViewController: UITableViewController {
     private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
 
     var rgbBridge: RGBHueBridge?
-    var groupIdentifiers: [String] = []
-    var groups: [String: Group] = [:]
-    var lights: [String: Light] = [:]
+    var groupIdentifiers = [String]()
+    var groups = [String: Group]()
+    var lights = [String: Light]()
     let swiftyHue = SwiftyHue()
 
     override func viewDidLoad() {
@@ -29,6 +29,8 @@ class LightGroupsTableViewController: UITableViewController {
         guard let rgbBridge = rgbBridge else {
             return
         }
+        print(rgbBridge.username)
+
         RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
 
         tableView.estimatedRowHeight = 600
@@ -339,7 +341,7 @@ extension LightGroupsTableViewController {
             }
             swiftyHue.stopHeartbeat()
             lightTableViewController.rgbBridge = rgbBridge
-            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]?.lightIdentifiers
+            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]!.lightIdentifiers!
             lightTableViewController.lights = lights
             lightTableViewController.title = groups[groupIdentifiers[index]]?.name
             lightTableViewController.groupIdentifier = groupIdentifiers[index]

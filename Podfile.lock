@@ -37,7 +37,7 @@ DEPENDENCIES:
   - SwiftLint
   - SwiftMessages
   - SwiftSVG (from `https://github.com/matejukmar/SwiftSVG.git`, branch `cached_svg_layer_fix`)
-  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, tag `0.5.3`)
+  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, tag `0.5.4`)
   - TORoundedButton
 
 SPEC REPOS:
@@ -60,7 +60,7 @@ EXTERNAL SOURCES:
     :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :git: https://github.com/griffind/SwiftyHue.git
-    :tag: 0.5.3
+    :tag: 0.5.4
 
 CHECKOUT OPTIONS:
   SwiftSVG:
@@ -68,7 +68,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
     :git: https://github.com/griffind/SwiftyHue.git
-    :tag: 0.5.3
+    :tag: 0.5.4
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -85,6 +85,6 @@ SPEC CHECKSUMS:
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
   TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: 5c329bd52917677c2f210c60b82cdc8a76373e22
+PODFILE CHECKSUM: dd98d583b9d01de5bc366d259df97738b10c9f59
 
 COCOAPODS: 1.7.0

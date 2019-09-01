@@ -24,11 +24,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     var groupIdentifier: String?
     var group: Group?
-    var lights: [String: Light]?
-    var lightIdentifiers: [String]?
+    var lights = [String: Light]()
+    var lightIdentifiers = [String]()
 
-    var scenes: [String: PartialScene]?
-    var sceneIdentifiers: [String]?
+    var scenes = [String: PartialScene]()
+    var sceneIdentifiers = [String]()
 
     var tableCell = TypeOfCell.lights
 
@@ -81,20 +81,14 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
             self.lights = lights
             self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
-            self.swiftyHue.startHeartbeat()
+            RGBRequest.getScenes(with: self.swiftyHue, completion: { (scenes) in
+                for scene in scenes where self.group?.identifier == scene.value.group {
+                    self.scenes[scene.key] = scene.value
+                }
+                self.sceneIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.scenes)
+                self.swiftyHue.startHeartbeat()
+            })
         })
-
-        swiftyHue.resourceAPI.fetchScenes({ (result) in
-            self.scenes = result.value
-            guard let scenes = self.scenes else {
-                return
-            }
-            self.sceneIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(scenes)
-        })
-
-//        updateCells(from: API_KEY, completion: {
-//            self.swiftyHue.startHeartbeat()
-//        })
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -128,13 +122,13 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func updateCellsToScreen() {
-        for identifier in lightIdentifiers! {
-            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers!.index(of: identifier)!,
+        for identifier in lightIdentifiers {
+            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers.index(of: identifier)!,
                                                                 section: 0)) as? LightsCustomCell else {
                                                                     return
             }
 
-            guard let lightState = lights?[identifier]?.state else {
+            guard let lightState = lights[identifier]?.state else {
                 return
             }
 
@@ -172,8 +166,8 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func updateCellsFromNavigationSwitch(with lightState: LightState) {
-        for identifier in lightIdentifiers! {
-            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers!.index(of: identifier)!,
+        for identifier in lightIdentifiers {
+            guard let cell = tableView.cellForRow(at: IndexPath(row: lightIdentifiers.index(of: identifier)!,
                                                                 section: 0)) as? LightsCustomCell else {
                                                                     return
             }
@@ -185,7 +179,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     @objc func cellSwitchChanged(_ sender: UISwitch!) {
         swiftyHue
             .bridgeSendAPI
-            .updateLightStateForId(lightIdentifiers![sender.tag],
+            .updateLightStateForId(lightIdentifiers[sender.tag],
                                    withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
                                    completionHandler: { (error) in
                                     guard error == nil else {
@@ -221,10 +215,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     func setBrightnessForLight(at index: Int, with value: Float) {
         var lightState = LightState()
         lightState.brightness = Int(value * 2.54)
-        print(self.lightIdentifiers![index])
+        print(self.lightIdentifiers[index])
         self.swiftyHue
             .bridgeSendAPI
-            .updateLightStateForId(self.lightIdentifiers![index],
+            .updateLightStateForId(self.lightIdentifiers[index],
                                    withLightState: lightState,
                                    transitionTime: nil,
                                    completionHandler: { (error) in
@@ -245,7 +239,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func ifAnyLightsAreOnInGroup() -> Bool {
-        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers!, lights!) > 0 {
+        if RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(lightIdentifiers, lights) > 0 {
             return true
         }
         return false
@@ -255,11 +249,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 // MARK: - Tableview
 extension LightTableViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = lightIdentifiers?.count else {
-            print("Error retrieving lightIdentifiers?.count - returning 0")
-            return 0
+        switch tableCell {
+        case .lights:
+            return lightIdentifiers.count
+        case .scenes:
+            return sceneIdentifiers.count
         }
-        return count
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -274,8 +269,7 @@ extension LightTableViewController {
             //swiftlint:disable:next force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
 
-            guard let light = lights?[lightIdentifiers![indexPath.row]] else {
-                print("Error could not retrieve light from lights group")
+            guard let light = lights[lightIdentifiers[indexPath.row]] else {
                 return cell
             }
 
@@ -298,6 +292,7 @@ extension LightTableViewController {
                 svgLayer.resizeToFit(cell.lightImage.bounds)
             }
 
+            cell.lightImage.subviews.forEach({ $0.removeFromSuperview() })
             cell.lightImage.addSubview(image)
 
             return cell
@@ -306,7 +301,7 @@ extension LightTableViewController {
             // swiftlint:disable:next force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
 
-            guard let scene = scenes?[sceneIdentifiers![indexPath.row]] else {
+            guard let scene = scenes[sceneIdentifiers[indexPath.row]] else {
                 print("Error could not retrieve scene from scenes group")
                 return cell
             }
@@ -322,7 +317,7 @@ extension LightTableViewController {
         case .lights:
             return
         case .scenes:
-            swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(sceneIdentifiers![indexPath.row],
+            swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(sceneIdentifiers[indexPath.row],
                                                               inGroupWithIdentifier: group!.identifier,
                                                               completionHandler: { _ in })
         }
@@ -342,14 +337,14 @@ extension LightTableViewController {
                         " from tableview.indexPathForSelectedRow?.row")
                     return
             }
-            guard let light = lights![lightIdentifiers![index]] else {
+            guard let light = lights[lightIdentifiers[index]] else {
                 return
             }
 
             colorPickerViewController.lightState = light.state
             colorPickerViewController.title = light.name
             colorPickerViewController.swiftyHue = swiftyHue
-            colorPickerViewController.lights = [lightIdentifiers![index]: light]
+            colorPickerViewController.lights = [lightIdentifiers[index]: light]
         case "GroupColorPickerSegue":
             guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
                 print("Error could not cast \(segue.destination) as LightTableViewController")
@@ -357,8 +352,8 @@ extension LightTableViewController {
             }
 
             var groupLights = [String: Light]()
-            for identifier in lightIdentifiers! {
-                groupLights[identifier] = lights![identifier]
+            for identifier in lightIdentifiers {
+                groupLights[identifier] = lights[identifier]
             }
 
             colorPickerViewController.lightState = group?.action

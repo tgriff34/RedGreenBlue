@@ -34,6 +34,15 @@ class RGBRequest {
             completion(lights)
         })
     }
+    static func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
+        let resourceAPI = swiftyHue.resourceAPI
+        resourceAPI.fetchScenes({ (result) in
+            guard let scenes = result.value else {
+                return
+            }
+            completion(scenes)
+        })
+    }
     static func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: RGBHueBridge.ipAddress,
