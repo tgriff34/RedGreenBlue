@@ -18,6 +18,8 @@ class RGBHueBridge: Object {
     @objc dynamic var modelDescription: String = ""
     @objc dynamic var modelName: String = ""
     @objc dynamic var serialNumber: String = ""
+    @objc dynamic var UDN: String = ""
+    var icons: [HueBridgeIcon] = []
 
     convenience init(hueBridge: HueBridge) {
         self.init()
@@ -27,10 +29,11 @@ class RGBHueBridge: Object {
         self.modelDescription = hueBridge.modelDescription
         self.modelName = hueBridge.modelName
         self.serialNumber = hueBridge.serialNumber
+        self.UDN = hueBridge.UDN
+        self.icons = hueBridge.icons
     }
 
     override static func primaryKey() -> String? {
         return "ipAddress"
     }
-
 }

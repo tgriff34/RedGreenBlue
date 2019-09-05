@@ -16,7 +16,6 @@ target 'RedGreenBlue' do
   pod 'NVActivityIndicatorView'
   pod 'Canvas', '~> 0.1.2'
   pod 'SwiftSVG', :git => 'https://github.com/matejukmar/SwiftSVG.git', :branch => 'cached_svg_layer_fix'
-  pod 'fluid-slider'
 
 
   target 'RedGreenBlueTests' do

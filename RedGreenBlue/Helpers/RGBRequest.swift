@@ -11,21 +11,51 @@ import SwiftyHue
 import SwiftMessages
 
 class RGBRequest {
-    static func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([String: Group]) -> Void) {
+
+    static let shared = RGBRequest()
+
+    func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([RGBGroup]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchGroups({ (result) in
             switch result {
             case .success:
-                guard let groups = result.value else {
-                    return
-                }
-                completion(groups)
+                guard let groups = result.value else { return }
+                self.getLights(with: swiftyHue, completion: { (lights) in
+                    var rgbGroups = [RGBGroup]()
+                    let justGroups = Array(groups.values).map({ return $0 })
+                    let justLights = Array(lights.values).map({ return $0 })
+                    for group in justGroups {
+                        var lightsInGroup = [Light]()
+                        for light in justLights where group.lightIdentifiers!.contains(light.identifier) {
+                            lightsInGroup.append(light)
+                        }
+                        lightsInGroup.sort(by: { $0.identifier < $1.identifier })
+                        rgbGroups.append(RGBGroup(name: group.name,
+                                               identifier: group.identifier,
+                                               lightIdentifiers: group.lightIdentifiers ?? [],
+                                               action: group.action,
+                                               modelId: group.modelId ?? "",
+                                               type: group.type,
+                                               lights: lightsInGroup))
+                    }
+                    rgbGroups.sort(by: { $0.identifier < $1.identifier })
+                    completion(rgbGroups)
+                })
             case .failure:
                 print("Error recieving groups from API")
             }
         })
     }
-    static func getLights(with swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
+
+    func getGroup(with identifier: String, using swiftyHue: SwiftyHue, completion: @escaping (RGBGroup) -> Void) {
+        getGroups(with: swiftyHue, completion: { (groups) in
+            for group in groups where group.identifier == identifier {
+                completion(group)
+            }
+        })
+    }
+
+    func getLights(with swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchLights({ (result) in
             guard let lights = result.value else {
@@ -34,7 +64,7 @@ class RGBRequest {
             completion(lights)
         })
     }
-    static func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
+    func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchScenes({ (result) in
             guard let scenes = result.value else {
@@ -43,14 +73,14 @@ class RGBRequest {
             completion(scenes)
         })
     }
-    static func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
+    func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: RGBHueBridge.ipAddress,
                                                     username: RGBHueBridge.username)
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
     }
 
-    static func setUpConnectionListeners() {
+    func setUpConnectionListeners() {
         NotificationCenter
             .default
             .addObserver(self,
@@ -67,23 +97,25 @@ class RGBRequest {
                          object: nil)
     }
 
-    private static var isConnected: Bool = false
-    @objc private static func onConnectionUpdate(_ notification: Notification) {
+    private var isConnected: Bool = false
+    @objc private func onConnectionUpdate(_ notification: Notification) {
         if !isConnected {
             isConnected = true
             setConnected(isConnected)
         }
     }
 
-    @objc private static func onNoConnectionUpdate(_ notification: Notification) {
+    @objc private func onNoConnectionUpdate(_ notification: Notification) {
         isConnected = false
         setConnected(isConnected)
     }
 
-    private static func setConnected(_ connected: Bool) {
+    private func setConnected(_ connected: Bool) {
         if connected {
             SwiftMessages.hide()
             let connectedMessage = MessageView.viewFromNib(layout: .cardView)
+            var connectedMessageConfig = SwiftMessages.Config()
+            connectedMessageConfig.presentationContext = .window(windowLevel: .statusBar)
             connectedMessage.configureTheme(.success)
             connectedMessage.configureContent(title: "Connected", body: "")
             connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)

@@ -8,22 +8,33 @@
 
 import UIKit
 import SwiftyHue
-import fluid_slider
 
 class LightGroupsTableViewController: UITableViewController {
-
-    private let API_KEY: String = "API_KEY" //swiftlint:disable:this identifier_name
-    private let CACHE_KEY: String = "CACHE_KEY" //swiftlint:disable:this identifier_name
-
     var rgbBridge: RGBHueBridge?
-    var groupIdentifiers = [String]()
-    var groups = [String: Group]()
-    var lights = [String: Light]()
+    var groups = [RGBGroup]()
     let swiftyHue = SwiftyHue()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.estimatedRowHeight = 600
+        tableView.rowHeight = UITableView.automaticDimension
+
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(onDidLightUpdate(_:)),
+                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+                         object: nil)
+
+        RGBRequest.shared.setUpConnectionListeners()
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
+                                                            target: self, action: #selector(addOrEditGroup))
+
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
         let ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
         rgbBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
 
@@ -32,182 +43,57 @@ class LightGroupsTableViewController: UITableViewController {
         }
         print(rgbBridge.username)
 
-        RGBRequest.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
+        RGBRequest.shared.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
 
-        tableView.estimatedRowHeight = 600
-        tableView.rowHeight = UITableView.automaticDimension
-
-        swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .groups)
         swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
-
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(onDidGroupUpdate(_:)),
-                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.groupsUpdated.rawValue),
-                         object: nil)
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(onDidLightUpdate(_:)),
-                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                         object: nil)
-
-        RGBRequest.setUpConnectionListeners()
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self, action: #selector(addOrEditGroup))
-
-        fetchGroupsAndLights {
-            self.tableView.reloadData()
-            self.updateCells(ignoring: nil, from: self.CACHE_KEY, completion: nil)
-        }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        self.updateCells(ignoring: nil, from: API_KEY, completion: {
+        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
+            self.groups = groups
             self.tableView.reloadData()
             self.swiftyHue.startHeartbeat()
         })
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
         swiftyHue.stopHeartbeat()
     }
 
     // MARK: - Private Funcs
-    @objc func onDidGroupUpdate(_ notification: Notification) {
-        if let cache = swiftyHue.resourceCache {
-            self.groups = cache.groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
-            self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
-        }
-    }
-
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
-            self.lights = cache.lights
-            self.updateCells(ignoring: nil, from: CACHE_KEY, completion: nil)
+            for light in Array(cache.lights.values) {
+                for (groupIndex, group) in groups.enumerated() where group.lightIdentifiers.contains(light.identifier) {
+                    if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
+                        self.groups[groupIndex].lights[lightIndex] = light
+                    }
+                }
+            }
+            self.fetchData(group: nil, completion: nil)
         }
     }
 
     // Fetch all groups and lights and update cells
-    func fetchGroupsAndLights(completion: @escaping () -> Void) {
-        RGBRequest.getGroups(with: self.swiftyHue, completion: { (groups) in
+    func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
+        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
             self.groups = groups
-            self.groupIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(self.groups)
-            RGBRequest.getLights(with: self.swiftyHue, completion: { (lights) in
-                self.lights = lights
-                completion()
-            })
+            self.updateUI(group)
+            completion?()
         })
     }
 
-    func updateCells(ignoring cell: String?, from KEY: String, completion: (() -> Void)?) {
-        switch KEY {
-        case API_KEY:
-            fetchGroupsAndLights(completion: {
-                print("Updating cells from api")
-                self.updateCellsToScreen(ignoring: cell)
-                completion?()
-            })
-        case CACHE_KEY:
-            print("Updating cells from cache")
-            updateCellsToScreen(ignoring: cell)
-        default:
-            print("Error updating cells from KEY: ", KEY)
+    func updateUI(_ group: RGBGroup?) {
+        for (index, subGroup) in groups.enumerated() where group?.identifier != subGroup.identifier {
+            guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+                as? LightsGroupCustomCell else { return }
+            cell.group = subGroup
         }
     }
 
-    func updateCellsToScreen(ignoring cell: String?) {
-        for groupIdentifier in self.groupIdentifiers {
-            if cell == groupIdentifier { continue }
-            guard let cell =
-                self.tableView.cellForRow(at: IndexPath(row: self.groupIdentifiers.index(of: groupIdentifier)!,
-                                                        section: 0)) as? LightsGroupCustomCell
-                else {
-                    print("Error getting cell for row at:",
-                          "\(String(describing: self.groupIdentifiers.index(of: groupIdentifier)))")
-                    continue
-            }
-
-            guard let group = self.groups[groupIdentifier] else {
-                print("Error getting group at lightGroups[groupIdentifier]")
-                continue
-            }
-
-            let averageBrightnessOfLightsOn = RGBGroupsAndLightsHelper
-                .getAverageBrightnessOfLightsInGroup(group.lightIdentifiers!, lights)
-            let numberOfLightsOn = RGBGroupsAndLightsHelper
-                .getNumberOfLightsOnInGroup(group.lightIdentifiers!, lights)
-
-            numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: true) : cell.switch.setOn(false, animated: true)
-
-            cell.numberOfLightsLabel.text = self.parseNumberOfLightsOn(for: self.groups[groupIdentifier]!,
-                                                                       numberOfLightsOn)
-
-            UIView.animate(withDuration: 1, animations: {
-                if numberOfLightsOn > 0 {
-                    cell.slider.fraction = CGFloat(averageBrightnessOfLightsOn / numberOfLightsOn) / 254
-                } else {
-                    cell.slider.fraction = 0
-                }
-            })
-        }
-    }
-
-    func parseNumberOfLightsOn(for group: Group, _ number: Int) -> String {
-        // Displays how many lights currently on in group
-        if number == group.lightIdentifiers?.count {
-            return "All lights are on"
-        } else if number == 0 {
-            return "All lights are off"
-        } else {
-            let middleString = number == 1 ? " light" : " lights"
-            let endString = number == 1 ? " is on" : " are on"
-            return String(format: "%@%@%@", "\(number)", middleString, endString)
-        }
-    }
-
-    @objc func switchChanged(_ sender: UISwitch!) {
-        swiftyHue
-            .bridgeSendAPI
-            .setLightStateForGroupWithId(groupIdentifiers[sender.tag],
-                                         withLightState: RGBGroupsAndLightsHelper.retrieveLightState(from: sender),
-                                         completionHandler: { (error) in
-                                            guard error == nil else {
-                                                print("Error sending setLightStateForGroupWithId:",
-                                                      "\(String(describing: error?.description))")
-                                                return
-                                            }
-                                            self.updateCells(ignoring: nil,
-                                                             from: self.API_KEY,
-                                                             completion: nil)
-        })
-    }
-
-    @objc func sliderChanged(_ sender: Slider!) {
-        RGBGroupsAndLightsHelper.sendTimeSensistiveAPIRequest {
-            self.updateLightsBrightnessForGroup(at: sender.tag, with: Float(sender.fraction * 100))
-        }
-    }
-
-    func updateLightsBrightnessForGroup(at index: Int, with value: Float) {
-        guard let group = self.groups[self.groupIdentifiers[index]] else {
-            return
-        }
-        for identifier in group.lightIdentifiers! {
-            guard let state = self.lights[identifier]?.state else {
-                return
-            }
-            if state.on! == true {
-                var lightState = LightState()
-                lightState.brightness = Int(value * 2.54)
-                self.swiftyHue.bridgeSendAPI.updateLightStateForId(identifier, withLightState: lightState,
-                                                                   transitionTime: nil, completionHandler: { _ in })
-            }
+    func updateLightsBrightnessForGroup(group: RGBGroup, value: Float) {
+        for light in group.lights where light.state.on! == true {
+            var lightState = LightState()
+            lightState.brightness = Int(value * 2.54)
+            RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue,
+                                                          with: lightState, completion: nil)
         }
     }
 
@@ -220,22 +106,18 @@ class LightGroupsTableViewController: UITableViewController {
                 return
             }
 
-            let menu = UIAlertController(title: groups[groupIdentifiers[indexPath.row]]?.name,
+            let menu = UIAlertController(title: groups[indexPath.row].name,
                                          message: nil, preferredStyle: .actionSheet)
 
             let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
-                self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.groupIdentifiers[indexPath.row],
+                self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.groups[indexPath.row].identifier,
                                                                completionHandler: { _ in
                                                                 self.deleteRowFromTableView(at: indexPath.row)
                 })
             })
 
             let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
-                guard let group = self.groups[self.groupIdentifiers[indexPath.row]] else {
-                    print("Error getting group from long press")
-                    return
-                }
-                self.addOrEditView(group)
+                self.addOrEditView(self.groups[indexPath.row])
             })
 
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
@@ -269,54 +151,50 @@ extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupsCellIdentifier") as! LightsGroupCustomCell
-
-        guard let group = groups[groupIdentifiers[indexPath.row]] else {
-            print("LightsGroupTableViewController: Error",
-                String(describing: groups[groupIdentifiers[indexPath.row]]))
-            return cell
-        }
-
-        let averageBrightness = RGBGroupsAndLightsHelper.getAverageBrightnessOfLightsInGroup(group.lightIdentifiers!,
-                                                                                             lights)
-        let numberOfLightsOn = RGBGroupsAndLightsHelper.getNumberOfLightsOnInGroup(group.lightIdentifiers!,
-                                                                                   lights)
-
-        cell.label.text = group.name
-        cell.numberOfLightsLabel.text = parseNumberOfLightsOn(for: group, numberOfLightsOn)
-
-        cell.switch.tag = indexPath.row
-        numberOfLightsOn > 0 ? cell.switch.setOn(true, animated: false) : cell.switch.setOn(false, animated: false)
-        cell.switch.addTarget(self, action: #selector(self.switchChanged(_:)), for: .valueChanged)
-
-        cell.slider.tag = indexPath.row
-        cell.slider.contentViewColor = view.tintColor
-        RGBGroupsAndLightsHelper.setupBrightnessSlider(cell.slider)
-        cell.slider.addTarget(self, action: #selector(sliderChanged(_:)), for: .valueChanged)
-        cell.slider.didBeginTracking = { (slider) in
-            self.swiftyHue.stopHeartbeat()
-        }
-        cell.slider.didEndTracking = { (slider) in
-            self.updateLightsBrightnessForGroup(at: slider.tag, with: Float(slider.fraction * 100))
-            self.updateCells(ignoring: nil, from: self.API_KEY, completion: {
-                self.swiftyHue.startHeartbeat()
-            })
-        }
-        if numberOfLightsOn > 0 {
-            cell.slider.fraction = CGFloat(averageBrightness / numberOfLightsOn) / 254
-        } else {
-            cell.slider.fraction = 0
-        }
-
+        cell.group = groups[indexPath.row]
+        cell.delegate = self
         return cell
     }
 
     func deleteRowFromTableView(at row: Int) {
-        fetchGroupsAndLights {
+        fetchData(group: nil, completion: {
             self.tableView.beginUpdates()
             self.tableView.deleteRows(at: [IndexPath(row: row, section: 0)],
                                       with: .automatic)
             self.tableView.endUpdates()
+        })
+    }
+}
+
+extension LightGroupsTableViewController: LightsGroupsCellDelegate {
+    func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
+                                  lightSwitchTappedFor group: RGBGroup) {
+        var lightState = LightState()
+        lightState.on = lightGroupsTableViewCell.switch.isOn
+        RGBGroupsAndLightsHelper.shared.setLightState(for: group, using: swiftyHue,
+                                                      with: lightState, completion: {
+            self.fetchData(group: nil, completion: nil)
+        })
+    }
+
+    func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
+                                  lightSliderStartedFor group: RGBGroup) {
+        swiftyHue.stopHeartbeat()
+    }
+
+    func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
+                                  lightSliderMovedFor group: RGBGroup) {
+        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest {
+            self.updateLightsBrightnessForGroup(group: group, value: lightGroupsTableViewCell.slider.value)
         }
+    }
+
+    func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
+                                  lightSliderEndedFor group: RGBGroup) {
+        self.updateLightsBrightnessForGroup(group: group, value: lightGroupTableViewCell.slider.value)
+        self.fetchData(group: group, completion: {
+            self.swiftyHue.startHeartbeat()
+        })
     }
 }
 
@@ -334,12 +212,9 @@ extension LightGroupsTableViewController {
                     return
             }
             swiftyHue.stopHeartbeat()
-            lightTableViewController.rgbBridge = rgbBridge
-            lightTableViewController.lightIdentifiers = groups[groupIdentifiers[index]]!.lightIdentifiers!
-            lightTableViewController.lights = lights
-            lightTableViewController.title = groups[groupIdentifiers[index]]?.name
-            lightTableViewController.groupIdentifier = groupIdentifiers[index]
-            lightTableViewController.group = groups[groupIdentifiers[index]]
+            lightTableViewController.swiftyHue = swiftyHue
+            lightTableViewController.title = groups[index].name
+            lightTableViewController.group = groups[index]
 
         default:
             print("Error performing segue: \(String(describing: segue.identifier))")
@@ -351,14 +226,13 @@ extension LightGroupsTableViewController {
     }
 
     // Modularize
-    func addOrEditView(_ group: Group?) {
+    func addOrEditView(_ group: RGBGroup?) {
         guard let lightGroupsAddEditViewController = storyboard?.instantiateViewController(withIdentifier: "addGroup")
             as? LightGroupsAddEditViewController else {
                 print("Error could not instantiateViewController: addGroup as? LightGroupsAddEditViewController")
                 return
         }
         lightGroupsAddEditViewController.group = group
-        lightGroupsAddEditViewController.lights = lights
         lightGroupsAddEditViewController.swiftyHue = swiftyHue
         lightGroupsAddEditViewController.name = group?.name ?? ""
         lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
@@ -369,9 +243,9 @@ extension LightGroupsTableViewController {
 
         lightGroupsAddEditViewController.onSave = { (result) in
             if result {
-                self.fetchGroupsAndLights {
+                self.fetchData(group: nil, completion: {
                     self.tableView.reloadData()
-                }
+                })
             }
         }
     }

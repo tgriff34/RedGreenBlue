@@ -11,11 +11,9 @@ import SwiftyHue
 
 class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    var group: Group?
-    var groupIdentifiers: [String]?
-    var lights: [String: Light]?
-    var lightIdentifiers: [String]?
-    var swiftyHue: SwiftyHue?
+    var group: RGBGroup!
+    var lights = [Light]()
+    var swiftyHue: SwiftyHue!
 
     var selectedLights: [String] = []
     var name: String = ""
@@ -48,11 +46,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         tableView.delegate = self
         tableView.dataSource = self
 
-        guard let lights = lights else {
-            return
-        }
-
-        lightIdentifiers = RGBGroupsAndLightsHelper.retrieveIds(lights)
+        fetchData()
     }
 
     func save() {
@@ -74,13 +68,13 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
                 print("Error did not receive editing group")
                 return
             }
-            swiftyHue?.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
+            swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
                                                        newLightIdentifiers: selectedLights,
                                                        completionHandler: { _ in
                                                         self.save()
             })
         } else {
-            swiftyHue?.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
+            swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
                                                          includeLightIds: selectedLights,
                                                          completionHandler: { _ in
                                                             self.save()
@@ -95,28 +89,28 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
+
+    func fetchData() {
+        RGBRequest.shared.getLights(with: self.swiftyHue, completion: { (lights) in
+            self.lights = Array(lights.values).map({ return $0 })
+            self.lights.sort(by: { $0.identifier < $1.identifier })
+            self.tableView.reloadData()
+        })
+    }
 }
 
 // MARK: - TableView
 extension LightGroupsAddEditViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let lights = lights else {
-            return 0
-        }
         return lights.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLightIdentifier", for: indexPath)
 
-        guard let light = lights?[lightIdentifiers![indexPath.row]] else {
-            print("Error could not receive light for: ", indexPath.row)
-            return cell
-        }
+        cell.textLabel?.text = lights[indexPath.row].name
 
-        cell.textLabel?.text = light.name
-
-        if selectedLights.contains(light.identifier) {
+        if selectedLights.contains(lights[indexPath.row].identifier) {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         } else {
             cell.accessoryType = .none
@@ -128,7 +122,7 @@ extension LightGroupsAddEditViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .checkmark
-        selectedLights.append(lightIdentifiers![indexPath.row])
+        selectedLights.append(lights[indexPath.row].identifier)
         enableOrDisableSaveButton()
         print(selectedLights)
     }
@@ -136,7 +130,7 @@ extension LightGroupsAddEditViewController {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .none
-        selectedLights.remove(at: selectedLights.index(of: lightIdentifiers![indexPath.row])!)
+        selectedLights.remove(at: selectedLights.index(of: lights[indexPath.row].identifier)!)
         enableOrDisableSaveButton()
         print(selectedLights)
     }

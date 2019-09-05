@@ -14,7 +14,7 @@ import SwiftMessages
 class BridgesTableViewController: UITableViewController {
 
     var bridgeFinder = BridgeFinder()
-    var bridges = [HueBridge]()
+    var bridges = [RGBHueBridge]()
     var authorizedBridges = [RGBHueBridge]()
     var selectedBridge: RGBHueBridge?
     var bridgeAuthenticator: BridgeAuthenticator?
@@ -48,15 +48,17 @@ class BridgesTableViewController: UITableViewController {
         linkFailMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         linkFailMessageAlert.button?.isHidden = true
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
         guard let results = realm?.objects(RGBHueBridge.self) else {
             print("Error no bridges")
             return
         }
         authorizedBridges = Array(results)
-
         bridgeFinder.delegate = self
         bridgeFinder.start()
+        tableView.reloadData()
     }
 }
 
@@ -83,23 +85,21 @@ extension BridgesTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier", for: indexPath)
+        //swiftlint:disable:next force_cast
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier") as! BridgesTableViewCell
 
         switch indexPath.section {
         case 0:
             if let selectedBridge = UserDefaults.standard.object(forKey: "DefaultBridge"),
                 self.authorizedBridges[indexPath.row].ipAddress == selectedBridge as? String {
-                cell.setSelected(true, animated: false)
+                self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
-            cell.textLabel?.text = self.authorizedBridges[indexPath.row].friendlyName
-            cell.detailTextLabel?.text = "Connected"
+            cell.bridge = self.authorizedBridges[indexPath.row]
         case 1:
-            cell.textLabel?.text = self.bridges[indexPath.row].friendlyName
-            cell.detailTextLabel?.text = "Not connected"
+            cell.bridge = self.bridges[indexPath.row]
         default:
             break
         }
-
         return cell
     }
 
@@ -109,10 +109,18 @@ extension BridgesTableViewController {
             UserDefaults.standard.set(authorizedBridges[indexPath.row].ipAddress, forKey: "DefaultBridge")
         case 1:
             // Couldnt find the bridge so lets display the alert
+            let bridge = bridges[indexPath.row]
             SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
-            bridgeAuthenticator = BridgeAuthenticator(bridge: bridges[indexPath.row],
+            bridgeAuthenticator = BridgeAuthenticator(bridge: HueBridge(ip: bridge.ipAddress,
+                                                                        deviceType: bridge.deviceType,
+                                                                        friendlyName: bridge.friendlyName,
+                                                                        modelDescription: bridge.modelDescription,
+                                                                        modelName: bridge.modelName,
+                                                                        serialNumber: bridge.serialNumber,
+                                                                        UDN: bridge.UDN,
+                                                                        icons: bridge.icons),
                                                       uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
-            selectedBridge = RGBHueBridge(hueBridge: bridges[indexPath.row])
+            selectedBridge = bridge
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()
         default:
@@ -126,7 +134,7 @@ extension BridgesTableViewController: BridgeFinderDelegate {
         for bridge in bridges {
             let contains = authorizedBridges.filter({ $0.ipAddress == bridge.ip })
             if contains.isEmpty {
-                self.bridges.append(bridge)
+                self.bridges.append(RGBHueBridge(hueBridge: bridge))
             }
         }
 
@@ -162,9 +170,8 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         }
 
         authorizedBridges.append(selectedBridge)
-        bridges = bridges.filter { $0.ip == selectedBridge.ipAddress }
-
-        tableView.reloadSections(IndexSet(arrayLiteral: 0, 1), with: .automatic)
+        bridges = bridges.filter { $0.ipAddress != selectedBridge.ipAddress }
+        tableView.reloadData()
     }
 
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {

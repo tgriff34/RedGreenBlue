@@ -3,13 +3,10 @@ PODS:
   - Canvas (0.1.2)
   - CocoaAsyncSocket (7.6.3)
   - FlexColorPicker (1.2.1)
-  - fluid-slider (1.1.0):
-    - pop
   - Gloss (2.1.0)
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
-  - pop (1.0.12)
   - Realm (3.17.3):
     - Realm/Headers (= 3.17.3)
   - Realm/Headers (3.17.3)
@@ -35,7 +32,6 @@ PODS:
 DEPENDENCIES:
   - Canvas (~> 0.1.2)
   - FlexColorPicker
-  - fluid-slider
   - NVActivityIndicatorView
   - RealmSwift (~> 3.17)
   - SwiftLint
@@ -50,10 +46,8 @@ SPEC REPOS:
     - Canvas
     - CocoaAsyncSocket
     - FlexColorPicker
-    - fluid-slider
     - Gloss
     - NVActivityIndicatorView
-    - pop
     - Realm
     - RealmSwift
     - SwiftLint
@@ -81,10 +75,8 @@ SPEC CHECKSUMS:
   Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   FlexColorPicker: 2c6fe41cb33a650d5934fad75ab0e25df4b5af2f
-  fluid-slider: 68037ac7247f16a89f3e24ff5d0167c8eea6f50b
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
-  pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
   Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
   RealmSwift: b7fdc2d18616621c31df5c7a398a45a2163f8eb0
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
@@ -93,6 +85,6 @@ SPEC CHECKSUMS:
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
   TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: b73ddb8e29aea963c428000443b2724982e6fec5
+PODFILE CHECKSUM: dd98d583b9d01de5bc366d259df97738b10c9f59
 
 COCOAPODS: 1.7.0

@@ -8,92 +8,66 @@
 
 import Foundation
 import SwiftyHue
-import fluid_slider
 
 class RGBGroupsAndLightsHelper {
-    static func retrieveIds(_ objects: [String: Any]) -> [String] {
-        var identifiers: [String] = []
-        for object in objects {
-            identifiers.append(object.key)
-        }
-        identifiers.sort(by: { $0 < $1 })
-        return identifiers
+    static let shared = RGBGroupsAndLightsHelper()
+
+    func setLightState(for group: RGBGroup, using swiftyHue: SwiftyHue,
+                       with lightState: LightState, completion: @escaping () -> Void) {
+        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(group.identifier, withLightState: lightState,
+                                                            completionHandler: { (error) in
+                                                                guard error == nil else {
+                                                                    print("Error setLightStateForGroupWithId: ",
+                                                                          String(describing: error?.description))
+                                                                    return
+                                                                }
+                                                                completion()
+        })
     }
 
-    static func retrieveLightState(from sender: UISwitch) -> LightState {
-        var lightState = LightState()
-        if sender.isOn {
-            lightState.on = true
-        } else {
-            lightState.on = false
-        }
-        return lightState
+    func setLightState(for light: Light, using swiftyHue: SwiftyHue,
+                       with lightState: LightState, completion: (() -> Void)?) {
+        swiftyHue.bridgeSendAPI.updateLightStateForId(light.identifier, withLightState: lightState,
+                                                      completionHandler: { (error) in
+                                                        guard error == nil else {
+                                                            print("Error updateLightStateForId: ",
+                                                                  String(describing: error?.description))
+                                                            return
+                                                        }
+                                                        completion?()
+        })
     }
 
-    static func getAverageBrightnessOfLightsInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
+    func getAverageBrightnessOfLightsInGroup(_ lights: [Light]) -> Int {
         var averageBrightnessOfLightsOn: Int = 0
-        for identifier in lightIds {
-            guard let state = allLights[identifier]?.state else {
-                print("Error getting state of all lights")
-                return 0
-            }
-            if state.on! == true {
-                averageBrightnessOfLightsOn += state.brightness!
-            }
+        for light in lights where light.state.on! == true {
+            averageBrightnessOfLightsOn += light.state.brightness!
         }
         return averageBrightnessOfLightsOn
     }
 
-    static func getNumberOfLightsOnInGroup(_ lightIds: [String], _ allLights: [String: Light]) -> Int {
+    func getNumberOfLightsOnInGroup(_ lights: [Light]) -> Int {
         var numberOfLightsOn: Int = 0
-        for identifier in lightIds {
-            guard let state = allLights[identifier]?.state else {
-                print("Error getting state of all lights")
-                return 0
-            }
-            if state.on! == true {
-                numberOfLightsOn += 1
-            }
+        for light in lights where light.state.on! == true {
+            numberOfLightsOn += 1
         }
         return numberOfLightsOn
     }
 
-    static func setupBrightnessSlider(_ slider: Slider) {
-        let labelTextAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12, weight: .bold),
-                                                                  .foregroundColor: UIColor.white]
-        slider.attributedTextForFraction = { fraction in
-            let formatter = NumberFormatter()
-            formatter.maximumIntegerDigits = 3
-            formatter.maximumFractionDigits = 0
-            let formattedString = formatter.string(from: (fraction * 100) as NSNumber) ?? ""
-            let string = String(format: "%@%@", formattedString, "%")
-            return NSAttributedString(string: string, attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .bold),
-                                                                   .foregroundColor: UIColor.black])
-        }
-        slider.backgroundColor = .clear
-        slider.setMinimumLabelAttributedText(NSAttributedString(string: "0%", attributes: labelTextAttributes))
-        slider.setMaximumLabelAttributedText(NSAttributedString(string: "100%", attributes: labelTextAttributes))
-        slider.fraction = 0.5
-        slider.shadowOffset = CGSize(width: 0, height: 10)
-        slider.shadowBlur = 5
-        slider.shadowColor = UIColor(white: 0, alpha: 0.1)
-        slider.valueViewColor = .white
-    }
-
-    private static var previousTimer: Timer? = nil {
+    private var previousTimer: Timer? = nil {
         willSet {
             previousTimer?.invalidate()
         }
     }
-    static func sendTimeSensistiveAPIRequest(completion: @escaping () -> Void) {
+    func sendTimeSensistiveAPIRequest(completion: @escaping () -> Void) {
         guard previousTimer == nil else { return }
         previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
-            previousTimer = nil
+            self.previousTimer = nil
             completion()
         })
     }
 
-    static func getLightImageName(modelId: String) -> String {
+    func getLightImageName(modelId: String) -> String {
         switch modelId {
         case "LCT001", "LCT007", // E27/A19/B22, Classic bulbs
              "LCT010", "LCT014",
