@@ -9,11 +9,13 @@
 import Foundation
 import SwiftyHue
 import SwiftMessages
+import RealmSwift
 
 class RGBRequest {
-
     static let shared = RGBRequest()
 
+    // Retrieves all groups and lights.  Creates a RGBGroup model which uses Group and Lights of that group.
+    // Check RGBGroup model for more detail on what is contained in that model.
     func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([RGBGroup]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchGroups({ (result) in
@@ -47,6 +49,7 @@ class RGBRequest {
         })
     }
 
+    // Retrieves a single group by using the group id, this is used in LightsVC
     func getGroup(with identifier: String, using swiftyHue: SwiftyHue, completion: @escaping (RGBGroup) -> Void) {
         getGroups(with: swiftyHue, completion: { (groups) in
             for group in groups where group.identifier == identifier {
@@ -55,6 +58,7 @@ class RGBRequest {
         })
     }
 
+    // Retrieves all lights
     func getLights(with swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchLights({ (result) in
@@ -64,6 +68,8 @@ class RGBRequest {
             completion(lights)
         })
     }
+
+    // Retrieves all scenes
     func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchScenes({ (result) in
@@ -73,30 +79,41 @@ class RGBRequest {
             completion(scenes)
         })
     }
-    func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
+
+    // Sets current bridge selected.  If the ip in UserDefaults changed it will reconfigure settings to new bridge
+    func setCurrentlySelectedBridge(ipAddress: inout String?, rgbHueBridge: inout RGBHueBridge?,
+                                    swiftyHue: inout SwiftyHue) -> Bool {
+        if ipAddress != UserDefaults.standard.object(forKey: "DefaultBridge") as? String {
+            ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
+            rgbHueBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
+            setBridgeConfiguration(for: rgbHueBridge!, with: swiftyHue)
+            swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
+            return true
+        }
+        return false
+    }
+
+    // Sets connection observers so I know whether user is connected to the bridge or not
+    func setUpConnectionListeners() {
+        NotificationCenter.default.addObserver(self, selector: #selector(onConnectionUpdate(_:)),
+                                               name: NSNotification.Name(rawValue:
+                                                BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onNoConnectionUpdate(_:)),
+                                               name: NSNotification.Name(rawValue:
+                                                BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
+                                               object: nil)
+    }
+
+    // Sets bridge configuration for setCurrentlySelectedBridge
+    private func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: RGBHueBridge.ipAddress,
                                                     username: RGBHueBridge.username)
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
     }
 
-    func setUpConnectionListeners() {
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(onConnectionUpdate(_:)),
-                         name: NSNotification
-                            .Name(BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
-                         object: nil)
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(onNoConnectionUpdate(_:)),
-                         name: NSNotification
-                            .Name(BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
-                         object: nil)
-    }
-
+    // Connection observer helper functions
     private var isConnected: Bool = false
     @objc private func onConnectionUpdate(_ notification: Notification) {
         if !isConnected {

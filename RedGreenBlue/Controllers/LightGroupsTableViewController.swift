@@ -12,48 +12,54 @@ import SwiftyHue
 class LightGroupsTableViewController: UITableViewController {
     var rgbBridge: RGBHueBridge?
     var groups = [RGBGroup]()
-    let swiftyHue = SwiftyHue()
+    var swiftyHue = SwiftyHue()
+
+    var ipAddress: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.estimatedRowHeight = 600
+        _ = RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress,
+                                                             rgbHueBridge: &rgbBridge,
+                                                             swiftyHue: &swiftyHue)
+
+        tableView.estimatedRowHeight = 200
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter
-            .default
-            .addObserver(self,
-                         selector: #selector(onDidLightUpdate(_:)),
-                         name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                         object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
+                                               name: NSNotification.Name(rawValue:
+                                                ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+                                               object: nil)
 
         RGBRequest.shared.setUpConnectionListeners()
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
 
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        let ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
-        rgbBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
-
-        guard let rgbBridge = rgbBridge else {
-            return
-        }
-        print(rgbBridge.username)
-
-        RGBRequest.shared.setBridgeConfiguration(for: rgbBridge, with: swiftyHue)
-
-        swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
             self.groups = groups
             self.tableView.reloadData()
-            self.swiftyHue.startHeartbeat()
         })
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Checks if current bridge has changed if true
+        // it starts HB and reloads data otherwise it just restarts HB
+        // ip, bridge, sh are passed by reference so objects in this class are mutated
+        if RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbBridge,
+                                                        swiftyHue: &swiftyHue) {
+            fetchData(group: nil, completion: {
+                self.swiftyHue.startHeartbeat()
+                self.tableView.reloadData()
+            })
+        } else {
+            fetchData(group: nil, completion: { self.swiftyHue.startHeartbeat() })
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         swiftyHue.stopHeartbeat()
     }
 
@@ -143,6 +149,7 @@ extension LightGroupsTableViewController {
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                             forRowAt indexPath: IndexPath) {
+        // Allows for smoother scrolling for card view
         cell.contentView.layer.masksToBounds = true
         let radius = cell.contentView.layer.cornerRadius
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
@@ -166,7 +173,9 @@ extension LightGroupsTableViewController {
     }
 }
 
+// MARK: - Groups Cell Delegate
 extension LightGroupsTableViewController: LightsGroupsCellDelegate {
+    // Light switch tapped delegate
     func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
                                   lightSwitchTappedFor group: RGBGroup) {
         var lightState = LightState()
@@ -177,11 +186,13 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
         })
     }
 
+    // Brightness slider started moving
     func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
                                   lightSliderStartedFor group: RGBGroup) {
         swiftyHue.stopHeartbeat()
     }
 
+    // Brightness slider is moving
     func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
                                   lightSliderMovedFor group: RGBGroup) {
         RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest {
@@ -189,6 +200,7 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
         }
     }
 
+    // Brightness slider stopped moving
     func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
                                   lightSliderEndedFor group: RGBGroup) {
         self.updateLightsBrightnessForGroup(group: group, value: lightGroupTableViewCell.slider.value)
