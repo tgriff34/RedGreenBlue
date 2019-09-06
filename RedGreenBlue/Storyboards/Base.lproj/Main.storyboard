@@ -37,7 +37,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="gray" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="BridgeCellIdentifier" textLabel="aU9-b1-H7M" detailTextLabel="55Q-iW-a3n" style="IBUITableViewCellStyleSubtitle" id="TtO-Zp-TTA">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="BridgeCellIdentifier" textLabel="aU9-b1-H7M" detailTextLabel="55Q-iW-a3n" style="IBUITableViewCellStyleSubtitle" id="TtO-Zp-TTA" customClass="BridgesTableViewCell" customModule="RedGreenBlue" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="55.5" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TtO-Zp-TTA" id="hiX-0w-bQa">
@@ -223,13 +223,10 @@
                                             <rect key="frame" x="8" y="8" width="398" height="384"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="fill" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OGx-0I-fwH">
-                                                    <rect key="frame" x="329" y="20" width="51" height="40.5"/>
+                                                    <rect key="frame" x="329" y="20" width="51" height="31"/>
                                                 </switch>
-                                                <slider opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="kJA-is-U6L">
-                                                    <rect key="frame" x="18" y="334" width="362" height="31"/>
-                                                </slider>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Qgc-mp-Zyv">
-                                                    <rect key="frame" x="20" y="20" width="42" height="40.5"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Qgc-mp-Zyv">
+                                                    <rect key="frame" x="20" y="15.5" width="42" height="40.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5xu-U6-Vom">
                                                             <rect key="frame" x="0.0" y="0.0" width="42" height="20.5"/>
@@ -245,19 +242,21 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
+                                                <slider opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Dlb-3O-zOW">
+                                                    <rect key="frame" x="18" y="334" width="362" height="31"/>
+                                                </slider>
                                             </subviews>
                                             <color key="backgroundColor" red="0.18823529411764706" green="0.20000000000000001" blue="0.22352941176470587" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="kJA-is-U6L" secondAttribute="trailing" constant="20" id="4Xg-bA-pLG"/>
                                                 <constraint firstItem="Qgc-mp-Zyv" firstAttribute="leading" secondItem="JYQ-i2-VPP" secondAttribute="leading" constant="20" id="6aK-Ih-dRc"/>
-                                                <constraint firstItem="kJA-is-U6L" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Qgc-mp-Zyv" secondAttribute="bottom" constant="8" id="6hh-5v-V7N"/>
                                                 <constraint firstItem="OGx-0I-fwH" firstAttribute="top" secondItem="JYQ-i2-VPP" secondAttribute="top" constant="20" id="Eqr-hr-M9p"/>
-                                                <constraint firstItem="Qgc-mp-Zyv" firstAttribute="top" secondItem="JYQ-i2-VPP" secondAttribute="top" constant="20" id="PGH-tC-UCg"/>
+                                                <constraint firstAttribute="bottom" secondItem="Dlb-3O-zOW" secondAttribute="bottom" constant="20" id="Ksl-eG-sEi"/>
+                                                <constraint firstAttribute="trailing" secondItem="Dlb-3O-zOW" secondAttribute="trailing" constant="20" id="KvH-fx-23V"/>
+                                                <constraint firstItem="Dlb-3O-zOW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Qgc-mp-Zyv" secondAttribute="bottom" constant="8" id="REI-hO-0Qi"/>
                                                 <constraint firstItem="OGx-0I-fwH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Qgc-mp-Zyv" secondAttribute="trailing" constant="20" id="bwb-q8-a4O"/>
-                                                <constraint firstAttribute="bottom" secondItem="kJA-is-U6L" secondAttribute="bottom" constant="20" id="caB-zV-sG9"/>
                                                 <constraint firstAttribute="trailing" secondItem="OGx-0I-fwH" secondAttribute="trailing" constant="20" id="d7x-c2-vSx"/>
                                                 <constraint firstItem="Qgc-mp-Zyv" firstAttribute="centerY" secondItem="OGx-0I-fwH" secondAttribute="centerY" id="flG-uX-YbP"/>
-                                                <constraint firstItem="kJA-is-U6L" firstAttribute="leading" secondItem="JYQ-i2-VPP" secondAttribute="leading" constant="20" id="oAy-FB-qKf"/>
+                                                <constraint firstItem="Dlb-3O-zOW" firstAttribute="leading" secondItem="JYQ-i2-VPP" secondAttribute="leading" constant="20" id="nm9-Yv-5F7"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -274,8 +273,8 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="label" destination="5xu-U6-Vom" id="Eqw-hO-46G"/>
-                                    <outlet property="lightBrightnessSlider" destination="kJA-is-U6L" id="GMp-8G-Poi"/>
                                     <outlet property="numberOfLightsLabel" destination="El7-K9-Fwn" id="kfQ-1u-Yij"/>
+                                    <outlet property="slider" destination="Dlb-3O-zOW" id="hVu-nV-cLg"/>
                                     <outlet property="subView" destination="JYQ-i2-VPP" id="udc-SB-wlm"/>
                                     <outlet property="switch" destination="OGx-0I-fwH" id="y0u-Bh-DdV"/>
                                     <segue destination="Mzb-3l-kLH" kind="show" identifier="SelectedLightGroupSegue" id="LI0-lK-jBW"/>
@@ -285,17 +284,11 @@
                         <connections>
                             <outlet property="dataSource" destination="EQK-1E-UAe" id="Eav-je-fk6"/>
                             <outlet property="delegate" destination="EQK-1E-UAe" id="D6N-dD-vzo"/>
-                            <outletCollection property="gestureRecognizers" destination="a7r-of-usk" appends="YES" id="ssH-j8-v6L"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Groups" id="h0i-8Y-24O"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fDt-ox-lg7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="a7r-of-usk">
-                    <connections>
-                        <action selector="showEditDeleteMenu:" destination="EQK-1E-UAe" id="u4P-tr-eJ8"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3181" y="-454"/>
         </scene>

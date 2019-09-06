@@ -13,7 +13,9 @@
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
 		46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */; };
-		46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* BridgeModel.swift */; };
+		46B6423D232000800047F233 /* RGBGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B6423C232000800047F233 /* RGBGroup.swift */; };
+		46B642402321A7510047F233 /* BridgesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */; };
+		46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* RGBHueBridge.swift */; };
 		46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */; };
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
 		46CCAA142307870B0054187A /* RGBRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* RGBRequest.swift */; };
@@ -56,7 +58,9 @@
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
 		46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsSceneCustomCell.swift; sourceTree = "<group>"; };
-		46CCAA0A2307025C0054187A /* BridgeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeModel.swift; sourceTree = "<group>"; };
+		46B6423C232000800047F233 /* RGBGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroup.swift; sourceTree = "<group>"; };
+		46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTableViewCell.swift; sourceTree = "<group>"; };
+		46CCAA0A2307025C0054187A /* RGBHueBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBHueBridge.swift; sourceTree = "<group>"; };
 		46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGroupsTableViewController.swift; sourceTree = "<group>"; };
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
 		46CCAA132307870B0054187A /* RGBRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBRequest.swift; sourceTree = "<group>"; };
@@ -148,13 +152,22 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		46CCAA0C2307058A0054187A /* Models */ = {
+		46B6423E232068960047F233 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				46CCAA0A2307025C0054187A /* BridgeModel.swift */,
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
 				46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */,
 				46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */,
+				46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		46CCAA0C2307058A0054187A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				46CCAA0A2307025C0054187A /* RGBHueBridge.swift */,
+				46B6423C232000800047F233 /* RGBGroup.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -196,6 +209,7 @@
 			children = (
 				6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */,
 				46CCAA0C2307058A0054187A /* Models */,
+				46B6423E232068960047F233 /* Views */,
 				46EF2DAD230EF5FC0021B28B /* Helpers */,
 				465144652316DA2D00156659 /* Controllers */,
 				465144662318221200156659 /* Storyboards */,
@@ -492,16 +506,18 @@
 				46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */,
 				46CCAA142307870B0054187A /* RGBRequest.swift in Sources */,
 				46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */,
+				46B6423D232000800047F233 /* RGBGroup.swift in Sources */,
 				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				46EF2DAF230F0A010021B28B /* ColorPickerViewController.swift in Sources */,
 				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
+				46B642402321A7510047F233 /* BridgesTableViewCell.swift in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
 				46EF2DAC230ED09C0021B28B /* LightsCustomCell.swift in Sources */,
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
 				46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */,
-				46CCAA0B2307025C0054187A /* BridgeModel.swift in Sources */,
+				46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
