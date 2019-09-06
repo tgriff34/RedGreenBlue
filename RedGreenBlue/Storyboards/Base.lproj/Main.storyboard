@@ -284,17 +284,11 @@
                         <connections>
                             <outlet property="dataSource" destination="EQK-1E-UAe" id="Eav-je-fk6"/>
                             <outlet property="delegate" destination="EQK-1E-UAe" id="D6N-dD-vzo"/>
-                            <outletCollection property="gestureRecognizers" destination="a7r-of-usk" appends="YES" id="ssH-j8-v6L"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Groups" id="h0i-8Y-24O"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fDt-ox-lg7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="a7r-of-usk">
-                    <connections>
-                        <action selector="showEditDeleteMenu:" destination="EQK-1E-UAe" id="u4P-tr-eJ8"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3181" y="-454"/>
         </scene>

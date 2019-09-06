@@ -130,23 +130,23 @@ class RGBRequest {
     private func setConnected(_ connected: Bool) {
         if connected {
             SwiftMessages.hide()
-            let connectedMessage = MessageView.viewFromNib(layout: .cardView)
+            let connectedMessage = MessageView.viewFromNib(layout: .messageView)
             var connectedMessageConfig = SwiftMessages.Config()
-            connectedMessageConfig.presentationContext = .window(windowLevel: .statusBar)
+            connectedMessageConfig.presentationContext = .window(windowLevel: .normal)
             connectedMessage.configureTheme(.success)
             connectedMessage.configureContent(title: "Connected", body: "")
-            connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+            connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
             connectedMessage.button?.isHidden = true
-            (connectedMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
-            SwiftMessages.show(view: connectedMessage)
+            SwiftMessages.show(config: connectedMessageConfig, view: connectedMessage)
         } else {
-            let errorMessage = MessageView.viewFromNib(layout: .cardView)
+            let errorMessage = MessageView.viewFromNib(layout: .messageView)
             var errorMessageConfig = SwiftMessages.Config()
+            errorMessageConfig.presentationContext = .window(windowLevel: .normal)
             errorMessageConfig.duration = .forever
             errorMessageConfig.interactiveHide = false
             errorMessage.configureTheme(.error)
             errorMessage.configureContent(title: "Not connected", body: "")
-            errorMessage.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+            errorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
             errorMessage.button?.isHidden = true
             (errorMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
             SwiftMessages.show(config: errorMessageConfig, view: errorMessage)

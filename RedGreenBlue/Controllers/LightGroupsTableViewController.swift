@@ -102,43 +102,6 @@ class LightGroupsTableViewController: UITableViewController {
                                                           with: lightState, completion: nil)
         }
     }
-
-    @IBAction func showEditDeleteMenu(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        switch gestureRecognizer.state {
-        case .began:
-            let point = gestureRecognizer.location(in: self.tableView)
-            guard let indexPath = self.tableView.indexPathForRow(at: point) else {
-                print("Error get long press indexPath at point: ", point)
-                return
-            }
-
-            let menu = UIAlertController(title: groups[indexPath.row].name,
-                                         message: nil, preferredStyle: .actionSheet)
-
-            let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
-                self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.groups[indexPath.row].identifier,
-                                                               completionHandler: { _ in
-                                                                self.deleteRowFromTableView(at: indexPath.row)
-                })
-            })
-
-            let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
-                self.addOrEditView(self.groups[indexPath.row])
-            })
-
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-                menu.dismiss(animated: true, completion: nil)
-            })
-
-            menu.addAction(editAction)
-            menu.addAction(deleteAction)
-            menu.addAction(cancelAction)
-
-            present(menu, animated: true, completion: nil)
-        default:
-            break
-        }
-    }
 }
 
 // MARK: - TABLEVIEW
@@ -163,13 +126,29 @@ extension LightGroupsTableViewController {
         return cell
     }
 
-    func deleteRowFromTableView(at row: Int) {
-        fetchData(group: nil, completion: {
-            self.tableView.beginUpdates()
-            self.tableView.deleteRows(at: [IndexPath(row: row, section: 0)],
-                                      with: .automatic)
-            self.tableView.endUpdates()
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                            forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            swiftyHue.bridgeSendAPI.removeGroupWithId(self.groups[indexPath.row].identifier,
+                                                           completionHandler: { _ in })
+            groups.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        default:
+            print("")
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Edit", handler: { (_, _, completionHandler) in
+            self.addOrEditView(self.groups[indexPath.row])
+            completionHandler(true)
         })
+
+        action.backgroundColor = view.tintColor
+        let configuration = UISwipeActionsConfiguration(actions: [action])
+        return configuration
     }
 }
 
