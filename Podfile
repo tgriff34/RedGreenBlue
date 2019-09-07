@@ -17,6 +17,7 @@ target 'RedGreenBlue' do
   pod 'Canvas', '~> 0.1.2'
   pod 'SwiftSVG', :git => 'https://github.com/matejukmar/SwiftSVG.git', :branch => 'cached_svg_layer_fix'
   pod 'BTNavigationDropdownMenu'
+  pod 'SwiftyBeaver'
 
 
   target 'RedGreenBlueTests' do

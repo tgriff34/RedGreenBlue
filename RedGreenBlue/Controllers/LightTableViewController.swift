@@ -170,13 +170,15 @@ extension LightTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "SingleLightColorPickerSegue":
-            guard let colorPickerViewController = segue.destination as? ColorPickerViewController,
-                let index = tableView.indexPathForSelectedRow?.row else {
-                    print("Error could not cast \(segue.destination) as LightTableViewController")
-                    print("Error could not get index selected:",
-                          "\(String(describing: tableView.indexPathForSelectedRow?.row))",
-                        " from tableview.indexPathForSelectedRow?.row")
-                    return
+            guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
+                logger.error("could not cast \(segue.destination) as LightTableViewController")
+                return
+            }
+            guard let index = tableView.indexPathForSelectedRow?.row else {
+                logger.error("could not get index selected:",
+                      "\(String(describing: tableView.indexPathForSelectedRow?.row))",
+                    " from tableview.indexPathForSelectedRow?.row")
+                return
             }
 
             let light = group.lights[index]
@@ -185,7 +187,7 @@ extension LightTableViewController {
             colorPickerViewController.lights = [light]
         case "GroupColorPickerSegue":
             guard let colorPickerViewController = segue.destination as? ColorPickerViewController else {
-                print("Error could not cast \(segue.destination) as LightTableViewController")
+                logger.error("could not cast \(segue.destination) as LightTableViewController")
                 return
             }
 
@@ -193,7 +195,7 @@ extension LightTableViewController {
             colorPickerViewController.swiftyHue = swiftyHue
             colorPickerViewController.lights = group.lights
         default:
-            print("Error performing segue: \(String(describing: segue.identifier))")
+            logger.error("Error performing segue: \(String(describing: segue.identifier))")
         }
     }
 }

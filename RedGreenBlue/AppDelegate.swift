@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import SwiftyBeaver
+
+let logger = SwiftyBeaver.self
+let console = SwiftyBeaver.self
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions
         launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        let logFile = FileDestination()
+        let consoleLog = ConsoleDestination()
+        print("LOG FILE CAN BE FOUND AT: ", logFile.logFileURL ?? "")
+        logger.addDestination(logFile)
+        console.addDestination(consoleLog)
 
         self.window = UIWindow(frame: UIScreen.main.bounds)
 

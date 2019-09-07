@@ -52,7 +52,7 @@ class BridgesTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         guard let results = realm?.objects(RGBHueBridge.self) else {
-            print("Error no bridges")
+            logger.error("no bridges")
             return
         }
         authorizedBridges = Array(results)
@@ -181,7 +181,7 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
     }
 
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
-        print(secondsLeft)
+        // seconds left until it stops waiting for button press
     }
 
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {

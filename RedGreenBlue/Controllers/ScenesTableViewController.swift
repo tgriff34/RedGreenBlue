@@ -86,7 +86,11 @@ extension ScenesTableViewController {
         swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(scenes[indexPath.row].identifier,
                                                           inGroupWithIdentifier: scenes[indexPath.row].group,
                                                           completionHandler: { (error) in
-                                                            print(String(describing: error?.description))
+                                                            guard error == nil else {
+                                                                logger.warning("recallSceneWithIdentifier ",
+                                                                               String(describing: error?.description))
+                                                                return
+                                                            }
         })
     }
 }
