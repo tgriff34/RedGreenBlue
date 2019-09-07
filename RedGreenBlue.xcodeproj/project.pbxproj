@@ -32,6 +32,7 @@
 		6FA9CE0123062EF40011A2F8 /* RedGreenBlueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE0023062EF40011A2F8 /* RedGreenBlueTests.swift */; };
 		6FA9CE0C23062EF40011A2F8 /* RedGreenBlueUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE0B23062EF40011A2F8 /* RedGreenBlueUITests.swift */; };
 		6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */; };
+		6FF6F4BE2323FCC500555EE7 /* SuccessCustomMessage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */; };
 		D1C4E6685F2D264202C18A77 /* Pods_RedGreenBlueTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40FFE1F74C8594B37BA9BB6 /* Pods_RedGreenBlueTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		6FA9CE0B23062EF40011A2F8 /* RedGreenBlueUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedGreenBlueUITests.swift; sourceTree = "<group>"; };
 		6FA9CE0D23062EF40011A2F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTableViewController.swift; sourceTree = "<group>"; };
+		6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessCustomMessage.xib; sourceTree = "<group>"; };
 		71396FC2CCD8C1D60CD630F5 /* Pods-RedGreenBlueTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RedGreenBlueUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B64E619D6B85D176217C6898 /* Pods-RedGreenBlueUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				6FA9CDEF23062EF20011A2F8 /* Main.storyboard */,
 				6F4B3E1A2308528A000F44DA /* CustomMessageView.xib */,
 				6FA9CDF423062EF30011A2F8 /* LaunchScreen.storyboard */,
+				6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FF6F4BE2323FCC500555EE7 /* SuccessCustomMessage.xib in Resources */,
 				6FA9CDF623062EF30011A2F8 /* LaunchScreen.storyboard in Resources */,
 				6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */,
 				6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */,
@@ -696,7 +700,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 56K2EF9V37;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -715,7 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 56K2EF9V37;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
