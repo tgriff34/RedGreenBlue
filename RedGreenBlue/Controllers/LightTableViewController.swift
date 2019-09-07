@@ -10,27 +10,8 @@ import UIKit
 import SwiftyHue
 
 class LightTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    enum TypeOfCell {
-        case lights
-        case scenes
-    }
     var swiftyHue: SwiftyHue!
     var group: RGBGroup!
-    var scenes = [PartialScene]()
-    var tableCell = TypeOfCell.lights
-
-    @IBAction func lightsButton(_ sender: Any) {
-        if tableCell != .lights {
-            tableCell = .lights
-            tableView.reloadData()
-        }
-    }
-    @IBAction func scenesButton(_ sender: Any) {
-        if tableCell != .scenes {
-            tableCell = .scenes
-            tableView.reloadData()
-        }
-    }
 
     @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
@@ -55,13 +36,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
-        RGBRequest.shared.getScenes(with: self.swiftyHue, completion: { (scenes) in
-            let scenes = Array(scenes.values).map({ return $0 })
-            for scene in scenes where self.group.identifier == scene.group {
-                self.scenes.append(scene)
-            }
-            self.swiftyHue.startHeartbeat()
-        })
+        self.swiftyHue.startHeartbeat()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -142,12 +117,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 // MARK: - Tableview
 extension LightTableViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch tableCell {
-        case .lights:
-            return group.lightIdentifiers.count
-        case .scenes:
-            return scenes.count
-        }
+        return group.lightIdentifiers.count
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -157,32 +127,11 @@ extension LightTableViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch tableCell {
-        case .lights:
-            //swiftlint:disable:next force_cast
-            let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
-            cell.light = group.lights[indexPath.row]
-            cell.delegate = self
-            return cell
-
-        case .scenes:
-            // swiftlint:disable:next force_cast
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
-            let scene = scenes[indexPath.row]
-            cell.label.text = scene.name
-            return cell
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch tableCell {
-        case .lights:
-            return
-        case .scenes:
-            swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(scenes[indexPath.row].identifier,
-                                                              inGroupWithIdentifier: group.identifier,
-                                                              completionHandler: { _ in })
-        }
+        //swiftlint:disable:next force_cast
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
+        cell.light = group.lights[indexPath.row]
+        cell.delegate = self
+        return cell
     }
 }
 

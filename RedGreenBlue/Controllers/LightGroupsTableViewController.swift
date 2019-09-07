@@ -10,18 +10,19 @@ import UIKit
 import SwiftyHue
 
 class LightGroupsTableViewController: UITableViewController {
-    var rgbBridge: RGBHueBridge?
+    //var rgbBridge: RGBHueBridge?
     var groups = [RGBGroup]()
-    var swiftyHue = SwiftyHue()
+    var swiftyHue: SwiftyHue!
 
-    var ipAddress: String?
+    //var ipAddress: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        _ = RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress,
-                                                             rgbHueBridge: &rgbBridge,
-                                                             swiftyHue: &swiftyHue)
+        swiftyHue = RGBRequest.shared.getSwiftyHue()
+//        _ = RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress,
+//                                                             rgbHueBridge: &rgbBridge,
+//                                                             swiftyHue: &swiftyHue)
 
         tableView.estimatedRowHeight = 200
         tableView.rowHeight = UITableView.automaticDimension
@@ -47,8 +48,9 @@ class LightGroupsTableViewController: UITableViewController {
         // Checks if current bridge has changed if true
         // it starts HB and reloads data otherwise it just restarts HB
         // ip, bridge, sh are passed by reference so objects in this class are mutated
-        if RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbBridge,
-                                                        swiftyHue: &swiftyHue) {
+        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        if swiftyHueDidChange.didIpChange {
+            swiftyHue = swiftyHueDidChange.swiftyHue
             fetchData(group: nil, completion: {
                 self.swiftyHue.startHeartbeat()
                 self.tableView.reloadData()
