@@ -45,7 +45,7 @@ class RGBRequest {
                 })
             case .failure:
                 completion(nil, ConnectionError.notConnected)
-                print("Error recieving groups from API")
+                logger.error("failure receiving data from API")
                 self.setConnected(false)
             }
         })
@@ -71,7 +71,7 @@ class RGBRequest {
                 }
                 completion(lights)
             case .failure:
-                print("Error recieving lights from API")
+                logger.error("Error recieving lights from API")
                 self.setConnected(false)
             }
         })
@@ -88,7 +88,7 @@ class RGBRequest {
                 }
                 completion(scenes)
             case .failure:
-                print("Error recieving scenes from API")
+                logger.error("Error recieving scenes from API")
                 self.setConnected(false)
             }
         })
@@ -192,7 +192,7 @@ class RGBRequest {
 
     func errorsFromResponse(error: Error?, completion: @escaping () -> Void) {
         RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 2, completion: {
-            print(String(describing: error?.localizedDescription))
+            logger.error(String(describing: error?.localizedDescription))
             completion()
         })
     }
