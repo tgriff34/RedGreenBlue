@@ -130,7 +130,8 @@ class RGBRequest {
     private func setConnected(_ connected: Bool) {
         if connected {
             SwiftMessages.hide()
-            let connectedMessage = MessageView.viewFromNib(layout: .messageView)
+            // swiftlint:disable:next force_try
+            let connectedMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
             var connectedMessageConfig = SwiftMessages.Config()
             connectedMessageConfig.presentationContext = .window(windowLevel: .normal)
             connectedMessage.configureTheme(.success)
