@@ -60,15 +60,8 @@ extension InitialBridgeFinderViewController {
         switch segue.identifier {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
-
-//            guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
-//                print("Error casting ", String(describing: segue.destination), " as LightGroupsTableViewController")
-//                return
-//            }
-
-            //lightGroupsTableViewController.rgbBridge = rgbBridge
         default:
-            print("Error starting main application with segue: ", String(describing: segue.identifier))
+            logger.error("starting main application with segue: ", String(describing: segue.identifier))
         }
     }
 }
@@ -76,12 +69,14 @@ extension InitialBridgeFinderViewController {
 extension InitialBridgeFinderViewController: BridgeAuthenticatorDelegate {
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFinishAuthentication username: String) {
         guard let index = authenticator.tag else {
-            print("Error tag for authenticator not set")
+            let authString = String(describing: authenticator)
+            let authStringTag = String(describing: authenticator.tag)
+            logger.error("tag for authenticator not set: auth: \(authString)) index: \(authStringTag)")
             return
         }
 
         guard let bridge = foundBridges?[index] else {
-            print("Error could not find bridge in foundBridges")
+            logger.error("could not find bridge in foundBridge: \(String(describing: foundBridges?[index]))")
             return
         }
 

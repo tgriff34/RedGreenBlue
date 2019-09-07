@@ -65,7 +65,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
     @objc func add() {
         if userEditing {
             guard let group = group else {
-                print("Error did not receive editing group")
+                logger.error("did not receive editing group")
                 return
             }
             swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
@@ -124,7 +124,6 @@ extension LightGroupsAddEditViewController {
         cell?.accessoryType = .checkmark
         selectedLights.append(lights[indexPath.row].identifier)
         enableOrDisableSaveButton()
-        print(selectedLights)
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -132,7 +131,6 @@ extension LightGroupsAddEditViewController {
         cell?.accessoryType = .none
         selectedLights.remove(at: selectedLights.index(of: lights[indexPath.row].identifier)!)
         enableOrDisableSaveButton()
-        print(selectedLights)
     }
 }
 

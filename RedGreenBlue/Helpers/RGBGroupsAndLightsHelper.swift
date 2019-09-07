@@ -17,7 +17,7 @@ class RGBGroupsAndLightsHelper {
         swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(group.identifier, withLightState: lightState,
                                                             completionHandler: { (error) in
                                                                 guard error == nil else {
-                                                                    print("Error setLightStateForGroupWithId: ",
+                                                                    logger.warning("setLightStateForGroupWithId: ",
                                                                           String(describing: error?.description))
                                                                     return
                                                                 }
@@ -30,7 +30,7 @@ class RGBGroupsAndLightsHelper {
         swiftyHue.bridgeSendAPI.updateLightStateForId(light.identifier, withLightState: lightState,
                                                       completionHandler: { (error) in
                                                         guard error == nil else {
-                                                            print("Error updateLightStateForId: ",
+                                                            logger.warning("Error updateLightStateForId: ",
                                                                   String(describing: error?.description))
                                                             return
                                                         }
@@ -83,7 +83,7 @@ class RGBGroupsAndLightsHelper {
         case "LST001", "LST002": // LightStrips
             return "heroesLightstrip"
         default:
-            print("Error getting image from modelId", modelId)
+            logger.error("Error getting image from modelId", modelId)
             return ""
         }
     }

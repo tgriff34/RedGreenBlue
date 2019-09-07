@@ -57,12 +57,10 @@ class LightsCustomCell: UITableViewCell {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
             case .began:
-                print("slider started")
                 delegate?.lightsTableViewCell(self, lightSliderStartedFor: self.light)
             case .moved:
                 delegate?.lightsTableViewCell(self, lightSliderMovedFor: self.light)
             case .ended:
-                print("slider ended")
                 delegate?.lightsTableViewCell(self, lightSliderEndedFor: self.light)
             default:
                 break
