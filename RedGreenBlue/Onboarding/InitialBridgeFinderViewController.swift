@@ -61,12 +61,12 @@ extension InitialBridgeFinderViewController {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
 
-            guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
-                print("Error casting ", String(describing: segue.destination), " as LightGroupsTableViewController")
-                return
-            }
+//            guard let lightGroupsTableViewController = segue.destination as? LightGroupsTableViewController else {
+//                print("Error casting ", String(describing: segue.destination), " as LightGroupsTableViewController")
+//                return
+//            }
 
-            lightGroupsTableViewController.rgbBridge = rgbBridge
+            //lightGroupsTableViewController.rgbBridge = rgbBridge
         default:
             print("Error starting main application with segue: ", String(describing: segue.identifier))
         }

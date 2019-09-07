@@ -80,9 +80,30 @@ class RGBRequest {
         })
     }
 
+    //============================================================================================================
+    //============================================================================================================
+    //============================================================================================================
+
+    private var swiftyHue = SwiftyHue()
+    private var rgbHueBridge: RGBHueBridge?
+    private var ipAddress: String?
+
+    func getSwiftyHue() -> SwiftyHue {
+        _ = setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbHueBridge, swiftyHue: &swiftyHue)
+
+        return swiftyHue
+    }
+
+    func getSwiftyHueWithBool() -> (swiftyHue: SwiftyHue, didIpChange: Bool) {
+        let didIpChange = setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbHueBridge,
+                                                     swiftyHue: &swiftyHue)
+
+        return (swiftyHue, didIpChange)
+    }
+
     // Sets current bridge selected.  If the ip in UserDefaults changed it will reconfigure settings to new bridge
-    func setCurrentlySelectedBridge(ipAddress: inout String?, rgbHueBridge: inout RGBHueBridge?,
-                                    swiftyHue: inout SwiftyHue) -> Bool {
+    private func setCurrentlySelectedBridge(ipAddress: inout String?, rgbHueBridge: inout RGBHueBridge?,
+                                            swiftyHue: inout SwiftyHue) -> Bool {
         if ipAddress != UserDefaults.standard.object(forKey: "DefaultBridge") as? String {
             ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
             rgbHueBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
@@ -91,6 +112,14 @@ class RGBRequest {
             return true
         }
         return false
+    }
+
+    // Sets bridge configuration for setCurrentlySelectedBridge
+    private func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
+        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
+                                                    ipAddress: RGBHueBridge.ipAddress,
+                                                    username: RGBHueBridge.username)
+        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
     }
 
     // Sets connection observers so I know whether user is connected to the bridge or not
@@ -103,14 +132,6 @@ class RGBRequest {
                                                name: NSNotification.Name(rawValue:
                                                 BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
                                                object: nil)
-    }
-
-    // Sets bridge configuration for setCurrentlySelectedBridge
-    private func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
-        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
-                                                    ipAddress: RGBHueBridge.ipAddress,
-                                                    username: RGBHueBridge.username)
-        swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
     }
 
     // Connection observer helper functions
