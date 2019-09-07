@@ -137,7 +137,7 @@ extension LightGroupsTableViewController {
             groups.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         default:
-            print("")
+            logger.warning("editing style does not exist: \(editingStyle)")
         }
     }
 
@@ -196,12 +196,14 @@ extension LightGroupsTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "SelectedLightGroupSegue":
-            guard let lightTableViewController = segue.destination as? LightTableViewController,
-                let index = tableView.indexPathForSelectedRow?.row else {
-                    print("Error could not cast \(segue.destination) as LightTableViewController")
-                    print("Error could not get index selected:",
-                          "\(String(describing: tableView.indexPathForSelectedRow?.row))",
-                        " from tableview.indexPathForSelectedRow?.row")
+            guard let lightTableViewController = segue.destination as? LightTableViewController else {
+                logger.error("could not cast \(segue.destination) as LightTableViewController")
+                return
+            }
+            guard let index = tableView.indexPathForSelectedRow?.row else {
+                logger.error("could not get index selected:",
+                      "\(String(describing: tableView.indexPathForSelectedRow?.row))",
+                    " from tableview.indexPathForSelectedRow?.row")
                     return
             }
             swiftyHue.stopHeartbeat()
@@ -210,7 +212,7 @@ extension LightGroupsTableViewController {
             lightTableViewController.group = groups[index]
 
         default:
-            print("Error performing segue: \(String(describing: segue.identifier))")
+            logger.error("performing segue: \(String(describing: segue.identifier))")
         }
     }
 
@@ -222,7 +224,7 @@ extension LightGroupsTableViewController {
     func addOrEditView(_ group: RGBGroup?) {
         guard let lightGroupsAddEditViewController = storyboard?.instantiateViewController(withIdentifier: "addGroup")
             as? LightGroupsAddEditViewController else {
-                print("Error could not instantiateViewController: addGroup as? LightGroupsAddEditViewController")
+                logger.error("could not instantiateViewController: addGroup as? LightGroupsAddEditViewController")
                 return
         }
         lightGroupsAddEditViewController.group = group

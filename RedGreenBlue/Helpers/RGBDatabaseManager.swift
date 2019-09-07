@@ -14,7 +14,7 @@ class RGBDatabaseManager {
             let realm = try Realm()
             return realm
         } catch {
-            print("Could not access database: ", error)
+            logger.error("Could not access database: ", error.localizedDescription)
         }
         return nil
     }
@@ -25,7 +25,7 @@ class RGBDatabaseManager {
                 closure()
             }
         } catch {
-            print("Could not write to database: ", error)
+            logger.error("Could not write to database: ", error.localizedDescription)
         }
     }
 }
