@@ -16,7 +16,7 @@ class RGBRequest {
 
     // Retrieves all groups and lights.  Creates a RGBGroup model which uses Group and Lights of that group.
     // Check RGBGroup model for more detail on what is contained in that model.
-    func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([RGBGroup]) -> Void) {
+    func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([RGBGroup]?, Error?) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchGroups({ (result) in
             switch result {
@@ -41,18 +41,20 @@ class RGBRequest {
                                                lights: lightsInGroup))
                     }
                     rgbGroups.sort(by: { $0.identifier < $1.identifier })
-                    completion(rgbGroups)
+                    completion(rgbGroups, nil)
                 })
             case .failure:
-                print("Error recieving groups from API")
+                completion(nil, ConnectionError.notConnected)
+                logger.error("failure receiving data from API")
+                self.setConnected(false)
             }
         })
     }
 
     // Retrieves a single group by using the group id, this is used in LightsVC
     func getGroup(with identifier: String, using swiftyHue: SwiftyHue, completion: @escaping (RGBGroup) -> Void) {
-        getGroups(with: swiftyHue, completion: { (groups) in
-            for group in groups where group.identifier == identifier {
+        getGroups(with: swiftyHue, completion: { (groups, _) in
+            for group in groups! where group.identifier == identifier {
                 completion(group)
             }
         })
@@ -62,10 +64,16 @@ class RGBRequest {
     func getLights(with swiftyHue: SwiftyHue, completion: @escaping ([String: Light]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchLights({ (result) in
-            guard let lights = result.value else {
-                return
+            switch result {
+            case .success:
+                guard let lights = result.value else {
+                    return
+                }
+                completion(lights)
+            case .failure:
+                logger.error("Error recieving lights from API")
+                self.setConnected(false)
             }
-            completion(lights)
         })
     }
 
@@ -73,10 +81,16 @@ class RGBRequest {
     func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchScenes({ (result) in
-            guard let scenes = result.value else {
-                return
+            switch result {
+            case .success:
+                guard let scenes = result.value else {
+                    return
+                }
+                completion(scenes)
+            case .failure:
+                logger.error("Error recieving scenes from API")
+                self.setConnected(false)
             }
-            completion(scenes)
         })
     }
 
@@ -175,4 +189,15 @@ class RGBRequest {
             SwiftMessages.show(config: errorMessageConfig, view: errorMessage)
         }
     }
+
+    func errorsFromResponse(error: Error?, completion: @escaping () -> Void) {
+        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 2, completion: {
+            logger.error(String(describing: error?.localizedDescription))
+            completion()
+        })
+    }
+}
+
+enum ConnectionError: Error {
+    case notConnected
 }

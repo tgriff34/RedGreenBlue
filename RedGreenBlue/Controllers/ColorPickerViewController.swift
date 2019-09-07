@@ -30,9 +30,9 @@ class ColorPickerViewController: DefaultColorPickerViewController {
 
     // Only send a request to the lights
     @objc func touchUpInside(_ sender: RadialPaletteControl) {
-        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest {
+        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
             self.setLightColor(color: sender.selectedColor)
-        }
+        })
     }
 
     // Setting light colors

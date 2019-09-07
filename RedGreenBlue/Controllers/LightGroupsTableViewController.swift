@@ -10,19 +10,13 @@ import UIKit
 import SwiftyHue
 
 class LightGroupsTableViewController: UITableViewController {
-    //var rgbBridge: RGBHueBridge?
     var groups = [RGBGroup]()
     var swiftyHue: SwiftyHue!
-
-    //var ipAddress: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         swiftyHue = RGBRequest.shared.getSwiftyHue()
-//        _ = RGBRequest.shared.setCurrentlySelectedBridge(ipAddress: &ipAddress,
-//                                                             rgbHueBridge: &rgbBridge,
-//                                                             swiftyHue: &swiftyHue)
 
         tableView.estimatedRowHeight = 200
         tableView.rowHeight = UITableView.automaticDimension
@@ -32,32 +26,13 @@ class LightGroupsTableViewController: UITableViewController {
                                                 ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                                                object: nil)
 
-        RGBRequest.shared.setUpConnectionListeners()
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
-
-        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
-            self.groups = groups
-            self.tableView.reloadData()
-        })
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Checks if current bridge has changed if true
-        // it starts HB and reloads data otherwise it just restarts HB
-        // ip, bridge, sh are passed by reference so objects in this class are mutated
-        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
-        if swiftyHueDidChange.didIpChange {
-            swiftyHue = swiftyHueDidChange.swiftyHue
-            fetchData(group: nil, completion: {
-                self.swiftyHue.startHeartbeat()
-                self.tableView.reloadData()
-            })
-        } else {
-            fetchData(group: nil, completion: { self.swiftyHue.startHeartbeat() })
-        }
+        setUpInitialView()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -79,16 +54,39 @@ class LightGroupsTableViewController: UITableViewController {
         }
     }
 
+    private func setUpInitialView() {
+        RGBRequest.shared.setUpConnectionListeners()
+        // Checks if current bridge has changed if true
+        // it starts HB and reloads data otherwise it just restarts HB
+        // ip, bridge, sh are passed by reference so objects in this class are mutated
+        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        if swiftyHueDidChange.didIpChange || groups.isEmpty {
+            swiftyHue = swiftyHueDidChange.swiftyHue
+            fetchData(group: nil, completion: {
+                self.swiftyHue.startHeartbeat()
+                self.tableView.reloadData()
+            })
+        } else {
+            fetchData(group: nil, completion: { self.swiftyHue.startHeartbeat() })
+        }
+    }
+
     // Fetch all groups and lights and update cells
-    func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
-        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
-            self.groups = groups
+    private func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
+        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
+            guard error == nil else {
+                RGBRequest.shared.errorsFromResponse(error: error, completion: {
+                    self.setUpInitialView()
+                })
+                return
+            }
+            self.groups = groups!
             self.updateUI(group)
             completion?()
         })
     }
 
-    func updateUI(_ group: RGBGroup?) {
+    private func updateUI(_ group: RGBGroup?) {
         for (index, subGroup) in groups.enumerated() where group?.identifier != subGroup.identifier {
             guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
                 as? LightsGroupCustomCell else { return }
@@ -96,7 +94,7 @@ class LightGroupsTableViewController: UITableViewController {
         }
     }
 
-    func updateLightsBrightnessForGroup(group: RGBGroup, value: Float) {
+    private func updateLightsBrightnessForGroup(group: RGBGroup, value: Float) {
         for light in group.lights where light.state.on! == true {
             var lightState = LightState()
             lightState.brightness = Int(value * 2.54)
@@ -176,9 +174,9 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
     // Brightness slider is moving
     func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
                                   lightSliderMovedFor group: RGBGroup) {
-        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest {
+        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
             self.updateLightsBrightnessForGroup(group: group, value: lightGroupsTableViewCell.slider.value)
-        }
+        })
     }
 
     // Brightness slider stopped moving

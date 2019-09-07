@@ -28,13 +28,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                                                name: NSNotification.Name(rawValue:
                                                 ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                                                object: nil)
-
-        RGBRequest.shared.setUpConnectionListeners()
-
         setupNavigationSwitch()
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        RGBRequest.shared.setUpConnectionListeners()
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.swiftyHue.startHeartbeat()
     }
@@ -153,9 +151,9 @@ extension LightTableViewController: LightsCellDelegate {
 
     // When the brightness slider is moving
     func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSliderMovedFor light: Light) {
-        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest {
+        RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
             self.setBrightnessForLight(light: light, value: lightsTableViewCell.slider.value)
-        }
+        })
     }
 
     // Stopped sliding the brightness slider

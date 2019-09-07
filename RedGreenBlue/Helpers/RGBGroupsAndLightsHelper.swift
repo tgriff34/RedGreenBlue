@@ -59,9 +59,9 @@ class RGBGroupsAndLightsHelper {
             previousTimer?.invalidate()
         }
     }
-    func sendTimeSensistiveAPIRequest(completion: @escaping () -> Void) {
+    func sendTimeSensistiveAPIRequest(withTimeInterval timeInterval: TimeInterval, completion: @escaping () -> Void) {
         guard previousTimer == nil else { return }
-        previousTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+        previousTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false, block: { _ in
             self.previousTimer = nil
             completion()
         })

@@ -22,12 +22,20 @@ class ScenesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         swiftyHue = RGBRequest.shared.getSwiftyHue()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchData()
     }
 
     func fetchData() {
-        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups) in
-            let justGroups = groups
+        RGBRequest.shared.setUpConnectionListeners()
+        RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
+            guard error == nil else {
+                return
+            }
+            let justGroups = groups!
             for group in justGroups where group.type == .Room {
                 self.groups.append(group)
                 self.navigationItems.append(group.name)
