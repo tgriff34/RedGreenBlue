@@ -89,7 +89,10 @@ class LightGroupsTableViewController: UITableViewController {
     private func updateUI(_ group: RGBGroup?) {
         for (index, subGroup) in groups.enumerated() where group?.identifier != subGroup.identifier {
             guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
-                as? LightsGroupCustomCell else { return }
+                as? LightsGroupCustomCell else {
+                    logger.error("Error receiving cellForRow: \(index)")
+                    continue
+            }
             cell.group = subGroup
         }
     }

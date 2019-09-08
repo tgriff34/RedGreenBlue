@@ -71,8 +71,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     private func updateUI(group: RGBGroup) {
         for (index, light) in group.lights.enumerated() {
-            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LightsCustomCell
-            cell?.light = light
+            guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LightsCustomCell else {
+                logger.error("Error getting cellForRow: \(index)")
+                return
+            }
+            cell.light = light
         }
         navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         setupGroupBrightnessSlider()
@@ -111,7 +114,8 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         for identifier in group.lightIdentifiers {
             guard let cell = tableView.cellForRow(at: IndexPath(row: group.lightIdentifiers.index(of: identifier)!,
                                                                 section: 0)) as? LightsCustomCell else {
-                                                                    return
+                logger.error("error getting cellForRow at: \(group.lightIdentifiers.index(of: identifier)!)")
+                return
             }
             cell.switch.setOn(lightState.on!, animated: true)
         }
