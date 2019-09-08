@@ -10,8 +10,10 @@ import UIKit
 import SwiftyHue
 import RealmSwift
 import SwiftMessages
+import TORoundedButton
+import NVActivityIndicatorView
 
-class BridgesTableViewController: UITableViewController {
+class BridgesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var bridgeFinder: BridgeFinder?
     var bridges = [RGBHueBridge]()
@@ -26,8 +28,15 @@ class BridgesTableViewController: UITableViewController {
     var warningAlertConfig = SwiftMessages.Config()
     var errorAlertConfig = SwiftMessages.Config()
 
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var startBridgeFinderButton: RoundedButton!
+    var activityIndicatorView: NVActivityIndicatorView?
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        tableView.delegate = self
+        tableView.dataSource = self
 
         logger.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
         console.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
@@ -52,6 +61,12 @@ class BridgesTableViewController: UITableViewController {
         linkFailMessageAlert.button?.isHidden = true
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
 
+        startBridgeFinderButton.addTarget(self, action: #selector(startBridgeFinder), for: .touchUpInside)
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: self.startBridgeFinderButton.frame.midX - 25,
+                                                                      y: self.startBridgeFinderButton.frame.midY - 25,
+                                                                      width: 50, height: 50),
+                                                        type: .ballPulse, color: .white, padding: 1)
+        view.addSubview(activityIndicatorView!)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -61,20 +76,26 @@ class BridgesTableViewController: UITableViewController {
         }
         authorizedBridges = Array(results)
 
+        tableView.reloadData()
+    }
+
+    @objc func startBridgeFinder() {
         bridgeFinder = BridgeFinder()
         bridgeFinder?.delegate = self
         bridgeFinder?.start()
-        tableView.reloadData()
+        startBridgeFinderButton.isEnabled = false
+        startBridgeFinderButton.text = ""
+        activityIndicatorView?.startAnimating()
     }
 }
 
 // MARK: - Table view data source
 extension BridgesTableViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "Authorized Bridges"
         } else if section == 1 && bridges.count > 0 {
@@ -83,14 +104,14 @@ extension BridgesTableViewController {
         return ""
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return authorizedBridges.count
         }
         return bridges.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier") as! BridgesTableViewCell
 
@@ -109,7 +130,7 @@ extension BridgesTableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
             UserDefaults.standard.set(authorizedBridges[indexPath.row].ipAddress, forKey: "DefaultBridge")
@@ -148,16 +169,22 @@ extension BridgesTableViewController: BridgeFinderDelegate {
         }
 
         if !foundNewUndiscoveredBridges {
-            let emptyMessage = MessageView.viewFromNib(layout: .cardView)
+            // swiftlint:disable:next force_try
+            let emptyMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
+            var emptyMessageConfig = SwiftMessages.Config()
+            emptyMessageConfig.presentationContext = .window(windowLevel: .normal)
             emptyMessage.configureTheme(backgroundColor: view.tintColor, foregroundColor: .white)
-            emptyMessage.configureContent(title: "", body: "No new bridges found")
-            emptyMessage.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+            emptyMessage.configureContent(title: "No new bridges found", body: "")
+            emptyMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
             emptyMessage.button?.isHidden = true
             (emptyMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
-            SwiftMessages.show(view: emptyMessage)
+            SwiftMessages.show(config: emptyMessageConfig, view: emptyMessage)
         } else {
             tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
+        startBridgeFinderButton.isEnabled = true
+        startBridgeFinderButton.text = "Find Bridges"
+        activityIndicatorView?.stopAnimating()
     }
 }
 
