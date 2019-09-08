@@ -173,7 +173,8 @@ class RGBRequest {
             connectedMessage.button?.isHidden = true
             SwiftMessages.show(config: connectedMessageConfig, view: connectedMessage)
         } else {
-            let errorMessage = MessageView.viewFromNib(layout: .messageView)
+            // swiftlint:disable:next force_try
+            let errorMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
             var errorMessageConfig = SwiftMessages.Config()
             errorMessageConfig.presentationContext = .window(windowLevel: .normal)
             errorMessageConfig.duration = .forever
