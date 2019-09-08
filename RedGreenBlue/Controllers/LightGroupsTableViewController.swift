@@ -74,13 +74,13 @@ class LightGroupsTableViewController: UITableViewController {
     // Fetch all groups and lights and update cells
     private func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
-            guard error == nil else {
+            guard error == nil, let groups = groups else {
                 RGBRequest.shared.errorsFromResponse(error: error, completion: {
                     self.setUpInitialView()
                 })
                 return
             }
-            self.groups = groups!
+            self.groups = groups
             self.updateUI(group)
             completion?()
         })

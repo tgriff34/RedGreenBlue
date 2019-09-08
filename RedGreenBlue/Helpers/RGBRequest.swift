@@ -46,7 +46,6 @@ class RGBRequest {
             case .failure:
                 completion(nil, ConnectionError.notConnected)
                 logger.error("failure receiving data from API")
-                self.setConnected(false)
             }
         })
     }
@@ -72,13 +71,12 @@ class RGBRequest {
                 completion(lights)
             case .failure:
                 logger.error("Error recieving lights from API")
-                self.setConnected(false)
             }
         })
     }
 
     // Retrieves all scenes
-    func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]) -> Void) {
+    func getScenes(with swiftyHue: SwiftyHue, completion: @escaping ([String: PartialScene]?, Error?) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchScenes({ (result) in
             switch result {
@@ -86,10 +84,10 @@ class RGBRequest {
                 guard let scenes = result.value else {
                     return
                 }
-                completion(scenes)
+                completion(scenes, nil)
             case .failure:
+                completion(nil, ConnectionError.notConnected)
                 logger.error("Error recieving scenes from API")
-                self.setConnected(false)
             }
         })
     }
