@@ -68,10 +68,3 @@ class LightsCustomCell: UITableViewCell {
         }
     }
 }
-
-protocol LightsCellDelegate: AnyObject {
-    func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSwitchTappedFor light: Light)
-    func lightsTableViewCell(_ lightsTabelViewCell: LightsCustomCell, lightSliderStartedFor light: Light)
-    func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSliderMovedFor light: Light)
-    func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSliderEndedFor light: Light)
-}

@@ -21,6 +21,9 @@
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
 		46CCAA142307870B0054187A /* RGBRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* RGBRequest.swift */; };
 		46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA15230848F90054187A /* LightTableViewController.swift */; };
+		46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */; };
+		46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC9900232555AD00D939BF /* GroupCellProtocol.swift */; };
+		46DC9903232555BF00D939BF /* LightCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC9902232555BF00D939BF /* LightCellProtocol.swift */; };
 		46EF2DAC230ED09C0021B28B /* LightsCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */; };
 		46EF2DAF230F0A010021B28B /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EF2DAE230F0A010021B28B /* ColorPickerViewController.swift */; };
 		46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EF2DB02311CA620021B28B /* RGBDatabaseManager.swift */; };
@@ -68,6 +71,9 @@
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
 		46CCAA132307870B0054187A /* RGBRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBRequest.swift; sourceTree = "<group>"; };
 		46CCAA15230848F90054187A /* LightTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTableViewController.swift; sourceTree = "<group>"; };
+		46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSliderProtocol.swift; sourceTree = "<group>"; };
+		46DC9900232555AD00D939BF /* GroupCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCellProtocol.swift; sourceTree = "<group>"; };
+		46DC9902232555BF00D939BF /* LightCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightCellProtocol.swift; sourceTree = "<group>"; };
 		46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsCustomCell.swift; sourceTree = "<group>"; };
 		46EF2DAE230F0A010021B28B /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		46EF2DB02311CA620021B28B /* RGBDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBDatabaseManager.swift; sourceTree = "<group>"; };
@@ -178,6 +184,16 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		46DC98FD2325557200D939BF /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */,
+				46DC9900232555AD00D939BF /* GroupCellProtocol.swift */,
+				46DC9902232555BF00D939BF /* LightCellProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		46EF2DAD230EF5FC0021B28B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */,
+				46DC98FD2325557200D939BF /* Protocols */,
 				46CCAA0C2307058A0054187A /* Models */,
 				46B6423E232068960047F233 /* Views */,
 				46EF2DAD230EF5FC0021B28B /* Helpers */,
@@ -509,12 +526,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46DC9903232555BF00D939BF /* LightCellProtocol.swift in Sources */,
 				46EF2DB32311F3180021B28B /* LightGroupsAddEditViewController.swift in Sources */,
 				46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */,
 				46CCAA142307870B0054187A /* RGBRequest.swift in Sources */,
 				46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */,
 				46B6423D232000800047F233 /* RGBGroup.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
+				46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */,
 				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				46EF2DAF230F0A010021B28B /* ColorPickerViewController.swift in Sources */,
 				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
@@ -524,6 +543,7 @@
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
+				46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */,
 				46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */,
 				46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */,
 			);

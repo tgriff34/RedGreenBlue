@@ -76,14 +76,3 @@ class LightsGroupCustomCell: UITableViewCell {
         }
     }
 }
-
-protocol LightsGroupsCellDelegate: AnyObject {
-    func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
-                                  lightSwitchTappedFor group: RGBGroup)
-    func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
-                                  lightSliderStartedFor group: RGBGroup)
-    func lightGroupsTableViewCell(_ lightGroupsTableViewCell: LightsGroupCustomCell,
-                                  lightSliderMovedFor group: RGBGroup)
-    func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
-                                  lightSliderEndedFor group: RGBGroup)
-}
