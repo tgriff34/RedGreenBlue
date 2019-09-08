@@ -302,14 +302,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzp-jz-NcU">
-                                <rect key="frame" x="310" y="160" width="84" height="30"/>
+                                <rect key="frame" x="310" y="186" width="84" height="30"/>
                                 <state key="normal" title="Group Color"/>
                                 <connections>
                                     <segue destination="ola-6L-n2P" kind="show" identifier="GroupColorPickerSegue" id="MfQ-Xa-CmW"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kwi-jE-obP">
-                                <rect key="frame" x="0.0" y="210" width="414" height="603"/>
+                                <rect key="frame" x="0.0" y="236" width="414" height="577"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="LightsCellIdentifier" rowHeight="236" id="vPw-NY-63i" customClass="LightsCustomCell" customModule="RedGreenBlue" customModuleProvider="target">
@@ -420,20 +420,27 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="5ML-DR-Cyn">
+                                <rect key="frame" x="26" y="148" width="362" height="31"/>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="HYj-HM-BAm" firstAttribute="trailing" secondItem="5ML-DR-Cyn" secondAttribute="trailing" constant="28" id="BOY-xp-jrb"/>
                             <constraint firstItem="nzp-jz-NcU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="HYj-HM-BAm" secondAttribute="leading" constant="20" id="QP9-eL-FfZ"/>
                             <constraint firstItem="HYj-HM-BAm" firstAttribute="trailing" secondItem="nzp-jz-NcU" secondAttribute="trailing" constant="20" id="RTu-Pn-62k"/>
                             <constraint firstItem="Kwi-jE-obP" firstAttribute="leading" secondItem="HYj-HM-BAm" secondAttribute="leading" id="YnC-R3-L9V"/>
                             <constraint firstItem="Kwi-jE-obP" firstAttribute="top" secondItem="nzp-jz-NcU" secondAttribute="bottom" constant="20" id="YsR-cg-o9j"/>
                             <constraint firstItem="HYj-HM-BAm" firstAttribute="trailing" secondItem="Kwi-jE-obP" secondAttribute="trailing" id="aTa-Wb-gvq"/>
-                            <constraint firstItem="nzp-jz-NcU" firstAttribute="top" secondItem="HYj-HM-BAm" secondAttribute="top" constant="20" id="cYQ-9x-Mwd"/>
                             <constraint firstItem="HYj-HM-BAm" firstAttribute="bottom" secondItem="Kwi-jE-obP" secondAttribute="bottom" id="fhn-Be-pWC"/>
+                            <constraint firstItem="5ML-DR-Cyn" firstAttribute="top" secondItem="HYj-HM-BAm" secondAttribute="top" constant="8" id="jZA-Xf-Uhw"/>
+                            <constraint firstItem="5ML-DR-Cyn" firstAttribute="leading" secondItem="HYj-HM-BAm" secondAttribute="leading" constant="28" id="lQN-5t-hpX"/>
+                            <constraint firstItem="nzp-jz-NcU" firstAttribute="top" secondItem="5ML-DR-Cyn" secondAttribute="bottom" constant="8" id="zqH-8T-uEC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="HYj-HM-BAm"/>
                     </view>
                     <connections>
+                        <outlet property="groupBrightnessSlider" destination="5ML-DR-Cyn" id="Sr4-IW-DpN"/>
                         <outlet property="tableView" destination="Kwi-jE-obP" id="nr2-5r-Jqh"/>
                     </connections>
                 </viewController>

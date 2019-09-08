@@ -15,6 +15,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
+    @IBOutlet weak var groupBrightnessSlider: UISlider!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,12 +30,14 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                                                 ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                                                object: nil)
         setupNavigationSwitch()
+        groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         RGBRequest.shared.setUpConnectionListeners()
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
+        self.setupGroupBrightnessSlider()
         self.swiftyHue.startHeartbeat()
     }
 
@@ -66,12 +69,13 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
 
-    func updateUI(group: RGBGroup) {
+    private func updateUI(group: RGBGroup) {
         for (index, light) in group.lights.enumerated() {
             let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LightsCustomCell
             cell?.light = light
         }
         navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
+        setupGroupBrightnessSlider()
     }
 
     @objc func navigationSwitchChanged(_ sender: UISwitch!) {
@@ -83,7 +87,27 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
 
-    func updateCellsFromNavigationSwitch(_ lightState: LightState) {
+    @objc func groupSliderChanged(_ sender: UISlider!, _ event: UIEvent) {
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+            case .began:
+                swiftyHue.stopHeartbeat()
+            case .moved:
+                RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
+                    self.setBrightnessForGroup(group: self.group, value: sender.value)
+                })
+            case .ended:
+                setBrightnessForGroup(group: group, value: sender.value)
+                self.fetchData(group: group, completion: {
+                    self.swiftyHue.startHeartbeat()
+                })
+            default:
+                break
+            }
+        }
+    }
+
+    private func updateCellsFromNavigationSwitch(_ lightState: LightState) {
         for identifier in group.lightIdentifiers {
             guard let cell = tableView.cellForRow(at: IndexPath(row: group.lightIdentifiers.index(of: identifier)!,
                                                                 section: 0)) as? LightsCustomCell else {
@@ -93,20 +117,36 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
-    func setBrightnessForLight(light: Light, value: Float) {
+    private func setBrightnessForLight(light: Light, value: Float) {
         var lightState = LightState()
         lightState.brightness = Int(value * 2.54)
         RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue, with: lightState, completion: nil)
     }
 
-    func setupNavigationSwitch() {
+    private func setBrightnessForGroup(group: RGBGroup, value: Float) {
+        for light in group.lights {
+            setBrightnessForLight(light: light, value: value)
+        }
+    }
+
+    private func setupNavigationSwitch() {
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationSwitch!)
     }
 
-    func ifAnyLightsAreOnInGroup() -> Bool {
+    private func setupGroupBrightnessSlider() {
+        if ifAnyLightsAreOnInGroup() {
+            let avgBrightness = RGBGroupsAndLightsHelper.shared.getAverageBrightnessOfLightsInGroup(group.lights)
+            let numOfLightsOn = RGBGroupsAndLightsHelper.shared.getNumberOfLightsOnInGroup(group.lights)
+            groupBrightnessSlider.setValue(Float(avgBrightness / numOfLightsOn) / 2.54, animated: true)
+        } else {
+            groupBrightnessSlider.setValue(0, animated: true)
+        }
+    }
+
+    private func ifAnyLightsAreOnInGroup() -> Bool {
         if RGBGroupsAndLightsHelper.shared.getNumberOfLightsOnInGroup(group.lights) > 0 {
             return true
         }
