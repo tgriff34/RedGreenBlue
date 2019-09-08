@@ -169,18 +169,19 @@ class RGBRequest {
             connectedMessageConfig.presentationContext = .window(windowLevel: .normal)
             connectedMessage.configureTheme(.success)
             connectedMessage.configureContent(title: "Connected", body: "")
-            connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+            connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: -8, left: 20, bottom: 5, right: 20)
             connectedMessage.button?.isHidden = true
             SwiftMessages.show(config: connectedMessageConfig, view: connectedMessage)
         } else {
-            let errorMessage = MessageView.viewFromNib(layout: .messageView)
+            // swiftlint:disable:next force_try
+            let errorMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
             var errorMessageConfig = SwiftMessages.Config()
             errorMessageConfig.presentationContext = .window(windowLevel: .normal)
             errorMessageConfig.duration = .forever
             errorMessageConfig.interactiveHide = false
             errorMessage.configureTheme(.error)
             errorMessage.configureContent(title: "Not connected", body: "")
-            errorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+            errorMessage.layoutMarginAdditions = UIEdgeInsets(top: -8, left: 20, bottom: 5, right: 20)
             errorMessage.button?.isHidden = true
             (errorMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
             SwiftMessages.show(config: errorMessageConfig, view: errorMessage)
