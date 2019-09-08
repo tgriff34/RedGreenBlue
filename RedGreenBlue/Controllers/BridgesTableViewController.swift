@@ -13,7 +13,7 @@ import SwiftMessages
 
 class BridgesTableViewController: UITableViewController {
 
-    var bridgeFinder = BridgeFinder()
+    var bridgeFinder: BridgeFinder?
     var bridges = [RGBHueBridge]()
     var authorizedBridges = [RGBHueBridge]()
     var selectedBridge: RGBHueBridge?
@@ -28,6 +28,9 @@ class BridgesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        logger.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
+        console.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
 
         // set up warning message card
         warningAlertConfig.duration = .forever
@@ -48,6 +51,7 @@ class BridgesTableViewController: UITableViewController {
         linkFailMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         linkFailMessageAlert.button?.isHidden = true
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -56,8 +60,10 @@ class BridgesTableViewController: UITableViewController {
             return
         }
         authorizedBridges = Array(results)
-        bridgeFinder.delegate = self
-        bridgeFinder.start()
+
+        bridgeFinder = BridgeFinder()
+        bridgeFinder?.delegate = self
+        bridgeFinder?.start()
         tableView.reloadData()
     }
 }
@@ -131,14 +137,17 @@ extension BridgesTableViewController {
 
 extension BridgesTableViewController: BridgeFinderDelegate {
     func bridgeFinder(_ finder: BridgeFinder, didFinishWithResult bridges: [HueBridge]) {
+        var foundNewUndiscoveredBridges: Bool = false
         for bridge in bridges {
-            let contains = authorizedBridges.filter({ $0.ipAddress == bridge.ip })
-            if contains.isEmpty {
+            let alreadyAuthorizedBridge = self.authorizedBridges.filter({ $0.ipAddress == bridge.ip })
+            let alreadyFoundBridge = self.bridges.filter({ $0.ipAddress == bridge.ip })
+            if alreadyAuthorizedBridge.isEmpty && alreadyFoundBridge.isEmpty {
                 self.bridges.append(RGBHueBridge(hueBridge: bridge))
+                foundNewUndiscoveredBridges = true
             }
         }
 
-        if self.bridges.isEmpty {
+        if !foundNewUndiscoveredBridges {
             let emptyMessage = MessageView.viewFromNib(layout: .cardView)
             emptyMessage.configureTheme(backgroundColor: view.tintColor, foregroundColor: .white)
             emptyMessage.configureContent(title: "", body: "No new bridges found")
@@ -146,8 +155,9 @@ extension BridgesTableViewController: BridgeFinderDelegate {
             emptyMessage.button?.isHidden = true
             (emptyMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
             SwiftMessages.show(view: emptyMessage)
+        } else {
+            tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
-        tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
     }
 }
 
