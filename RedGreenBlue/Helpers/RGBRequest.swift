@@ -40,7 +40,7 @@ class RGBRequest {
                                                type: group.type,
                                                lights: lightsInGroup))
                     }
-                    rgbGroups.sort(by: { $0.identifier < $1.identifier })
+                    rgbGroups.sort(by: { $0.identifier.compare($1.identifier, options: .numeric) == .orderedAscending })
                     completion(rgbGroups, nil)
                 })
             case .failure:

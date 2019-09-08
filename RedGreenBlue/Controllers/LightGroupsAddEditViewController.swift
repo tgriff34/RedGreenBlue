@@ -24,6 +24,8 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
 
+    var tapRecogniser: UITapGestureRecognizer?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,6 +48,9 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         tableView.delegate = self
         tableView.dataSource = self
 
+        tapRecogniser = UITapGestureRecognizer()
+        tapRecogniser?.addTarget(self, action: #selector(viewTapped))
+
         fetchData()
     }
 
@@ -56,6 +61,10 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         } else {
             onSave?(true)
         }
+    }
+
+    @objc func viewTapped() {
+        self.view.endEditing(true)
     }
 
     @objc func cancel() {
@@ -83,7 +92,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
     }
 
     func enableOrDisableSaveButton() {
-        if selectedLights.isEmpty || textField.text?.isEmpty ?? true {
+        if selectedLights.isEmpty || textField.text?.isEmpty ?? false {
             navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
             navigationItem.rightBarButtonItem?.isEnabled = true
@@ -142,6 +151,10 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         name = textField.text ?? ""
+        self.view.removeGestureRecognizer(tapRecogniser!)
         enableOrDisableSaveButton()
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.view.addGestureRecognizer(tapRecogniser!)
     }
 }
