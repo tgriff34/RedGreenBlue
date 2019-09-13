@@ -75,7 +75,6 @@ class ScenesTableViewController: UITableViewController {
         menuView.menuTitleColor = .white
         menuView.cellBackgroundColor = view.backgroundColor
         menuView.cellTextLabelColor = .white
-        menuView.animationDuration = 0.2
         menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
             self.scenesForGroup = self.allScenes[indexPath]
             self.tableView.reloadData()

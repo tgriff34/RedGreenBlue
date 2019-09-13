@@ -62,10 +62,10 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
         (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
 
         startBridgeFinderButton.addTarget(self, action: #selector(startBridgeFinder), for: .touchUpInside)
-        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: self.startBridgeFinderButton.frame.midX - 25,
-                                                                      y: self.startBridgeFinderButton.frame.midY - 25,
-                                                                      width: 50, height: 50),
-                                                        type: .ballPulse, color: .white, padding: 1)
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: self.view.frame.width / 2 - 50,
+                                                                      y: self.view.frame.height / 2 - 50,
+                                                                      width: 100, height: 100),
+                                                        type: .ballPulse, color: .white, padding: 0)
         view.addSubview(activityIndicatorView!)
     }
 
@@ -84,7 +84,6 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
         bridgeFinder?.delegate = self
         bridgeFinder?.start()
         startBridgeFinderButton.isEnabled = false
-        startBridgeFinderButton.text = ""
         activityIndicatorView?.startAnimating()
     }
 }
@@ -183,7 +182,6 @@ extension BridgesTableViewController: BridgeFinderDelegate {
             tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
         startBridgeFinderButton.isEnabled = true
-        startBridgeFinderButton.text = "Find Bridges"
         activityIndicatorView?.stopAnimating()
     }
 }
