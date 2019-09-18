@@ -45,7 +45,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 //        }
     }
 
-    func fetchData() {
+    private func fetchData() {
         guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self) else {
             logger.error("could not retrieve results of RGBDynamicScenes from DB")
             return
@@ -65,7 +65,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         })
     }
 
-    func setupDropdownNavigationBar() {
+    private func setupDropdownNavigationBar() {
         let menuView = BTNavigationDropdownMenu(title: BTTitle.index(0), items: navigationItems)
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
@@ -76,43 +76,6 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
             self.selectedGroupIndex = indexPath
         }
-    }
-}
-
-extension DynamicScenesViewController {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dynamicScenes.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier")
-            as! LightsDynamicSceneCustomCell // swiftlint:disable:this force_cast
-        cell.dynamicScene = dynamicScenes[indexPath.row]
-        cell.delegate = self
-        return cell
-    }
-}
-
-// MARK: - Cell Delegate
-
-var timer: Timer?
-
-extension DynamicScenesViewController: DynamicSceneCellProtocol {
-    func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
-                               sceneSwitchTappedFor scene: RGBDynamicScene) {
-        // Set selected row to current cell
-        tableView.selectRow(at: IndexPath(row: dynamicScenes.index(of: scene)!, section: 0),
-                            animated: true, scrollPosition: .none)
-
-        // Remove previous scene timer and reset indices
-        timer?.invalidate()
-        var previousIndices = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
-
-        // Set scene
-        setScene(scene: scene, previousIndices: &previousIndices)
-        timer = Timer.scheduledTimer(withTimeInterval: scene.timer, repeats: true, block: { _ in
-            self.setScene(scene: scene, previousIndices: &previousIndices)
-        })
     }
 
     private func setScene(scene: RGBDynamicScene, previousIndices: inout [Int]) {
@@ -141,6 +104,51 @@ extension DynamicScenesViewController: DynamicSceneCellProtocol {
 
             RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: self.swiftyHue,
                                                           with: lightState, completion: nil)
+        }
+    }
+}
+
+extension DynamicScenesViewController {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dynamicScenes.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier")
+            as! LightsDynamicSceneCustomCell // swiftlint:disable:this force_cast
+        cell.dynamicScene = dynamicScenes[indexPath.row]
+        cell.delegate = self
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
+}
+
+// MARK: - Cell Delegate
+var timer: Timer?
+
+extension DynamicScenesViewController: DynamicSceneCellProtocol {
+    func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
+                               sceneSwitchTappedFor scene: RGBDynamicScene) {
+        // Set selected row to current cell
+        if dynamicTableViewCell.switch.isOn {
+            timer?.invalidate()
+            tableView.selectRow(at: IndexPath(row: dynamicScenes.index(of: scene)!, section: 0),
+                                animated: true, scrollPosition: .none)
+
+            // Remove previous scene timer and reset indices
+            var previousIndices = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
+
+            // Set scene
+            setScene(scene: scene, previousIndices: &previousIndices)
+            timer = Timer.scheduledTimer(withTimeInterval: scene.timer, repeats: true, block: { _ in
+                self.setScene(scene: scene, previousIndices: &previousIndices)
+            })
+        } else {
+            timer?.invalidate()
+            timer = nil
         }
     }
 }

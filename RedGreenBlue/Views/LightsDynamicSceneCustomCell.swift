@@ -24,11 +24,10 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         if selected {
-            self.switch.isOn = true
+            self.switch.setOn(true, animated: true)
         } else {
-            self.switch.isOn = false
+            self.switch.setOn(false, animated: true)
         }
     }
 
