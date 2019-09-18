@@ -17,13 +17,10 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
     var groups = [RGBGroup]()
     var dynamicScenes = [RGBDynamicScene]()
     var navigationItems = [String]()
-    var timers = [Timer]()
 
     var selectedGroupIndex = 0
 
     @IBOutlet weak var tableView: UITableView!
-
-    weak var delegate: MiniPlayerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,21 +85,62 @@ extension DynamicScenesViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier") as! LightSceneCustomCell
-        cell.label.text = dynamicScenes[indexPath.row].name
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier")
+            as! LightsDynamicSceneCustomCell // swiftlint:disable:this force_cast
+        cell.dynamicScene = dynamicScenes[indexPath.row]
+        cell.delegate = self
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.miniPlayer(play: dynamicScenes[indexPath.row], for: groups[selectedGroupIndex])
     }
 }
 
-extension DynamicScenesViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? MiniPlayerViewController {
-            self.delegate = destination
+// MARK: - Cell Delegate
+
+var timer: Timer?
+
+extension DynamicScenesViewController: DynamicSceneCellProtocol {
+    func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
+                               sceneSwitchTappedFor scene: RGBDynamicScene) {
+        // Set selected row to current cell
+        tableView.selectRow(at: IndexPath(row: dynamicScenes.index(of: scene)!, section: 0),
+                            animated: true, scrollPosition: .none)
+
+        // Remove previous scene timer and reset indices
+        timer?.invalidate()
+        var previousIndices = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
+
+        // Set scene
+        setScene(scene: scene, previousIndices: &previousIndices)
+        timer = Timer.scheduledTimer(withTimeInterval: scene.timer, repeats: true, block: { _ in
+            self.setScene(scene: scene, previousIndices: &previousIndices)
+        })
+    }
+
+    private func setScene(scene: RGBDynamicScene, previousIndices: inout [Int]) {
+        var indicesUsed = [Int]()
+        for (index, light) in self.groups[self.selectedGroupIndex].lights.enumerated() {
+            // Create lightstate and turn light on
+            var lightState = LightState()
+            lightState.on = true
+
+            // Set brightness for light within random range of upper / lower bounds
+            // let brightness = Int(arc4random_uniform(UInt32(scene.upperBrightness - scene.bottomBrightness))
+            //     + UInt32(scene.bottomBrightness))
+            // lightState.brightness = brightness
+
+            // Set xy color value to random xy in array without repeating same color
+            var randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))
+            if indicesUsed.count < scene.xys.count {
+                while indicesUsed.contains(randomNumber) {
+                    randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))
+                }
+            }
+            previousIndices[index] = randomNumber
+            indicesUsed.append(randomNumber)
+
+            lightState.xy = [scene.xys[randomNumber].xvalue, scene.xys[randomNumber].yvalue]
+
+            RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: self.swiftyHue,
+                                                          with: lightState, completion: nil)
         }
     }
 }
