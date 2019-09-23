@@ -13,17 +13,14 @@ class RGBDynamicScene: Object {
 
     @objc dynamic var name: String = ""
     @objc dynamic var timer: Double = 0
-    @objc dynamic var bottomBrightness: Int = 0
-    @objc dynamic var upperBrightness: Int = 0
+    @objc dynamic var brightnessDifference: Int = 0
     let xys = List<XYColor>()
 
-    convenience init(name: String, timer: Double,
-                     bottomBrightness: Int, upperBrightness: Int) {
+    convenience init(name: String, timer: Double, brightnessDifference: Int) {
         self.init()
         self.name = name
         self.timer = timer
-        self.bottomBrightness = bottomBrightness
-        self.upperBrightness = upperBrightness
+        self.brightnessDifference = brightnessDifference
     }
 
     override static func primaryKey() -> String? {

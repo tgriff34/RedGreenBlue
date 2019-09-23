@@ -16,7 +16,8 @@ class ScenesTableViewController: UITableViewController {
     var swiftyHue: SwiftyHue!
     var groups = [RGBGroup]()
     var allScenes = [[PartialScene]]()
-    var scenesForGroup = [PartialScene]()
+
+    var selectedGroupIndex = 0
 
     var navigationItems = [String]()
 
@@ -28,7 +29,7 @@ class ScenesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         RGBRequest.shared.setUpConnectionListeners()
-        if groups.isEmpty { fetchData() }
+        fetchData()
     }
 
     func fetchData() {
@@ -67,16 +68,15 @@ class ScenesTableViewController: UITableViewController {
     }
 
     func setUpDropdown() {
-        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(0), items: navigationItems)
+        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
         self.navigationItem.titleView = menuView
-        self.scenesForGroup = self.allScenes[0]
         self.tableView.reloadData()
 
         menuView.menuTitleColor = .white
         menuView.cellBackgroundColor = view.backgroundColor
         menuView.cellTextLabelColor = .white
         menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
-            self.scenesForGroup = self.allScenes[indexPath]
+            self.selectedGroupIndex = indexPath
             self.tableView.reloadData()
         }
     }
@@ -84,19 +84,22 @@ class ScenesTableViewController: UITableViewController {
 
 extension ScenesTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scenesForGroup.count
+        if allScenes.isEmpty {
+            return 0
+        }
+        return allScenes[selectedGroupIndex].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
-        cell.label.text = scenesForGroup[indexPath.row].name
+        cell.label.text = allScenes[selectedGroupIndex][indexPath.row].name
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(scenesForGroup[indexPath.row].identifier,
-                                                          inGroupWithIdentifier: scenesForGroup[indexPath.row].group,
+        swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(allScenes[selectedGroupIndex][indexPath.row].identifier,
+                                                          inGroupWithIdentifier: allScenes[selectedGroupIndex][indexPath.row].group,
                                                           completionHandler: { (error) in
                                                             guard error == nil else {
                                                                 logger.warning("recallSceneWithIdentifier ",

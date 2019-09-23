@@ -27,7 +27,6 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         swiftyHue = RGBRequest.shared.getSwiftyHue()
         tableView.delegate = self
         tableView.dataSource = self
-        fetchData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +42,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 //                setting?.xys.append(XY([0, 1]))
 //            })
 //        }
+        fetchData()
     }
 
     private func fetchData() {
@@ -58,6 +58,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
                 return
             }
             self.groups = groups
+            self.navigationItems.removeAll()
             for group in groups {
                 self.navigationItems.append(group.name)
             }
@@ -66,7 +67,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     private func setupDropdownNavigationBar() {
-        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(0), items: navigationItems)
+        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
 
@@ -86,9 +87,9 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             lightState.on = true
 
             // Set brightness for light within random range of upper / lower bounds
-            // let brightness = Int(arc4random_uniform(UInt32(scene.upperBrightness - scene.bottomBrightness))
-            //     + UInt32(scene.bottomBrightness))
-            // lightState.brightness = brightness
+//            let brightness = Int.random(in:
+//                (light.state.brightness! - scene.brightnessDifference)...(light.state.brightness! + scene.brightnessDifference))
+//            lightState.brightness = brightness
 
             // Set xy color value to random xy in array without repeating same color
             var randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))

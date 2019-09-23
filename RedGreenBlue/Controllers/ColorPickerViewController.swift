@@ -47,6 +47,7 @@ class ColorPickerViewController: DefaultColorPickerViewController {
             var lightState = LightState()
             if turnOnLights { lightState.on = true }
             lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
+            console.debug(lightState.xy)
             RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue,
                                                           with: lightState, completion: nil)
         }
