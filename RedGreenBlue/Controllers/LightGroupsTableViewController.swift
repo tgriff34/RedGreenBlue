@@ -28,6 +28,8 @@ class LightGroupsTableViewController: UITableViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
+
+        console.debug(RGBDatabaseManager.realm()?.configuration.fileURL!)
     }
 
     override func viewWillAppear(_ animated: Bool) {

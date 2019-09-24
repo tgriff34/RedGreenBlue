@@ -45,6 +45,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         fetchData()
     }
 
+    // MARK: - Private Functions
     private func fetchData() {
         guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self) else {
             logger.error("could not retrieve results of RGBDynamicScenes from DB")
@@ -87,9 +88,6 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             lightState.on = true
 
             // Set brightness for light within random range of upper / lower bounds
-//            let brightness = Int.random(in:
-//                (light.state.brightness! - scene.brightnessDifference)...(light.state.brightness! + scene.brightnessDifference))
-//            lightState.brightness = brightness
 
             // Set xy color value to random xy in array without repeating same color
             var randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))
@@ -109,6 +107,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
     }
 }
 
+// MARK: - TableView
 extension DynamicScenesViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dynamicScenes.count
@@ -130,7 +129,7 @@ extension DynamicScenesViewController {
 // MARK: - Cell Delegate
 var timer: Timer?
 
-extension DynamicScenesViewController: DynamicSceneCellProtocol {
+extension DynamicScenesViewController: DynamicSceneCellDelegate {
     func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
                                sceneSwitchTappedFor scene: RGBDynamicScene) {
         // Set selected row to current cell

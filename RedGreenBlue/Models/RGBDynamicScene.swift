@@ -14,7 +14,7 @@ class RGBDynamicScene: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var timer: Double = 0
     @objc dynamic var brightnessDifference: Int = 0
-    let xys = List<XYColor>()
+    var xys = List<XYColor>()
 
     convenience init(name: String, timer: Double, brightnessDifference: Int) {
         self.init()

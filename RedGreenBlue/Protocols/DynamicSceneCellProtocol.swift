@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol DynamicSceneCellProtocol: AnyObject {
+protocol DynamicSceneCellDelegate: AnyObject {
     func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
                                sceneSwitchTappedFor scene: RGBDynamicScene)
 }

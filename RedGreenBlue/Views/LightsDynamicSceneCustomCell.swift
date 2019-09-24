@@ -14,7 +14,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
     @IBOutlet weak var subView: UIView!
     @IBOutlet weak var `switch`: UISwitch!
 
-    weak var delegate: DynamicSceneCellProtocol?
+    weak var delegate: DynamicSceneCellDelegate?
 
     var dynamicScene: RGBDynamicScene! {
         didSet {
