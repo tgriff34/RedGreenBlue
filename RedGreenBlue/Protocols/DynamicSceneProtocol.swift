@@ -13,5 +13,5 @@ protocol DynamicSceneAddColorDelegate: AnyObject {
 }
 
 protocol DynamicSceneAddDelegate: AnyObject {
-    func dynamicSceneAdded(_ scene: RGBDynamicScene)
+    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene)
 }

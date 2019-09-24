@@ -50,14 +50,13 @@ class DynamicScenesAddViewController: UIViewController {
     }
 
     @objc func save() {
-        dismiss(animated: true, completion: nil)
         let scene = RGBDynamicScene(name: self.name,
                                     timer: Double(pickerData[self.pickerView.selectedRow(inComponent: 0)]),
                                     brightnessDifference: 0,
                                     isDefault: false)
         scene.xys = self.colors
         console.debug(scene)
-        addSceneDelegate?.dynamicSceneAdded(scene)
+        addSceneDelegate?.dynamicSceneAdded(self, scene)
     }
 
     @objc func cancel() {

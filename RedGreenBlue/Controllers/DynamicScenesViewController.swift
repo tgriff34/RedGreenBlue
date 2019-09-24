@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SwiftyHue
 import BTNavigationDropdownMenu
+import SwiftMessages
 
 class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -165,6 +166,7 @@ extension DynamicScenesViewController {
             })
             dynamicScenes[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            //tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         default:
             logger.error("editing style does not exist: \(editingStyle)")
         }
@@ -181,7 +183,8 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
         if dynamicTableViewCell.switch.isOn {
             timer?.invalidate()
             guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
-                logger.warning("could not get indexpath of cell: \(String(describing: tableView.indexPath(for: dynamicTableViewCell)))")
+                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
+                logger.warning("could not get indexpath of cell: \(error)")
                 return
             }
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
@@ -217,12 +220,25 @@ extension DynamicScenesViewController {
 
 // MARK: - Dynamic Scene added delegate
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
-    func dynamicSceneAdded(_ scene: RGBDynamicScene) {
-        console.debug("HERE")
-        dynamicScenes[1].append(scene)
-        RGBDatabaseManager.write(to: realm, closure: {
-            realm.add(scene, update: .all)
-        })
-        tableView.reloadData()
+    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
+        if dynamicScenes[1].contains(where: { $0.name == scene.name }) {
+            // TODO: MODULARIZE THIS AS WELL
+            let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
+            var sameNameErrorConfig = SwiftMessages.Config()
+            sameNameErrorConfig.presentationContext = .window(windowLevel: .normal)
+            sameNameErrorMessage.configureTheme(.warning)
+            sameNameErrorMessage.configureContent(title: "Error Adding Scene",
+                                                  body: "Name is the same as another scene!")
+            sameNameErrorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+            sameNameErrorMessage.button?.isHidden = true
+            SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
+        } else {
+            sender.dismiss(animated: true, completion: nil)
+            dynamicScenes[1].append(scene)
+            RGBDatabaseManager.write(to: realm, closure: {
+                realm.add(scene, update: .all)
+            })
+            tableView.reloadData()
+        }
     }
 }
