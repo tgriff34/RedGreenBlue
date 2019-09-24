@@ -30,14 +30,12 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         swiftyHue = RGBRequest.shared.getSwiftyHue()
         tableView.delegate = self
         tableView.dataSource = self
-
-
-
         fetchData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupDropdownNavigationBar()
     }
 
     // MARK: - Private Functions
@@ -53,7 +51,11 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         } else {
             logger.warning("No user defined RGBDynamicScenes in DB")
         }
+        self.tableView.reloadData()
+        setupDropdownNavigationBar()
+    }
 
+    private func setupDropdownNavigationBar() {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
             guard error == nil, let groups = groups else {
                 logger.error(error.debugDescription)
@@ -64,21 +66,19 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             for group in groups {
                 self.navigationItems.append(group.name)
             }
-            self.setupDropdownNavigationBar()
+            let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
+                                                    containerView: self.navigationController!.view,
+                                                    title: BTTitle.index(self.selectedGroupIndex),
+                                                    items: self.navigationItems)
+            self.navigationItem.titleView = menuView
+
+            menuView.menuTitleColor = .white
+            menuView.cellBackgroundColor = self.view.backgroundColor
+            menuView.cellTextLabelColor = .white
+            menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
+                self.selectedGroupIndex = indexPath
+            }
         })
-    }
-
-    private func setupDropdownNavigationBar() {
-        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
-        self.navigationItem.titleView = menuView
-        self.tableView.reloadData()
-
-        menuView.menuTitleColor = .white
-        menuView.cellBackgroundColor = view.backgroundColor
-        menuView.cellTextLabelColor = .white
-        menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
-            self.selectedGroupIndex = indexPath
-        }
     }
 
     private func setScene(scene: RGBDynamicScene, previousIndices: inout [Int]) {
@@ -231,7 +231,9 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             RGBDatabaseManager.write(to: realm, closure: {
                 realm.add(scene, update: .all)
             })
-            tableView.reloadData()
+            tableView.beginUpdates()
+            tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
+            tableView.endUpdates()
         }
     }
 }
