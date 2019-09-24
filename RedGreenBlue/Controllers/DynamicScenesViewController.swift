@@ -123,8 +123,10 @@ extension DynamicScenesViewController {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "Default scenes"
+        } else if section == 1 && dynamicScenes[1].count > 0 {
+            return "User created scenes"
         }
-        return "User created scenes"
+        return ""
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
