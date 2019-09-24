@@ -98,14 +98,15 @@ extension ScenesTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(allScenes[selectedGroupIndex][indexPath.row].identifier,
-                                                          inGroupWithIdentifier: allScenes[selectedGroupIndex][indexPath.row].group,
-                                                          completionHandler: { (error) in
-                                                            guard error == nil else {
-                                                                logger.warning("recallSceneWithIdentifier ",
-                                                                               String(describing: error?.description))
-                                                                return
-                                                            }
-        })
+        swiftyHue.bridgeSendAPI
+            .recallSceneWithIdentifier(allScenes[selectedGroupIndex][indexPath.row].identifier,
+                                       inGroupWithIdentifier: allScenes[selectedGroupIndex][indexPath.row].group,
+                                       completionHandler: { (error) in
+                                         guard error == nil else {
+                                             logger.warning("recallSceneWithIdentifier ",
+                                                            String(describing: error?.description))
+                                             return
+                                         }
+            })
     }
 }
