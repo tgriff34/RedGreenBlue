@@ -11,3 +11,7 @@ import Foundation
 protocol DynamicSceneAddColorDelegate: AnyObject {
     func dynamicSceneColorAdded(_ color: XYColor)
 }
+
+protocol DynamicSceneAddDelegate: AnyObject {
+    func dynamicSceneAdded(_ scene: RGBDynamicScene)
+}

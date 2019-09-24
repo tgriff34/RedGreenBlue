@@ -20,6 +20,8 @@ class DynamicScenesAddViewController: UIViewController {
 
     var tapRecognizer: UITapGestureRecognizer?
 
+    weak var addSceneDelegate: DynamicSceneAddDelegate?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,6 +30,8 @@ class DynamicScenesAddViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
+
+        navigationItem.rightBarButtonItem?.isEnabled = false
 
         pickerData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
         pickerView.delegate = self
@@ -46,20 +50,26 @@ class DynamicScenesAddViewController: UIViewController {
     }
 
     @objc func save() {
-        let realm = RGBDatabaseManager.realm()!
-        dismiss(animated: true, completion: {
-            let scene = RGBDynamicScene(name: self.name,
-                                        timer: Double(self.pickerView.selectedRow(inComponent: 0)),
-                                        brightnessDifference: 0)
-            scene.xys = self.colors
-            RGBDatabaseManager.write(to: realm, closure: {
-                realm.add(scene)
-            })
-        })
+        dismiss(animated: true, completion: nil)
+        let scene = RGBDynamicScene(name: self.name,
+                                    timer: Double(pickerData[self.pickerView.selectedRow(inComponent: 0)]),
+                                    brightnessDifference: 0,
+                                    isDefault: false)
+        scene.xys = self.colors
+        console.debug(scene)
+        addSceneDelegate?.dynamicSceneAdded(scene)
     }
 
     @objc func cancel() {
         dismiss(animated: true, completion: nil)
+    }
+
+    private func enableOrDisableSaveButton() {
+        if colors.isEmpty || textField.text?.isEmpty ?? false {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        }
     }
 }
 
@@ -91,15 +101,16 @@ extension DynamicScenesAddViewController: UITableViewDelegate, UITableViewDataSo
         cell.textLabel?.text = "\(colors[indexPath.row].xvalue), \(colors[indexPath.row].yvalue)"
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
             colors.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            enableOrDisableSaveButton()
         default:
             logger.error("editing style does not exist: \(editingStyle)")
-            break
         }
     }
 }
@@ -113,6 +124,7 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         name = textField.text ?? ""
         self.view.removeGestureRecognizer(tapRecognizer!)
+        enableOrDisableSaveButton()
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.view.addGestureRecognizer(tapRecognizer!)
@@ -128,7 +140,6 @@ extension DynamicScenesAddViewController {
             viewController?.addColorDelegate = self
         default:
             logger.error("segue identifier does not exist: \(segue.identifier ?? "nil")")
-            break
         }
     }
 }
@@ -136,7 +147,8 @@ extension DynamicScenesAddViewController {
 // MARK: - Add Color Delegate
 extension DynamicScenesAddViewController: DynamicSceneAddColorDelegate {
     func dynamicSceneColorAdded(_ color: XYColor) {
-        self.colors.append(color)
+        colors.append(color)
         tableView.reloadData()
+        enableOrDisableSaveButton()
     }
 }

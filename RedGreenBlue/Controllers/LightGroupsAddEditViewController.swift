@@ -91,6 +91,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         }
     }
 
+    // TODO: Modularize with Dynamic Scene add
     func enableOrDisableSaveButton() {
         if selectedLights.isEmpty || textField.text?.isEmpty ?? false {
             navigationItem.rightBarButtonItem?.isEnabled = false
