@@ -60,6 +60,14 @@ extension InitialBridgeFinderViewController {
         switch segue.identifier {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
+            RGBDatabaseManager.write(to: realm!, closure: {
+                let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0, isDefault: true)
+                scene.xys.append(XYColor([Double(0.1356), Double(0.0412)]))
+                scene.xys.append(XYColor([Double(0.6997), Double(0.3)]))
+                scene.xys.append(XYColor([Double(0), Double(1)]))
+                scene.xys.append(XYColor([Double(0.4944), Double(0.474)]))
+                realm!.add(scene, update: .all)
+            })
         default:
             logger.error("starting main application with segue: ", String(describing: segue.identifier))
         }

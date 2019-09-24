@@ -15,7 +15,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
     var lights = [Light]()
     var swiftyHue: SwiftyHue!
 
-    var selectedLights: [String] = []
+    var selectedLights = [String]()
     var name: String = ""
     var userEditing: Bool = false
 
@@ -24,7 +24,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
 
-    var tapRecogniser: UITapGestureRecognizer?
+    var tapRecognizer: UITapGestureRecognizer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +48,8 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         tableView.delegate = self
         tableView.dataSource = self
 
-        tapRecogniser = UITapGestureRecognizer()
-        tapRecogniser?.addTarget(self, action: #selector(viewTapped))
+        tapRecognizer = UITapGestureRecognizer()
+        tapRecognizer?.addTarget(self, action: #selector(viewTapped))
 
         fetchData()
     }
@@ -91,6 +91,7 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         }
     }
 
+    // TODO: Modularize with Dynamic Scene add
     func enableOrDisableSaveButton() {
         if selectedLights.isEmpty || textField.text?.isEmpty ?? false {
             navigationItem.rightBarButtonItem?.isEnabled = false
@@ -151,10 +152,10 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         name = textField.text ?? ""
-        self.view.removeGestureRecognizer(tapRecogniser!)
+        self.view.removeGestureRecognizer(tapRecognizer!)
         enableOrDisableSaveButton()
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.view.addGestureRecognizer(tapRecogniser!)
+        self.view.addGestureRecognizer(tapRecognizer!)
     }
 }

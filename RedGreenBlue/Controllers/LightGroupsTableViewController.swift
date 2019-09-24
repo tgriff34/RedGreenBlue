@@ -28,6 +28,8 @@ class LightGroupsTableViewController: UITableViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self, action: #selector(addOrEditGroup))
+
+        console.debug(RGBDatabaseManager.realm()?.configuration.fileURL!)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +92,7 @@ class LightGroupsTableViewController: UITableViewController {
         for (index, subGroup) in groups.enumerated() where group?.identifier != subGroup.identifier {
             guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
                 as? LightsGroupCustomCell else {
-                    logger.error("Error receiving cellForRow: \(index)")
+                    logger.warning("Error receiving cellForRow: \(index)")
                     continue
             }
             cell.group = subGroup
