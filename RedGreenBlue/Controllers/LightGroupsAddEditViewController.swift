@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyHue
 
-class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class LightGroupsAddEditViewController: UITableViewController {
 
     var group: RGBGroup!
     var lights = [Light]()
@@ -17,17 +17,17 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
 
     var selectedLights = [String]()
     var name: String = ""
-    var userEditing: Bool = false
-
-    var onSave: ((Bool) -> Void)?
-
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var textField: UITextField!
 
     var tapRecognizer: UITapGestureRecognizer?
 
+    weak var addGroupDelegate: GroupAddDelegate?
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOS 13, *) {
+            self.navigationController?.isModalInPresentation = true
+        }
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                            target: self, action: #selector(cancel))
@@ -38,15 +38,9 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
             navigationItem.title = "Add Group"
             navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
-            userEditing = true
             navigationItem.title = "Edit Group"
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
-
-        textField.text = name
-        textField.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
 
         tapRecognizer = UITapGestureRecognizer()
         tapRecognizer?.addTarget(self, action: #selector(viewTapped))
@@ -54,53 +48,31 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
         fetchData()
     }
 
-    func save() {
-        dismiss(animated: true, completion: nil)
-        if userEditing {
-            onSave?(false)
-        } else {
-            onSave?(true)
-        }
-    }
-
     @objc func viewTapped() {
         self.view.endEditing(true)
     }
 
     @objc func cancel() {
+        addGroupDelegate?.groupAddedCancelled()
         dismiss(animated: true, completion: nil)
     }
 
     @objc func add() {
-        if userEditing {
-            guard let group = group else {
-                logger.error("did not receive editing group")
-                return
-            }
-            swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier, newName: name,
-                                                       newLightIdentifiers: selectedLights,
-                                                       completionHandler: { _ in
-                                                        self.save()
-            })
-        } else {
-            swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
-                                                         includeLightIds: selectedLights,
-                                                         completionHandler: { _ in
-                                                            self.save()
-            })
-        }
+        addGroupDelegate?.groupAddedSuccess(name, selectedLights)
+        dismiss(animated: true, completion: nil)
     }
 
     // TODO: Modularize with Dynamic Scene add
-    func enableOrDisableSaveButton() {
-        if selectedLights.isEmpty || textField.text?.isEmpty ?? false {
+    private func enableOrDisableSaveButton() {
+        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LightsGroupAddNameCell
+        if selectedLights.isEmpty || cell?.textField.text?.isEmpty ?? false {
             navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
 
-    func fetchData() {
+    private func fetchData() {
         RGBRequest.shared.getLights(with: self.swiftyHue, completion: { (lights) in
             self.lights = Array(lights.values).map({ return $0 })
             self.lights.sort(by: { $0.identifier < $1.identifier })
@@ -111,36 +83,58 @@ class LightGroupsAddEditViewController: UIViewController, UITableViewDataSource,
 
 // MARK: - TableView
 extension LightGroupsAddEditViewController {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        }
         return lights.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLightIdentifier", for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            //swiftlint:disable:next force_cast
+            let cell = tableView.dequeueReusableCell(withIdentifier: "textFieldCell") as! LightsGroupAddNameCell
+            cell.textField.delegate = self
+            cell.textField.text = name
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLightIdentifier")!
 
-        cell.textLabel?.text = lights[indexPath.row].name
+            cell.textLabel?.text = lights[indexPath.row].name
 
-        if selectedLights.contains(lights[indexPath.row].identifier) {
-            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        } else {
-            cell.accessoryType = .none
+            if selectedLights.contains(lights[indexPath.row].identifier) {
+                self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+            return cell
+        default:
+            logger.error("No section exists for: \(indexPath.section)")
+            return super.tableView(tableView, cellForRowAt: indexPath)
         }
-
-        return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.accessoryType = .checkmark
-        selectedLights.append(lights[indexPath.row].identifier)
-        enableOrDisableSaveButton()
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, let cell = tableView.cellForRow(at: indexPath) {
+            console.debug("CHECKMARK")
+            cell.accessoryType = .checkmark
+            selectedLights.append(lights[indexPath.row].identifier)
+            enableOrDisableSaveButton()
+        }
     }
 
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.accessoryType = .none
-        selectedLights.remove(at: selectedLights.index(of: lights[indexPath.row].identifier)!)
-        enableOrDisableSaveButton()
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, let cell = tableView.cellForRow(at: indexPath) {
+            cell.accessoryType = .none
+            selectedLights.remove(at: selectedLights.index(of: lights[indexPath.row].identifier)!)
+            enableOrDisableSaveButton()
+        }
     }
 }
 

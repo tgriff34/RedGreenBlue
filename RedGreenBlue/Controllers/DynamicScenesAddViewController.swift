@@ -9,13 +9,12 @@
 import UIKit
 import RealmSwift
 
-class DynamicScenesAddViewController: UIViewController {
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var pickerView: UIPickerView!
+class DynamicScenesAddViewController: UITableViewController {
 
-    var pickerData = [Int]()
+    @IBOutlet weak var textField: UITextField!
+
     var colors = List<XYColor>()
+    var time: Int = 1
     var name: String = ""
 
     var tapRecognizer: UITapGestureRecognizer?
@@ -33,14 +32,7 @@ class DynamicScenesAddViewController: UIViewController {
 
         navigationItem.rightBarButtonItem?.isEnabled = false
 
-        pickerData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        tableView.delegate = self
-        tableView.dataSource = self
         textField.delegate = self
-        textField.text = name
-
         tapRecognizer = UITapGestureRecognizer()
         tapRecognizer?.addTarget(self, action: #selector(viewTapped))
     }
@@ -51,7 +43,7 @@ class DynamicScenesAddViewController: UIViewController {
 
     @objc func save() {
         let scene = RGBDynamicScene(name: self.name,
-                                    timer: Double(pickerData[self.pickerView.selectedRow(inComponent: 0)]),
+                                    timer: Double(time),
                                     brightnessDifference: 0,
                                     isDefault: false)
         scene.xys = self.colors
@@ -72,49 +64,62 @@ class DynamicScenesAddViewController: UIViewController {
     }
 }
 
-// MARK: - PickerView
-extension DynamicScenesAddViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerData.count
-    }
-
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int,
-                    forComponent component: Int) -> NSAttributedString? {
-        let string = "\(pickerData[row]) seconds"
-        return NSAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+// MARK: - TableView
+extension DynamicScenesAddViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            break
+        case 1:
+            let cell = tableView.cellForRow(at: indexPath)
+            if indexPath.row == 0 {
+                if time == 1 {
+                    cell?.detailTextLabel!.text = "\(time) second"
+                } else {
+                    cell?.detailTextLabel!.text = "\(time) seconds"
+                }
+            } else if indexPath.row == 1 {
+                cell?.detailTextLabel?.text = "\(colors.count) colors"
+            }
+        default:
+            logger.error("No section for \(indexPath.section)")
+        }
+        return super.tableView(tableView, cellForRowAt: indexPath)
     }
 }
 
-// MARK: - TableView
-extension DynamicScenesAddViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return colors.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "colorCell")!
-        cell.textLabel?.text = "\(colors[indexPath.row].xvalue), \(colors[indexPath.row].yvalue)"
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        switch editingStyle {
-        case .delete:
-            colors.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            enableOrDisableSaveButton()
+// MARK: - Navigation / Set Delegate to self
+extension DynamicScenesAddViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "colorsSegue":
+            let viewController = segue.destination as? DynamicScenesColorsTableViewController
+            viewController?.addColorsDelegate = self
+        case "timeBetweenChangingSegue":
+            let viewController = segue.destination as? DynamicScenesAddTimeViewController
+            viewController?.addTimeDelegate = self
+            viewController?.selectedTime = time
         default:
-            logger.error("editing style does not exist: \(editingStyle)")
+            logger.error("segue identifier does not exist: \(segue.identifier ?? "nil")")
         }
     }
 }
 
-// MARK: - Text Field Delegate
+// MARK: - Add Color / Time Delegate
+extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddTimeDelegate {
+    func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
+        self.colors = colors
+        tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .none)
+        enableOrDisableSaveButton()
+    }
+
+    func dynamicSceneTimeAdded(_ time: Int) {
+        self.time = time
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
+    }
+}
+
+// MARK: - TextField Delegate
 extension DynamicScenesAddViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -127,27 +132,5 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.view.addGestureRecognizer(tapRecognizer!)
-    }
-}
-
-// MARK: - Navigation / Set Delegate to self
-extension DynamicScenesAddViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "addColorSegue":
-            let viewController = segue.destination as? DynamicScenesAddColorViewController
-            viewController?.addColorDelegate = self
-        default:
-            logger.error("segue identifier does not exist: \(segue.identifier ?? "nil")")
-        }
-    }
-}
-
-// MARK: - Add Color Delegate
-extension DynamicScenesAddViewController: DynamicSceneAddColorDelegate {
-    func dynamicSceneColorAdded(_ color: XYColor) {
-        colors.append(color)
-        tableView.reloadData()
-        enableOrDisableSaveButton()
     }
 }

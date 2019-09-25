@@ -33,8 +33,13 @@ class LightsCustomCell: UITableViewCell {
 
             let image = UIView(SVGNamed:
             RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)) { (svgLayer) in
-                    svgLayer.fillColor = UIColor.white.cgColor
-                    svgLayer.resizeToFit(self.lightImage.bounds)
+                if #available(iOS 13.0, *) {
+                    svgLayer.fillColor = UIColor.label.cgColor
+                } else {
+                    // Fallback on earlier versions
+                    svgLayer.fillColor = UIColor.black.cgColor
+                }
+                svgLayer.resizeToFit(self.lightImage.bounds)
             }
 
             lightImage.subviews.forEach({ $0.removeFromSuperview() })
@@ -45,6 +50,12 @@ class LightsCustomCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         subView.layer.cornerRadius = 20.0
+        if self.traitCollection.userInterfaceStyle != .dark {
+            subView.layer.shadowColor = UIColor.gray.cgColor
+            subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            subView.layer.shadowOpacity = 0.7
+            subView.layer.shadowRadius = 4.7
+        }
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
     }

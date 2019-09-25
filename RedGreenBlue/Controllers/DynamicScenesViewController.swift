@@ -66,15 +66,20 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             for group in groups {
                 self.navigationItems.append(group.name)
             }
-            let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
-                                                    containerView: self.navigationController!.view,
-                                                    title: BTTitle.index(self.selectedGroupIndex),
+            let menuView = BTNavigationDropdownMenu(title: BTTitle.index(self.selectedGroupIndex),
                                                     items: self.navigationItems)
             self.navigationItem.titleView = menuView
 
-            menuView.menuTitleColor = .white
             menuView.cellBackgroundColor = self.view.backgroundColor
-            menuView.cellTextLabelColor = .white
+            if #available(iOS 13, *) {
+                menuView.menuTitleColor = UIColor.label
+                menuView.arrowTintColor = UIColor.label
+                menuView.cellTextLabelColor = UIColor.label
+            } else {
+                menuView.menuTitleColor = .black
+                menuView.arrowTintColor = .black
+                menuView.cellTextLabelColor = .black
+            }
             menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
                 self.selectedGroupIndex = indexPath
             }
@@ -231,9 +236,13 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             RGBDatabaseManager.write(to: realm, closure: {
                 realm.add(scene, update: .all)
             })
-            tableView.beginUpdates()
-            tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
-            tableView.endUpdates()
+            if dynamicScenes[1].count == 1 {
+                tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+            } else {
+                tableView.beginUpdates()
+                tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
+                tableView.endUpdates()
+            }
         }
     }
 }
