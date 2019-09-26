@@ -53,7 +53,6 @@ class LightGroupsAddEditViewController: UITableViewController {
     }
 
     @objc func cancel() {
-        addGroupDelegate?.groupAddedCancelled()
         dismiss(animated: true, completion: nil)
     }
 

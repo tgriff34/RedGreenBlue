@@ -15,14 +15,19 @@ class RGBDynamicScene: Object {
     @objc dynamic var timer: Double = 0
     @objc dynamic var brightnessDifference: Int = 0
     @objc dynamic var isDefault: Bool = false
+    @objc dynamic var sequentialLightChange: Bool = false
+    @objc dynamic var randomColors: Bool = false
     var xys = List<XYColor>()
 
-    convenience init(name: String, timer: Double, brightnessDifference: Int, isDefault: Bool) {
+    convenience init(name: String, timer: Double, brightnessDifference: Int,
+                     isDefault: Bool, sequentialLightChange: Bool, randomColors: Bool) {
         self.init()
         self.name = name
         self.timer = timer
         self.brightnessDifference = brightnessDifference
         self.isDefault = isDefault
+        self.sequentialLightChange = sequentialLightChange
+        self.randomColors = randomColors
     }
 
     override static func primaryKey() -> String? {

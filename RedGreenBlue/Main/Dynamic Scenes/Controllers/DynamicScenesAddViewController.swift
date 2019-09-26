@@ -12,6 +12,8 @@ import RealmSwift
 class DynamicScenesAddViewController: UITableViewController {
 
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var sequentialLightChangeSwitch: UISwitch!
+    @IBOutlet weak var randomColorsSwitch: UISwitch!
 
     var colors = List<XYColor>()
     var time: Int = 1
@@ -45,7 +47,9 @@ class DynamicScenesAddViewController: UITableViewController {
         let scene = RGBDynamicScene(name: self.name,
                                     timer: Double(time),
                                     brightnessDifference: 0,
-                                    isDefault: false)
+                                    isDefault: false,
+                                    sequentialLightChange: sequentialLightChangeSwitch.isOn,
+                                    randomColors: randomColorsSwitch.isOn)
         scene.xys = self.colors
         console.debug(scene)
         addSceneDelegate?.dynamicSceneAdded(self, scene)
@@ -94,6 +98,7 @@ extension DynamicScenesAddViewController {
         switch segue.identifier {
         case "colorsSegue":
             let viewController = segue.destination as? DynamicScenesColorsTableViewController
+            viewController?.colors = colors
             viewController?.addColorsDelegate = self
         case "timeBetweenChangingSegue":
             let viewController = segue.destination as? DynamicScenesAddTimeViewController

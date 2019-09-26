@@ -10,5 +10,4 @@ import Foundation
 
 protocol GroupAddDelegate: AnyObject {
     func groupAddedSuccess(_ name: String, _ lights: [String])
-    func groupAddedCancelled()
 }
