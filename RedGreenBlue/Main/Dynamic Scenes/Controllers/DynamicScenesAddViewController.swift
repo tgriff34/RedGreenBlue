@@ -98,6 +98,7 @@ extension DynamicScenesAddViewController {
         switch segue.identifier {
         case "colorsSegue":
             let viewController = segue.destination as? DynamicScenesColorsTableViewController
+            viewController?.colors = colors
             viewController?.addColorsDelegate = self
         case "timeBetweenChangingSegue":
             let viewController = segue.destination as? DynamicScenesAddTimeViewController
