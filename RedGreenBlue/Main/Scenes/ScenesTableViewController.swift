@@ -68,6 +68,7 @@ class ScenesTableViewController: UITableViewController {
     }
 
     func setUpDropdown() {
+        if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
         let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()

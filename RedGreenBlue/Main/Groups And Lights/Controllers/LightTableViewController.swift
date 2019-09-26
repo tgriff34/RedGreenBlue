@@ -285,7 +285,6 @@ extension LightTableViewController: GroupAddDelegate {
                                                   newName: name, newLightIdentifiers: lights,
                                                   completionHandler: { _ in
                                                     self.fetchData(group: self.group, completion: {
-                                                        console.debug(self.group.lightIdentifiers.count)
                                                         self.tableView.reloadData()
                                                     })
         })

@@ -66,6 +66,7 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             for group in groups {
                 self.navigationItems.append(group.name)
             }
+            if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
             let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
                                                     containerView: self.view,
                                                     title: BTTitle.index(self.selectedGroupIndex),
