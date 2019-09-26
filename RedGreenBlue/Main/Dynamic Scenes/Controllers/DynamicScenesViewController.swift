@@ -112,15 +112,18 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 
     private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
-        for index in lightsForScene.indices where lightsForScene.contains(-1) {
+        console.debug(lightsForScene)
+        let iterator = groups[selectedGroupIndex].lights
+        for _ in iterator where lightsForScene.count < iterator.count {
             if randomColors {
-                lightsForScene[index] = genRandomNum(numberOfColors: numberOfColors)
+                lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
             } else {
-                let count = lightsForScene.count - 1
+                let count = iterator.count - 1
                 lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
                 lightsForScene = Array(lightsForScene[...count])
             }
         }
+        console.debug(lightsForScene)
 
         if isSequential { // If it's sequential just shift to right
             lightsForScene = lightsForScene.shiftRight()
@@ -214,10 +217,8 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
             }
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
 
-            // Remove previous scene timer and reset indices
-            lightsForScene = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
-
             // Set scene
+            lightsForScene.removeAll()
             setScene(scene: scene)
             timer = Timer.scheduledTimer(withTimeInterval: scene.timer, repeats: true, block: { _ in
                 self.setScene(scene: scene)
