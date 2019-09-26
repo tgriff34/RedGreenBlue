@@ -13,6 +13,8 @@ class LightGroupsTableViewController: UITableViewController {
     var groups = [RGBGroup]()
     var swiftyHue: SwiftyHue!
 
+    var groupToEdit: RGBGroup?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,9 +27,6 @@ class LightGroupsTableViewController: UITableViewController {
                                                name: NSNotification.Name(rawValue:
                                                 ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                                                object: nil)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self, action: #selector(addOrEditGroup))
 
         console.debug(RGBDatabaseManager.realm()?.configuration.fileURL!)
     }
@@ -147,7 +146,8 @@ extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Edit", handler: { (_, _, completionHandler) in
-            self.addOrEditView(self.groups[indexPath.row])
+            self.groupToEdit = self.groups[indexPath.row]
+            self.performSegue(withIdentifier: "AddGroupSegue", sender: self)
             completionHandler(true)
         })
 
@@ -194,6 +194,34 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
     }
 }
 
+// MARK: - Add Group Delegate
+extension LightGroupsTableViewController: GroupAddDelegate {
+    func groupAddedSuccess(_ name: String, _ lights: [String]) {
+        if groupToEdit == nil {
+            swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
+                                                        includeLightIds: lights,
+                                                        completionHandler: { _ in
+                                                            self.fetchData(group: nil, completion: {
+                                                                self.tableView.reloadData()
+                                                            })
+            })
+        } else {
+            swiftyHue.bridgeSendAPI.updateGroupWithId(groupToEdit!.identifier,
+                                                      newName: name, newLightIdentifiers: lights,
+                                                      completionHandler: { _ in
+                                                        self.fetchData(group: nil, completion: {
+                                                            self.tableView.reloadData()
+                                                            self.groupToEdit = nil
+                                                        })
+            })
+        }
+    }
+
+    func groupAddedCancelled() {
+        groupToEdit = nil
+    }
+}
+
 // MARK: - NAVIGATION
 extension LightGroupsTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -213,38 +241,17 @@ extension LightGroupsTableViewController {
             lightTableViewController.swiftyHue = swiftyHue
             lightTableViewController.title = groups[index].name
             lightTableViewController.group = groups[index]
-
+        case "AddGroupSegue":
+            let navigationController = segue.destination as? UINavigationController
+            let lightGroupsAddEditViewController = navigationController?.viewControllers.first!
+                as? LightGroupsAddEditViewController
+            lightGroupsAddEditViewController?.group = groupToEdit
+            lightGroupsAddEditViewController?.swiftyHue = swiftyHue
+            lightGroupsAddEditViewController?.name = groupToEdit?.name ?? ""
+            lightGroupsAddEditViewController?.selectedLights = groupToEdit?.lightIdentifiers ?? []
+            lightGroupsAddEditViewController?.addGroupDelegate = self
         default:
             logger.error("performing segue: \(String(describing: segue.identifier))")
-        }
-    }
-
-    @objc func addOrEditGroup() {
-        addOrEditView(nil)
-    }
-
-    // Modularize
-    func addOrEditView(_ group: RGBGroup?) {
-        guard let lightGroupsAddEditViewController = storyboard?.instantiateViewController(withIdentifier: "addGroup")
-            as? LightGroupsAddEditViewController else {
-                logger.error("could not instantiateViewController: addGroup as? LightGroupsAddEditViewController")
-                return
-        }
-        lightGroupsAddEditViewController.group = group
-        lightGroupsAddEditViewController.swiftyHue = swiftyHue
-        lightGroupsAddEditViewController.name = group?.name ?? ""
-        lightGroupsAddEditViewController.selectedLights = group?.lightIdentifiers ?? []
-        let navigationController = UINavigationController(rootViewController: lightGroupsAddEditViewController)
-        navigationController.navigationBar.barStyle = .black
-
-        present(navigationController, animated: true, completion: nil)
-
-        lightGroupsAddEditViewController.onSave = { (result) in
-            if result {
-                self.fetchData(group: nil, completion: {
-                    self.tableView.reloadData()
-                })
-            }
         }
     }
 }

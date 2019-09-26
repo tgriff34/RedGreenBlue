@@ -11,10 +11,18 @@
 		45B6C0AFDACD263DB6F68320 /* Pods_RedGreenBlueUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */; };
 		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
+		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
+		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
 		46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */; };
 		46736547233A61C700DA33AA /* DynamicScenesAddColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */; };
 		46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */; };
+		4673654D233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */; };
+		4673654F233BD85300DA33AA /* DynamicScenesColorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4673654E233BD85300DA33AA /* DynamicScenesColorsTableViewController.swift */; };
+		468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD77233C27AE0023401C /* GroupsAndLights.storyboard */; };
+		468CAD7A233C27C60023401C /* Scenes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD79233C27C60023401C /* Scenes.storyboard */; };
+		468CAD7C233C27F30023401C /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD7B233C27F30023401C /* Settings.storyboard */; };
+		468CAD7E233C28350023401C /* DynamicScenes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD7D233C28350023401C /* DynamicScenes.storyboard */; };
 		46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46974DDE2323F87E000AF31A /* ScenesTableViewController.swift */; };
 		46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */; };
 		46B6423D232000800047F233 /* RGBGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B6423C232000800047F233 /* RGBGroup.swift */; };
@@ -68,10 +76,18 @@
 		128E4C0BD168185191980114 /* Pods-RedGreenBlueTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.release.xcconfig"; sourceTree = "<group>"; };
 		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
+		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
+		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
 		46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddViewController.swift; sourceTree = "<group>"; };
 		46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddColorViewController.swift; sourceTree = "<group>"; };
 		46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneProtocol.swift; sourceTree = "<group>"; };
+		4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddTimeViewController.swift; sourceTree = "<group>"; };
+		4673654E233BD85300DA33AA /* DynamicScenesColorsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorsTableViewController.swift; sourceTree = "<group>"; };
+		468CAD77233C27AE0023401C /* GroupsAndLights.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GroupsAndLights.storyboard; sourceTree = "<group>"; };
+		468CAD79233C27C60023401C /* Scenes.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Scenes.storyboard; sourceTree = "<group>"; };
+		468CAD7B233C27F30023401C /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		468CAD7D233C28350023401C /* DynamicScenes.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DynamicScenes.storyboard; sourceTree = "<group>"; };
 		46974DDE2323F87E000AF31A /* ScenesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenesTableViewController.swift; sourceTree = "<group>"; };
 		46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsSceneCustomCell.swift; sourceTree = "<group>"; };
 		46B6423C232000800047F233 /* RGBGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroup.swift; sourceTree = "<group>"; };
@@ -154,20 +170,15 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
-		465144652316DA2D00156659 /* Controllers */ = {
+		465144652316DA2D00156659 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */,
-				46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */,
-				46EF2DB22311F3180021B28B /* LightGroupsAddEditViewController.swift */,
-				46CCAA15230848F90054187A /* LightTableViewController.swift */,
-				46EF2DAE230F0A010021B28B /* ColorPickerViewController.swift */,
-				46974DDE2323F87E000AF31A /* ScenesTableViewController.swift */,
-				46F42E072326BDA300FB73FA /* DynamicScenesViewController.swift */,
-				46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */,
-				46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */,
+				468CAD76233C27150023401C /* Settings */,
+				468CAD72233C26D20023401C /* Dynamic Scenes */,
+				468CAD71233C26750023401C /* Scenes */,
+				468CAD6D233C261C0023401C /* Groups And Lights */,
 			);
-			path = Controllers;
+			path = Main;
 			sourceTree = "<group>";
 		};
 		465144662318221200156659 /* Storyboards */ = {
@@ -181,16 +192,106 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		46B6423E232068960047F233 /* Views */ = {
+		468CAD6D233C261C0023401C /* Groups And Lights */ = {
+			isa = PBXGroup;
+			children = (
+				468CAD77233C27AE0023401C /* GroupsAndLights.storyboard */,
+				468CAD70233C266B0023401C /* Protocols */,
+				468CAD6F233C26610023401C /* Views */,
+				468CAD6E233C26570023401C /* Controllers */,
+			);
+			path = "Groups And Lights";
+			sourceTree = "<group>";
+		};
+		468CAD6E233C26570023401C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				46EF2DAE230F0A010021B28B /* ColorPickerViewController.swift */,
+				46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */,
+				46EF2DB22311F3180021B28B /* LightGroupsAddEditViewController.swift */,
+				46CCAA15230848F90054187A /* LightTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		468CAD6F233C26610023401C /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
 				46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */,
-				46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */,
-				46E22732233270E40031CE0C /* LightsDynamicSceneCustomCell.swift */,
-				46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */,
+				464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		468CAD70233C266B0023401C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				46DC9902232555BF00D939BF /* LightCellProtocol.swift */,
+				46DC9900232555AD00D939BF /* GroupCellProtocol.swift */,
+				464F0E19233C17E400E33FA1 /* GroupProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		468CAD71233C26750023401C /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				468CAD79233C27C60023401C /* Scenes.storyboard */,
+				46A8C0CD231889A6002DE3C2 /* LightsSceneCustomCell.swift */,
+				46974DDE2323F87E000AF31A /* ScenesTableViewController.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		468CAD72233C26D20023401C /* Dynamic Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				468CAD7D233C28350023401C /* DynamicScenes.storyboard */,
+				468CAD75233C27000023401C /* Protocols */,
+				468CAD74233C26F30023401C /* Views */,
+				468CAD73233C26E80023401C /* Controllers */,
+			);
+			path = "Dynamic Scenes";
+			sourceTree = "<group>";
+		};
+		468CAD73233C26E80023401C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				46F42E072326BDA300FB73FA /* DynamicScenesViewController.swift */,
+				46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */,
+				46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */,
+				4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */,
+				4673654E233BD85300DA33AA /* DynamicScenesColorsTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		468CAD74233C26F30023401C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				46E22732233270E40031CE0C /* LightsDynamicSceneCustomCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		468CAD75233C27000023401C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */,
+				46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		468CAD76233C27150023401C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				468CAD7B233C27F30023401C /* Settings.storyboard */,
+				46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */,
+				6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		46CCAA0C2307058A0054187A /* Models */ = {
@@ -207,10 +308,6 @@
 			isa = PBXGroup;
 			children = (
 				46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */,
-				46DC9900232555AD00D939BF /* GroupCellProtocol.swift */,
-				46DC9902232555BF00D939BF /* LightCellProtocol.swift */,
-				46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */,
-				46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -253,9 +350,8 @@
 				6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */,
 				46DC98FD2325557200D939BF /* Protocols */,
 				46CCAA0C2307058A0054187A /* Models */,
-				46B6423E232068960047F233 /* Views */,
 				46EF2DAD230EF5FC0021B28B /* Helpers */,
-				465144652316DA2D00156659 /* Controllers */,
+				465144652316DA2D00156659 /* Main */,
 				465144662318221200156659 /* Storyboards */,
 				4651445F2315C5D000156659 /* Onboarding */,
 				6FA9CDF223062EF30011A2F8 /* Assets.xcassets */,
@@ -415,11 +511,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FF6F4BE2323FCC500555EE7 /* SuccessCustomMessage.xib in Resources */,
+				468CAD7A233C27C60023401C /* Scenes.storyboard in Resources */,
 				6FA9CDF623062EF30011A2F8 /* LaunchScreen.storyboard in Resources */,
 				6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */,
 				6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */,
+				468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */,
+				468CAD7C233C27F30023401C /* Settings.storyboard in Resources */,
 				6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */,
 				46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */,
+				468CAD7E233C28350023401C /* DynamicScenes.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +657,7 @@
 				46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
 				46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */,
+				4673654F233BD85300DA33AA /* DynamicScenesColorsTableViewController.swift in Sources */,
 				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				46EF2DAF230F0A010021B28B /* ColorPickerViewController.swift in Sources */,
 				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
@@ -566,11 +667,14 @@
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
 				46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */,
 				46EF2DAC230ED09C0021B28B /* LightsCustomCell.swift in Sources */,
+				464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */,
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
+				464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */,
 				46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
 				46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */,
+				4673654D233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift in Sources */,
 				46E22733233270E40031CE0C /* LightsDynamicSceneCustomCell.swift in Sources */,
 				46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */,
 				46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */,
@@ -752,7 +856,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 56K2EF9V37;
+				DEVELOPMENT_TEAM = 7Y3STU6UA7;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -771,7 +875,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 56K2EF9V37;
+				DEVELOPMENT_TEAM = 7Y3STU6UA7;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

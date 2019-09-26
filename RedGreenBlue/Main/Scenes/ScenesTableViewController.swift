@@ -72,9 +72,16 @@ class ScenesTableViewController: UITableViewController {
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
 
-        menuView.menuTitleColor = .white
         menuView.cellBackgroundColor = view.backgroundColor
-        menuView.cellTextLabelColor = .white
+        if #available(iOS 13, *) {
+            menuView.menuTitleColor = UIColor.label
+            menuView.arrowTintColor = UIColor.label
+            menuView.cellTextLabelColor = UIColor.label
+        } else {
+            menuView.menuTitleColor = .black
+            menuView.arrowTintColor = .black
+            menuView.cellTextLabelColor = .black
+        }
         menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
             self.selectedGroupIndex = indexPath
             self.tableView.reloadData()
