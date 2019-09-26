@@ -24,7 +24,7 @@ class LightGroupsAddEditViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         if #available(iOS 13, *) {
             self.navigationController?.isModalInPresentation = true
         }
