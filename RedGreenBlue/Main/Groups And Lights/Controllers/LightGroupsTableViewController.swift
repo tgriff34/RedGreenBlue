@@ -13,8 +13,6 @@ class LightGroupsTableViewController: UITableViewController {
     var groups = [RGBGroup]()
     var swiftyHue: SwiftyHue!
 
-    var groupToEdit: RGBGroup?
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -68,7 +66,12 @@ class LightGroupsTableViewController: UITableViewController {
                 self.tableView.reloadData()
             })
         } else {
-            fetchData(group: nil, completion: { self.swiftyHue.startHeartbeat() })
+            fetchData(group: nil, completion: {
+                self.swiftyHue.startHeartbeat()
+                if self.tableView.numberOfRows(inSection: 0) != self.groups.count {
+                    self.tableView.reloadData()
+                }
+            })
         }
     }
 
@@ -129,32 +132,6 @@ extension LightGroupsTableViewController {
         cell.delegate = self
         return cell
     }
-
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
-                            forRowAt indexPath: IndexPath) {
-        switch editingStyle {
-        case .delete:
-            swiftyHue.bridgeSendAPI.removeGroupWithId(self.groups[indexPath.row].identifier,
-                                                           completionHandler: { _ in })
-            groups.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        default:
-            logger.warning("editing style does not exist: \(editingStyle)")
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
-        -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Edit", handler: { (_, _, completionHandler) in
-            self.groupToEdit = self.groups[indexPath.row]
-            self.performSegue(withIdentifier: "AddGroupSegue", sender: self)
-            completionHandler(true)
-        })
-
-        action.backgroundColor = view.tintColor
-        let configuration = UISwipeActionsConfiguration(actions: [action])
-        return configuration
-    }
 }
 
 // MARK: - Groups Cell Delegate
@@ -197,28 +174,13 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
 // MARK: - Add Group Delegate
 extension LightGroupsTableViewController: GroupAddDelegate {
     func groupAddedSuccess(_ name: String, _ lights: [String]) {
-        if groupToEdit == nil {
-            swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
-                                                        includeLightIds: lights,
-                                                        completionHandler: { _ in
-                                                            self.fetchData(group: nil, completion: {
-                                                                self.tableView.reloadData()
-                                                            })
-            })
-        } else {
-            swiftyHue.bridgeSendAPI.updateGroupWithId(groupToEdit!.identifier,
-                                                      newName: name, newLightIdentifiers: lights,
-                                                      completionHandler: { _ in
+        swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
+                                                    includeLightIds: lights,
+                                                    completionHandler: { _ in
                                                         self.fetchData(group: nil, completion: {
                                                             self.tableView.reloadData()
-                                                            self.groupToEdit = nil
                                                         })
-            })
-        }
-    }
-
-    func groupAddedCancelled() {
-        groupToEdit = nil
+        })
     }
 }
 
@@ -245,10 +207,10 @@ extension LightGroupsTableViewController {
             let navigationController = segue.destination as? UINavigationController
             let lightGroupsAddEditViewController = navigationController?.viewControllers.first!
                 as? LightGroupsAddEditViewController
-            lightGroupsAddEditViewController?.group = groupToEdit
+            lightGroupsAddEditViewController?.group = nil
             lightGroupsAddEditViewController?.swiftyHue = swiftyHue
-            lightGroupsAddEditViewController?.name = groupToEdit?.name ?? ""
-            lightGroupsAddEditViewController?.selectedLights = groupToEdit?.lightIdentifiers ?? []
+            lightGroupsAddEditViewController?.name = ""
+            lightGroupsAddEditViewController?.selectedLights = []
             lightGroupsAddEditViewController?.addGroupDelegate = self
         default:
             logger.error("performing segue: \(String(describing: segue.identifier))")

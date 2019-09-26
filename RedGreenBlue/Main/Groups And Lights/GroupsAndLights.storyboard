@@ -69,7 +69,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qwy-gs-GkP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4732" y="-1505"/>
+            <point key="canvasLocation" x="5794" y="-1560"/>
         </scene>
         <!--Groups-->
         <scene sceneID="5hB-1D-v0V">
@@ -330,6 +330,7 @@
                     <connections>
                         <outlet property="groupBrightnessSlider" destination="5ML-DR-Cyn" id="Sr4-IW-DpN"/>
                         <outlet property="tableView" destination="Kwi-jE-obP" id="nr2-5r-Jqh"/>
+                        <segue destination="yy8-hj-e8D" kind="show" identifier="EditGroupSegue" id="nEU-ED-2IC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Qg-pw-iGc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -390,7 +391,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KWY-DF-hwL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3658" y="-1505"/>
+            <point key="canvasLocation" x="4732" y="-1559"/>
         </scene>
     </scenes>
     <resources>
@@ -400,6 +401,7 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="nEU-ED-2IC"/>
         <segue reference="YcE-EC-4rq"/>
     </inferredMetricsTieBreakers>
 </document>

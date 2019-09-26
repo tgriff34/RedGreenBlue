@@ -15,6 +15,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
+    var optionsButton: UIBarButtonItem?
     @IBOutlet weak var groupBrightnessSlider: UISlider!
 
     override func viewDidLoad() {
@@ -66,6 +67,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         RGBRequest.shared.getGroup(with: group.identifier, using: self.swiftyHue, completion: { (group) in
             self.group = group
             self.updateUI(group: group)
+            completion?()
         })
     }
 
@@ -88,6 +90,25 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             self.updateCellsFromNavigationSwitch(lightState)
             self.fetchData(group: self.group, completion: nil)
         })
+    }
+
+    @objc func optionsButtonTapped(_ sender: UIBarButtonItem) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
+            self.performSegue(withIdentifier: "EditGroupSegue", sender: self)
+        })
+        let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
+            self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.group.identifier, completionHandler: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        actionSheet.addAction(editAction)
+        actionSheet.addAction(deleteAction)
+        actionSheet.addAction(cancelAction)
+
+        self.present(actionSheet, animated: true, completion: nil)
     }
 
     @objc func groupSliderChanged(_ sender: UISlider!, _ event: UIEvent) {
@@ -134,10 +155,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     private func setupNavigationSwitch() {
+        optionsButton = UIBarButtonItem(barButtonSystemItem: .action, target: self,
+                                        action: #selector(optionsButtonTapped(_:)))
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: navigationSwitch!)
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!), optionsButton!]
     }
 
     private func setupGroupBrightnessSlider() {
@@ -240,8 +263,31 @@ extension LightTableViewController {
             colorPickerViewController.title = group.name
             colorPickerViewController.swiftyHue = swiftyHue
             colorPickerViewController.lights = group.lights
+        case "EditGroupSegue":
+            let navigationController = segue.destination as? UINavigationController
+            let lightGroupsAddEditViewController = navigationController?.viewControllers.first!
+                as? LightGroupsAddEditViewController
+            lightGroupsAddEditViewController?.group = group
+            lightGroupsAddEditViewController?.swiftyHue = swiftyHue
+            lightGroupsAddEditViewController?.name = group.name
+            lightGroupsAddEditViewController?.selectedLights = group.lightIdentifiers
+            lightGroupsAddEditViewController?.addGroupDelegate = self
         default:
             logger.error("Error performing segue: \(String(describing: segue.identifier))")
         }
+    }
+}
+
+extension LightTableViewController: GroupAddDelegate {
+    func groupAddedSuccess(_ name: String, _ lights: [String]) {
+        navigationItem.title = name
+        swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier,
+                                                  newName: name, newLightIdentifiers: lights,
+                                                  completionHandler: { _ in
+                                                    self.fetchData(group: self.group, completion: {
+                                                        console.debug(self.group.lightIdentifiers.count)
+                                                        self.tableView.reloadData()
+                                                    })
+        })
     }
 }
