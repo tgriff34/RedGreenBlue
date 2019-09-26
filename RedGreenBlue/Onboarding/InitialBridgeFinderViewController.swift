@@ -61,7 +61,8 @@ extension InitialBridgeFinderViewController {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
             RGBDatabaseManager.write(to: realm!, closure: {
-                let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0, isDefault: true)
+                let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0,
+                                            isDefault: true, sequentialLightChange: false, randomColors: true)
                 scene.xys.append(XYColor([Double(0.1356), Double(0.0412)]))
                 scene.xys.append(XYColor([Double(0.6997), Double(0.3)]))
                 scene.xys.append(XYColor([Double(0), Double(1)]))

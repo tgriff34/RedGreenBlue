@@ -27,9 +27,6 @@ class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
         brightnessSlider.isHidden = true
         colorPreview.isHidden = true
 
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
-//                                                            target: self, action: #selector(cancel))
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
     }
@@ -39,8 +36,4 @@ class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
         let xyPoint: CGPoint = HueUtilities.calculateXY(self.colorPicker.selectedColor, forModel: "LCT016")
         addColorDelegate?.dynamicSceneColorAdded(XYColor([Double(xyPoint.x), Double(xyPoint.y)]))
     }
-//
-//    @objc func cancel() {
-//        dismiss(animated: true, completion: nil)
-//    }
 }

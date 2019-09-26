@@ -66,8 +66,11 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
             for group in groups {
                 self.navigationItems.append(group.name)
             }
-            let menuView = BTNavigationDropdownMenu(title: BTTitle.index(self.selectedGroupIndex),
+            let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
+                                                    containerView: self.view,
+                                                    title: BTTitle.index(self.selectedGroupIndex),
                                                     items: self.navigationItems)
+
             self.navigationItem.titleView = menuView
 
             menuView.cellBackgroundColor = self.view.backgroundColor
@@ -86,30 +89,53 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         })
     }
 
-    private func setScene(scene: RGBDynamicScene, previousIndices: inout [Int]) {
-        var indicesUsed = [Int]()
+    var lightsForScene = [Int]()
+
+    private func setScene(scene: RGBDynamicScene) {
+        setLightsForScene(numberOfColors: scene.xys.count, isSequential: scene.sequentialLightChange,
+                          randomColors: scene.randomColors)
+
         for (index, light) in self.groups[self.selectedGroupIndex].lights.enumerated() {
             // Create lightstate and turn light on
             var lightState = LightState()
             lightState.on = true
 
-            // Set brightness for light within random range of upper / lower bounds
+            let lightIndex = lightsForScene[index]
 
-            // Set xy color value to random xy in array without repeating same color
-            var randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))
-            if indicesUsed.count < scene.xys.count {
-                while indicesUsed.contains(randomNumber) {
-                    randomNumber = Int(arc4random_uniform(UInt32(scene.xys.count)))
-                }
-            }
-            previousIndices[index] = randomNumber
-            indicesUsed.append(randomNumber)
-
-            lightState.xy = [scene.xys[randomNumber].xvalue, scene.xys[randomNumber].yvalue]
+            lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
 
             RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: self.swiftyHue,
                                                           with: lightState, completion: nil)
         }
+    }
+
+    private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
+        // Set lights array whether lights should be in order of them picked or randomized
+        for index in lightsForScene.indices where lightsForScene.contains(-1) {
+            if randomColors {
+                lightsForScene[index] = genRandomNum(numberOfColors: numberOfColors)
+            } else {
+                let count = lightsForScene.count - 1
+                lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
+                lightsForScene = Array(lightsForScene[...count])
+            }
+        }
+
+        if isSequential { // If it's sequential just shift to right
+            lightsForScene = lightsForScene.shiftRight()
+        } else { // Otherwise randomly shuffle
+            lightsForScene.shuffle()
+        }
+    }
+
+    private func genRandomNum(numberOfColors: Int) -> Int {
+        var randomNumber = Int(arc4random_uniform(UInt32(numberOfColors)))
+        if lightsForScene.count < numberOfColors {
+            while lightsForScene.contains(randomNumber) {
+                randomNumber = Int(arc4random_uniform(UInt32(numberOfColors)))
+            }
+        }
+        return randomNumber
     }
 }
 
@@ -188,12 +214,12 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
 
             // Remove previous scene timer and reset indices
-            var previousIndices = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
+            lightsForScene = [Int](repeating: -1, count: groups[selectedGroupIndex].lights.count)
 
             // Set scene
-            setScene(scene: scene, previousIndices: &previousIndices)
+            setScene(scene: scene)
             timer = Timer.scheduledTimer(withTimeInterval: scene.timer, repeats: true, block: { _ in
-                self.setScene(scene: scene, previousIndices: &previousIndices)
+                self.setScene(scene: scene)
             })
         } else {
             timer?.invalidate()
@@ -244,5 +270,14 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
                 tableView.endUpdates()
             }
         }
+    }
+}
+
+extension Array {
+    func shiftRight(amount: Int = 1) -> [Element] {
+        var amount = amount
+        assert(-count...count ~= amount, "Shift amount out of bounds")
+        if amount < 0 { amount += count }
+        return Array(self[amount ..< count] + self[0 ..< amount])
     }
 }
