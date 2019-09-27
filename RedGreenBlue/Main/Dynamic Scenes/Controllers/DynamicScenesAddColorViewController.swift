@@ -18,10 +18,6 @@ class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if #available(iOS 13.0, *) {
-            self.navigationController?.isModalInPresentation = true
-        }
-
         swiftyHue = RGBRequest.shared.getSwiftyHue()
 
         brightnessSlider.isHidden = true
