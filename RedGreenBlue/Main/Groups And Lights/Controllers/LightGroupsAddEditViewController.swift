@@ -25,10 +25,6 @@ class LightGroupsAddEditViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if #available(iOS 13, *) {
-            self.navigationController?.isModalInPresentation = true
-        }
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                            target: self, action: #selector(cancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
@@ -121,7 +117,6 @@ extension LightGroupsAddEditViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1, let cell = tableView.cellForRow(at: indexPath) {
-            console.debug("CHECKMARK")
             cell.accessoryType = .checkmark
             selectedLights.append(lights[indexPath.row].identifier)
             enableOrDisableSaveButton()

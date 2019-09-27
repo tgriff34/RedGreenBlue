@@ -11,7 +11,7 @@ target 'RedGreenBlue' do
   pod 'RealmSwift', '~> 3.17'
   pod 'SwiftMessages'
   pod 'SwiftLint'
-  pod 'FlexColorPicker'
+  pod 'FlexColorPicker', :git => 'https://github.com/RastislavMirek/FlexColorPicker.git', :branch => 'master'
   pod 'TORoundedButton'
   pod 'NVActivityIndicatorView'
   pod 'Canvas', '~> 0.1.2'

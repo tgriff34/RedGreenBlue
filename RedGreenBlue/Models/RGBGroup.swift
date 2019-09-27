@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyHue
 
-struct RGBGroup {
+struct RGBGroup: Equatable {
     let name: String
     let identifier: String
     let lightIdentifiers: [String]
@@ -17,4 +17,10 @@ struct RGBGroup {
     let modelId: String
     let type: GroupType
     var lights: [Light]
+
+    static func == (lhs: RGBGroup, rhs: RGBGroup) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.identifier == rhs.identifier &&
+            lhs.lights.count == rhs.lights.count
+    }
 }

@@ -112,7 +112,6 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 
     private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
-        console.debug(lightsForScene)
         let iterator = groups[selectedGroupIndex].lights
         for _ in iterator where lightsForScene.count < iterator.count {
             if randomColors {
@@ -123,7 +122,6 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
                 lightsForScene = Array(lightsForScene[...count])
             }
         }
-        console.debug(lightsForScene)
 
         if isSequential { // If it's sequential just shift to right
             lightsForScene = lightsForScene.shiftRight()
