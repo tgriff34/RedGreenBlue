@@ -65,8 +65,15 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             return
         }
         RGBRequest.shared.getGroup(with: group.identifier, using: self.swiftyHue, completion: { (group) in
-            self.group = group
-            self.updateUI(group: group)
+            if self.group != group { // If the group has changed just reload the entire table
+                self.group = group
+                self.tableView.reloadData()
+                self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
+                self.setupGroupBrightnessSlider()
+            } else { // Otherwise go cell by cell for smoother UI update
+                self.group = group
+                self.updateUI(group: group)
+            }
             completion?()
         })
     }
@@ -84,7 +91,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         var lightState = LightState()
         lightState.on = sender.isOn
         RGBGroupsAndLightsHelper.shared.setLightState(for: group, using: swiftyHue, with: lightState, completion: {
-            self.updateCellsFromNavigationSwitch(lightState)
             self.fetchData(group: self.group, completion: nil)
         })
     }
@@ -125,17 +131,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             default:
                 break
             }
-        }
-    }
-
-    private func updateCellsFromNavigationSwitch(_ lightState: LightState) {
-        for identifier in group.lightIdentifiers {
-            guard let cell = tableView.cellForRow(at: IndexPath(row: group.lightIdentifiers.index(of: identifier)!,
-                                                                section: 0)) as? LightsCustomCell else {
-                logger.error("error getting cellForRow at: \(group.lightIdentifiers.index(of: identifier)!)")
-                return
-            }
-            cell.switch.setOn(lightState.on!, animated: true)
         }
     }
 
@@ -281,9 +276,7 @@ extension LightTableViewController: GroupAddDelegate {
         swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier,
                                                   newName: name, newLightIdentifiers: lights,
                                                   completionHandler: { _ in
-                                                    self.fetchData(group: self.group, completion: {
-                                                        self.tableView.reloadData()
-                                                    })
+                                                    self.fetchData(group: self.group, completion: nil)
         })
     }
 }

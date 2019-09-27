@@ -51,7 +51,6 @@ class DynamicScenesAddViewController: UITableViewController {
                                     sequentialLightChange: sequentialLightChangeSwitch.isOn,
                                     randomColors: randomColorsSwitch.isOn)
         scene.xys = self.colors
-        console.debug(scene)
         addSceneDelegate?.dynamicSceneAdded(self, scene)
     }
 
