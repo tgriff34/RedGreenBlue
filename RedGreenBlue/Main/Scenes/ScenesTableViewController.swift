@@ -39,6 +39,7 @@ class ScenesTableViewController: UITableViewController {
                 return
             }
             self.navigationItems.removeAll()
+            self.groups.removeAll()
             for group in groups![0] {
                 self.groups.append(group)
                 self.navigationItems.append(group.name)
