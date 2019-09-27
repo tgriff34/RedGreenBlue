@@ -21,6 +21,6 @@ struct RGBGroup: Equatable {
     static func == (lhs: RGBGroup, rhs: RGBGroup) -> Bool {
         return lhs.name == rhs.name &&
             lhs.identifier == rhs.identifier &&
-            lhs.lights.count == rhs.lights.count
+            lhs.lightIdentifiers == rhs.lightIdentifiers
     }
 }

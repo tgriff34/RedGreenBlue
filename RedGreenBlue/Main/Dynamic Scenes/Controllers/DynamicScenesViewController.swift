@@ -61,9 +61,9 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
                 logger.error(error.debugDescription)
                 return
             }
-            self.groups = groups
+            self.groups = groups.flatMap({$0})
             self.navigationItems.removeAll()
-            for group in groups {
+            for group in self.groups {
                 self.navigationItems.append(group.name)
             }
             if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
