@@ -115,13 +115,17 @@ class DynamicScenesViewController: UITableViewController {
     private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
         let iterator = groups[selectedGroupIndex].lights
-        for _ in iterator where lightsForScene.count < iterator.count {
-            if randomColors {
-                lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
-            } else {
-                let count = iterator.count - 1
-                lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
-                lightsForScene = Array(lightsForScene[...count])
+        if numberOfColors > iterator.count && lightsForScene.isEmpty {
+            lightsForScene = Array(0..<numberOfColors)
+        } else {
+            for _ in iterator where lightsForScene.count < iterator.count {
+                if randomColors {
+                    lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
+                } else {
+                    let count = iterator.count - 1
+                    lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
+                    lightsForScene = Array(lightsForScene[...count])
+                }
             }
         }
 
