@@ -191,11 +191,6 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
         // Set selected row to current cell
         if dynamicTableViewCell.switch.isOn {
             timer?.invalidate()
-//            guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
-//                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
-//                logger.warning("could not get indexpath of cell: \(error)")
-//                return
-//            }
 
             // Set scene
             lightsForScene.removeAll()
@@ -302,6 +297,9 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             })
             tableView.beginUpdates()
             tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
+            if dynamicScenes[1].count == 1 {
+                tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+            }
             tableView.endUpdates()
         }
     }
@@ -320,6 +318,9 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
         dynamicScenes[1].remove(at: indexPath.row)
         tableView.beginUpdates()
         tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
+        if dynamicScenes[1].isEmpty {
+            tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+        }
         tableView.endUpdates()
     }
 }
