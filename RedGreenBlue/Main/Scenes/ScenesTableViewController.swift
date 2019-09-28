@@ -38,9 +38,9 @@ class ScenesTableViewController: UITableViewController {
                 logger.error(String(describing: error.debugDescription))
                 return
             }
-            let justGroups = groups!
             self.navigationItems.removeAll()
-            for group in justGroups where group.type == .Room {
+            self.groups.removeAll()
+            for group in groups![0] {
                 self.groups.append(group)
                 self.navigationItems.append(group.name)
             }

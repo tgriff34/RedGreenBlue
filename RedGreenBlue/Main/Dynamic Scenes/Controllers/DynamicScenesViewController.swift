@@ -12,7 +12,7 @@ import SwiftyHue
 import BTNavigationDropdownMenu
 import SwiftMessages
 
-class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class DynamicScenesViewController: UITableViewController {
 
     var swiftyHue: SwiftyHue!
     var groups = [RGBGroup]()
@@ -21,15 +21,11 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 
     var selectedGroupIndex = 0
 
-    @IBOutlet weak var tableView: UITableView!
-
     let realm = RGBDatabaseManager.realm()!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         swiftyHue = RGBRequest.shared.getSwiftyHue()
-        tableView.delegate = self
-        tableView.dataSource = self
         fetchData()
     }
 
@@ -46,7 +42,10 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         }
         dynamicScenes.append(Array(results))
 
-        if let userResults = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self).filter("isDefault = false") {
+        if let userResults = RGBDatabaseManager.realm()?
+            .objects(RGBDynamicScene.self)
+            .filter("isDefault = false")
+            .sorted(by: { $0.name > $1.name }) {
             dynamicScenes.append(Array(userResults))
         } else {
             logger.warning("No user defined RGBDynamicScenes in DB")
@@ -61,15 +60,13 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
                 logger.error(error.debugDescription)
                 return
             }
-            self.groups = groups
+            self.groups = groups.flatMap({$0})
             self.navigationItems.removeAll()
-            for group in groups {
+            for group in self.groups {
                 self.navigationItems.append(group.name)
             }
             if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
-            let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
-                                                    containerView: self.view,
-                                                    title: BTTitle.index(self.selectedGroupIndex),
+            let menuView = BTNavigationDropdownMenu(title: BTTitle.index(self.selectedGroupIndex),
                                                     items: self.navigationItems)
 
             self.navigationItem.titleView = menuView
@@ -110,6 +107,11 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
 
+    private func turnOffScene() {
+        timer?.invalidate()
+        timer = nil
+    }
+
     private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
         let iterator = groups[selectedGroupIndex].lights
@@ -143,11 +145,11 @@ class DynamicScenesViewController: UIViewController, UITableViewDelegate, UITabl
 
 // MARK: - TableView
 extension DynamicScenesViewController {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "Default custom scenes"
         } else if section == 1 && dynamicScenes[1].count > 0 {
@@ -156,11 +158,11 @@ extension DynamicScenesViewController {
         return ""
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dynamicScenes[section].count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier")
             as! LightsDynamicSceneCustomCell // swiftlint:disable:this force_cast
         cell.dynamicScene = dynamicScenes[indexPath.section][indexPath.row]
@@ -168,34 +170,11 @@ extension DynamicScenesViewController {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
-    }
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 0 {
-            return false
+            return nil
         }
-        return true
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        switch editingStyle {
-        case .delete:
-            let sceneToDelete = realm.object(ofType: RGBDynamicScene.self,
-                                             forPrimaryKey: dynamicScenes[indexPath.section][indexPath.row].name)
-            RGBDatabaseManager.write(to: realm, closure: {
-                // These must be deleted in this order
-                realm.delete(sceneToDelete!.xys)
-                realm.delete(sceneToDelete!)
-            })
-            dynamicScenes[indexPath.section].remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            //tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
-        default:
-            logger.error("editing style does not exist: \(editingStyle)")
-        }
+        return indexPath
     }
 }
 
@@ -208,12 +187,11 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
         // Set selected row to current cell
         if dynamicTableViewCell.switch.isOn {
             timer?.invalidate()
-            guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
-                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
-                logger.warning("could not get indexpath of cell: \(error)")
-                return
-            }
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+//            guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
+//                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
+//                logger.warning("could not get indexpath of cell: \(error)")
+//                return
+//            }
 
             // Set scene
             lightsForScene.removeAll()
@@ -222,8 +200,7 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
                 self.setScene(scene: scene)
             })
         } else {
-            timer?.invalidate()
-            timer = nil
+            turnOffScene()
         }
     }
 }
@@ -231,11 +208,23 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
 // MARK: - Navigation
 extension DynamicScenesViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        let navController = segue.destination as? UINavigationController
+        let viewController = navController?.viewControllers.first as? DynamicScenesAddViewController
+        viewController?.addSceneDelegate = self
+
         switch segue.identifier {
-        case "addDynamicSceneSegue":
-            let navController = segue.destination as? UINavigationController
-            let viewController = navController?.viewControllers.first as? DynamicScenesAddViewController
-            viewController?.addSceneDelegate = self
+        case "AddDynamicSceneSegue":
+            //Handled above
+            break
+        case "EditDynamicSceneSegue":
+            viewController?.title = "Edit Custom Scene"
+            let indexPath = self.tableView.indexPathForSelectedRow
+            if let cell = self.tableView.cellForRow(at: indexPath!) as? LightsDynamicSceneCustomCell,
+                cell.switch.isOn {
+                turnOffScene()
+            }
+            viewController?.scene = dynamicScenes[1][indexPath!.row]
         default:
             logger.error("error performing segue with identifier: \(segue.identifier ?? "nil")")
         }
@@ -244,8 +233,23 @@ extension DynamicScenesViewController {
 
 // MARK: - Dynamic Scene added delegate
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
-    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
-        if dynamicScenes[1].contains(where: { $0.name == scene.name }) {
+    func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
+        // Get the old realm object from row selected
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving indexpath for selected row")
+            return
+        }
+        guard let oldScene = realm.object(ofType: RGBDynamicScene.self,
+                                          forPrimaryKey: dynamicScenes[1][indexPath.row].name) else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving object at selected row from Realm")
+            return
+        }
+
+        // If the name is the same of another scene except the edited scene display error
+        if dynamicScenes[1].contains(where: { $0.name == scene.name }) &&
+            oldScene.name != scene.name {
             // TODO: MODULARIZE THIS AS WELL
             let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
             var sameNameErrorConfig = SwiftMessages.Config()
@@ -256,20 +260,62 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             sameNameErrorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
             sameNameErrorMessage.button?.isHidden = true
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
-        } else {
+        } else { // If the user edited the name or not, delete old scene and create a new scene in DB
+            RGBDatabaseManager.write(to: realm, closure: { // Deleting old scene
+                realm.delete(oldScene.xys)
+                realm.delete(oldScene)
+            })
+            dynamicScenes[1][indexPath.row] = scene // Setting edited scene on tableview to new scene
+            RGBDatabaseManager.write(to: realm, closure: { // Adding new scene to DB
+                realm.add(scene, update: .all)
+            })
+            // Dismiss modal and reload changed row
+            sender.dismiss(animated: true, completion: nil)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
+        }
+    }
+
+    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
+        // If the name is the same as another scene display error
+        if dynamicScenes[1].contains(where: { $0.name == scene.name }) ||
+            dynamicScenes[0].contains(where: { $0.name == scene.name }) {
+            // TODO: MODULARIZE THIS AS WELL
+            let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
+            var sameNameErrorConfig = SwiftMessages.Config()
+            sameNameErrorConfig.presentationContext = .window(windowLevel: .normal)
+            sameNameErrorMessage.configureTheme(.warning)
+            sameNameErrorMessage.configureContent(title: "Error Adding Scene",
+                                                  body: "Name is the same as another scene!")
+            sameNameErrorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+            sameNameErrorMessage.button?.isHidden = true
+            SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
+        } else { // Add to DB and insert row
             sender.dismiss(animated: true, completion: nil)
             dynamicScenes[1].append(scene)
             RGBDatabaseManager.write(to: realm, closure: {
                 realm.add(scene, update: .all)
             })
-            if dynamicScenes[1].count == 1 {
-                tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
-            } else {
-                tableView.beginUpdates()
-                tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
-                tableView.endUpdates()
-            }
+            tableView.beginUpdates()
+            tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
+            tableView.endUpdates()
         }
+    }
+
+    func dynamicSceneDeleted(_ sender: DynamicScenesAddViewController) {
+        sender.dismiss(animated: true, completion: nil)
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving indexpath for selected row")
+            return
+        }
+        RGBDatabaseManager.write(to: realm, closure: {
+            realm.delete(dynamicScenes[1][indexPath.row].xys)
+            realm.delete(dynamicScenes[1][indexPath.row])
+        })
+        dynamicScenes[1].remove(at: indexPath.row)
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
+        tableView.endUpdates()
     }
 }
 

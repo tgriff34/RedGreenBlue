@@ -10,7 +10,7 @@ import UIKit
 import SwiftyHue
 
 class LightGroupsTableViewController: UITableViewController {
-    var groups = [RGBGroup]()
+    var groups = [[RGBGroup]]()
     var swiftyHue: SwiftyHue!
 
     override func viewDidLoad() {
@@ -26,7 +26,7 @@ class LightGroupsTableViewController: UITableViewController {
                                                 ResourceCacheUpdateNotification.lightsUpdated.rawValue),
                                                object: nil)
 
-        console.debug(RGBDatabaseManager.realm()?.configuration.fileURL!)
+        console.debug(RGBDatabaseManager.realm()?.configuration.fileURL! as Any)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -43,9 +43,12 @@ class LightGroupsTableViewController: UITableViewController {
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
             for light in Array(cache.lights.values) {
-                for (groupIndex, group) in groups.enumerated() where group.lightIdentifiers.contains(light.identifier) {
-                    if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
-                        self.groups[groupIndex].lights[lightIndex] = light
+                for (section, groupsByType) in groups.enumerated() {
+                    for (row, group) in groupsByType.enumerated()
+                        where group.lightIdentifiers.contains(light.identifier) {
+                        if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
+                            self.groups[section][row].lights[lightIndex] = light
+                        }
                     }
                 }
             }
@@ -68,7 +71,8 @@ class LightGroupsTableViewController: UITableViewController {
         } else {
             fetchData(group: nil, completion: {
                 self.swiftyHue.startHeartbeat()
-                if self.tableView.numberOfRows(inSection: 0) != self.groups.count {
+                if self.tableView.numberOfRows(inSection: 0) != self.groups[0].count ||
+                    self.tableView.numberOfRows(inSection: 1) != self.groups[1].count {
                     self.tableView.reloadData()
                 }
             })
@@ -91,9 +95,11 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     private func updateUI(_ group: RGBGroup?) {
-        for (index, subGroup) in groups.enumerated() where group?.identifier != subGroup.identifier {
-            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LightsGroupCustomCell
-            cell?.group = subGroup
+        for (section, groupsByType) in groups.enumerated() {
+            for (row, subGroup) in groupsByType.enumerated() where group?.identifier != subGroup.identifier {
+                let cell = tableView.cellForRow(at: IndexPath(row: row, section: section)) as? LightsGroupCustomCell
+                cell?.group = subGroup
+            }
         }
     }
 
@@ -109,8 +115,22 @@ class LightGroupsTableViewController: UITableViewController {
 
 // MARK: - TABLEVIEW
 extension LightGroupsTableViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return groups.count
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Rooms"
+        }
+        return "Groups"
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return groups[0].count
+        }
+        return groups[1].count
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
@@ -124,7 +144,7 @@ extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupsCellIdentifier") as! LightsGroupCustomCell
-        cell.group = groups[indexPath.row]
+        cell.group = groups[indexPath.section][indexPath.row]
         cell.delegate = self
         return cell
     }
@@ -189,7 +209,7 @@ extension LightGroupsTableViewController {
                 logger.error("could not cast \(segue.destination) as LightTableViewController")
                 return
             }
-            guard let index = tableView.indexPathForSelectedRow?.row else {
+            guard let index = tableView.indexPathForSelectedRow else {
                 logger.error("could not get index selected:",
                       "\(String(describing: tableView.indexPathForSelectedRow?.row))",
                     " from tableview.indexPathForSelectedRow?.row")
@@ -197,8 +217,8 @@ extension LightGroupsTableViewController {
             }
             swiftyHue.stopHeartbeat()
             lightTableViewController.swiftyHue = swiftyHue
-            lightTableViewController.title = groups[index].name
-            lightTableViewController.group = groups[index]
+            lightTableViewController.title = groups[index.section][index.row].name
+            lightTableViewController.group = groups[index.section][index.row]
         case "AddGroupSegue":
             let navigationController = segue.destination as? UINavigationController
             let lightGroupsAddEditViewController = navigationController?.viewControllers.first!

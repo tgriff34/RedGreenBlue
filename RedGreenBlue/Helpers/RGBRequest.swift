@@ -16,31 +16,45 @@ class RGBRequest {
 
     // Retrieves all groups and lights.  Creates a RGBGroup model which uses Group and Lights of that group.
     // Check RGBGroup model for more detail on what is contained in that model.
-    func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([RGBGroup]?, Error?) -> Void) {
+    func getGroups(with swiftyHue: SwiftyHue, completion: @escaping ([[RGBGroup]]?, Error?) -> Void) {
         let resourceAPI = swiftyHue.resourceAPI
         resourceAPI.fetchGroups({ (result) in
             switch result {
             case .success:
                 guard let groups = result.value else { return }
                 self.getLights(with: swiftyHue, completion: { (lights) in
-                    var rgbGroups = [RGBGroup]()
+                    var rgbGroups = [[RGBGroup]]()
+                    var roomTypeGroups = [RGBGroup]()
+                    var groupTypeGroups = [RGBGroup]()
+
                     let justGroups = Array(groups.values).map({ return $0 })
                     let justLights = Array(lights.values).map({ return $0 })
+
                     for group in justGroups {
                         var lightsInGroup = [Light]()
                         for light in justLights where group.lightIdentifiers!.contains(light.identifier) {
                             lightsInGroup.append(light)
                         }
                         lightsInGroup.sort(by: { $0.identifier < $1.identifier })
-                        rgbGroups.append(RGBGroup(name: group.name,
-                                               identifier: group.identifier,
-                                               lightIdentifiers: group.lightIdentifiers ?? [],
-                                               action: group.action,
-                                               modelId: group.modelId ?? "",
-                                               type: group.type,
-                                               lights: lightsInGroup))
+                        if group.type == .Room {
+                            roomTypeGroups.append(RGBGroup(name: group.name, identifier: group.identifier,
+                                                           lightIdentifiers: group.lightIdentifiers ?? [],
+                                                           action: group.action, modelId: group.modelId ?? "",
+                                                           type: group.type, lights: lightsInGroup))
+                        } else {
+                            groupTypeGroups.append(RGBGroup(name: group.name, identifier: group.identifier,
+                                                            lightIdentifiers: group.lightIdentifiers ?? [],
+                                                            action: group.action, modelId: group.modelId ?? "",
+                                                            type: group.type, lights: lightsInGroup))
+                        }
                     }
-                    rgbGroups.sort(by: { $0.identifier.compare($1.identifier, options: .numeric) == .orderedAscending })
+                    roomTypeGroups.sort(by: { $0.identifier.compare($1.identifier,
+                                                                    options: .numeric) == .orderedAscending })
+                    groupTypeGroups.sort(by: { $0.identifier.compare($1.identifier,
+                                                                     options: .numeric) == .orderedAscending })
+
+                    rgbGroups.append(roomTypeGroups)
+                    rgbGroups.append(groupTypeGroups)
                     completion(rgbGroups, nil)
                 })
             case .failure:
@@ -53,8 +67,10 @@ class RGBRequest {
     // Retrieves a single group by using the group id, this is used in LightsVC
     func getGroup(with identifier: String, using swiftyHue: SwiftyHue, completion: @escaping (RGBGroup) -> Void) {
         getGroups(with: swiftyHue, completion: { (groups, _) in
-            for group in groups! where group.identifier == identifier {
-                completion(group)
+            for groupType in groups! {
+                for group in groupType where group.identifier == identifier {
+                    completion(group)
+                }
             }
         })
     }
