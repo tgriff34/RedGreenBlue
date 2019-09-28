@@ -15,6 +15,7 @@ class DynamicScenesAddViewController: UITableViewController {
     @IBOutlet weak var sequentialLightChangeSwitch: UISwitch!
     @IBOutlet weak var randomColorsSwitch: UISwitch!
 
+    var scene: RGBDynamicScene?
     var colors = List<XYColor>()
     var time: Int = 1
     var name: String = ""
@@ -32,11 +33,22 @@ class DynamicScenesAddViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
 
-        navigationItem.rightBarButtonItem?.isEnabled = false
-
         textField.delegate = self
         tapRecognizer = UITapGestureRecognizer()
         tapRecognizer?.addTarget(self, action: #selector(viewTapped))
+
+        if let scene = scene {
+            for color in scene.xys { // needs to copy instead of assigning as reference
+                colors.append(XYColor([color.xvalue, color.yvalue]))
+            }
+            time = Int(scene.timer)
+            name = String(scene.name)
+            sequentialLightChangeSwitch.isOn = scene.sequentialLightChange
+            randomColorsSwitch.isOn = scene.randomColors
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 1),
+                                      IndexPath(row: 1, section: 1)],
+                                 with: .none)
+        }
     }
 
     @objc func viewTapped() {
@@ -51,7 +63,11 @@ class DynamicScenesAddViewController: UITableViewController {
                                     sequentialLightChange: sequentialLightChangeSwitch.isOn,
                                     randomColors: randomColorsSwitch.isOn)
         scene.xys = self.colors
-        addSceneDelegate?.dynamicSceneAdded(self, scene)
+        if self.scene != nil {
+            addSceneDelegate?.dynamicSceneEdited(self, scene)
+        } else {
+            addSceneDelegate?.dynamicSceneAdded(self, scene)
+        }
     }
 
     @objc func cancel() {
@@ -69,25 +85,40 @@ class DynamicScenesAddViewController: UITableViewController {
 
 // MARK: - TableView
 extension DynamicScenesAddViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if scene == nil {
+            return 2
+        }
+        return 3
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            break
+            textField.text = name
+            enableOrDisableSaveButton()
         case 1:
-            let cell = tableView.cellForRow(at: indexPath)
+            let cell = super.tableView(tableView, cellForRowAt: indexPath)
             if indexPath.row == 0 {
                 if time == 1 {
-                    cell?.detailTextLabel!.text = "\(time) second"
+                    cell.detailTextLabel!.text = "\(time) second"
                 } else {
-                    cell?.detailTextLabel!.text = "\(time) seconds"
+                    cell.detailTextLabel!.text = "\(time) seconds"
                 }
             } else if indexPath.row == 1 {
-                cell?.detailTextLabel?.text = "\(colors.count) colors"
+                cell.detailTextLabel?.text = "\(colors.count) colors"
             }
+            return cell
+        case 2:
+            break
         default:
             logger.error("No section for \(indexPath.section)")
         }
         return super.tableView(tableView, cellForRowAt: indexPath)
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 {
+            addSceneDelegate?.dynamicSceneDeleted(self)
+        }
     }
 }
 

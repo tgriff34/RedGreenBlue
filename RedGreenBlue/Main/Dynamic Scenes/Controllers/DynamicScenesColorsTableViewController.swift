@@ -10,13 +10,8 @@ import UIKit
 import RealmSwift
 
 class DynamicScenesColorsTableViewController: UITableViewController {
-
     var colors = List<XYColor>()
     weak var addColorsDelegate: DynamicSceneAddAllColorsDelegate?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }
 
 // MARK: - TableView
@@ -52,6 +47,12 @@ extension DynamicScenesColorsTableViewController {
         switch segue.identifier {
         case "addColorSegue":
             let viewController = segue.destination as? DynamicScenesAddColorViewController
+            viewController?.color = nil
+            viewController?.addColorDelegate = self
+        case "EditingColorSegue":
+            let viewController = segue.destination as? DynamicScenesAddColorViewController
+            let row = self.tableView.indexPathForSelectedRow?.row
+            viewController?.color = colors[row!]
             viewController?.addColorDelegate = self
         default:
             logger.error("No such segue identifier: \(String(describing: segue.identifier))")
@@ -62,10 +63,15 @@ extension DynamicScenesColorsTableViewController {
 // MARK: - Delegate
 extension DynamicScenesColorsTableViewController: DynamicSceneAddColorDelegate {
     func dynamicSceneColorAdded(_ color: XYColor) {
-        colors.append(color)
         tableView.beginUpdates()
-        tableView.insertRows(at: [IndexPath(row: colors.count - 1, section: 0)], with: .automatic)
-        tableView.endUpdates()
+        if let row = self.tableView.indexPathForSelectedRow?.row {
+            colors[row] = color
+            tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+        } else {
+            colors.append(color)
+            tableView.insertRows(at: [IndexPath(row: colors.count - 1, section: 0)], with: .automatic)
+        }
         addColorsDelegate?.dynamicSceneColorsAdded(colors)
+        tableView.endUpdates()
     }
 }

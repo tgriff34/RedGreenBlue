@@ -12,6 +12,7 @@ import SwiftyHue
 
 class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
     var swiftyHue: SwiftyHue?
+    var color: XYColor?
 
     weak var addColorDelegate: DynamicSceneAddColorDelegate?
 
@@ -22,6 +23,11 @@ class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
 
         brightnessSlider.isHidden = true
         colorPreview.isHidden = true
+
+        if let color = color {
+            self.colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
+                                                                      forModel: "LCT016")
+        }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
