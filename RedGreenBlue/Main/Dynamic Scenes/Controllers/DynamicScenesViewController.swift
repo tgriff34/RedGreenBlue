@@ -107,6 +107,11 @@ class DynamicScenesViewController: UITableViewController {
         }
     }
 
+    private func turnOffScene() {
+        timer?.invalidate()
+        timer = nil
+    }
+
     private func setLightsForScene(numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
         let iterator = groups[selectedGroupIndex].lights
@@ -182,12 +187,11 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
         // Set selected row to current cell
         if dynamicTableViewCell.switch.isOn {
             timer?.invalidate()
-            guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
-                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
-                logger.warning("could not get indexpath of cell: \(error)")
-                return
-            }
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+//            guard let indexPath = tableView.indexPath(for: dynamicTableViewCell) else {
+//                let error = String(describing: tableView.indexPath(for: dynamicTableViewCell))
+//                logger.warning("could not get indexpath of cell: \(error)")
+//                return
+//            }
 
             // Set scene
             lightsForScene.removeAll()
@@ -196,8 +200,7 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
                 self.setScene(scene: scene)
             })
         } else {
-            timer?.invalidate()
-            timer = nil
+            turnOffScene()
         }
     }
 }
@@ -216,8 +219,12 @@ extension DynamicScenesViewController {
             break
         case "EditDynamicSceneSegue":
             viewController?.title = "Edit Custom Scene"
-            let row = self.tableView.indexPathForSelectedRow?.row
-            viewController?.scene = dynamicScenes[1][row!]
+            let indexPath = self.tableView.indexPathForSelectedRow
+            if let cell = self.tableView.cellForRow(at: indexPath!) as? LightsDynamicSceneCustomCell,
+                cell.switch.isOn {
+                turnOffScene()
+            }
+            viewController?.scene = dynamicScenes[1][indexPath!.row]
         default:
             logger.error("error performing segue with identifier: \(segue.identifier ?? "nil")")
         }
@@ -228,12 +235,21 @@ extension DynamicScenesViewController {
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
     func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
         // Get the old realm object from row selected
-        let indexPath = tableView.indexPathForSelectedRow
-        let oldScene = realm.object(ofType: RGBDynamicScene.self, forPrimaryKey: dynamicScenes[1][indexPath!.row].name)
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving indexpath for selected row")
+            return
+        }
+        guard let oldScene = realm.object(ofType: RGBDynamicScene.self,
+                                          forPrimaryKey: dynamicScenes[1][indexPath.row].name) else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving object at selected row from Realm")
+            return
+        }
 
         // If the name is the same of another scene except the edited scene display error
         if dynamicScenes[1].contains(where: { $0.name == scene.name }) &&
-            oldScene!.name != scene.name {
+            oldScene.name != scene.name {
             // TODO: MODULARIZE THIS AS WELL
             let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
             var sameNameErrorConfig = SwiftMessages.Config()
@@ -246,16 +262,16 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // If the user edited the name or not, delete old scene and create a new scene in DB
             RGBDatabaseManager.write(to: realm, closure: { // Deleting old scene
-                realm.delete(oldScene!.xys)
-                realm.delete(oldScene!)
+                realm.delete(oldScene.xys)
+                realm.delete(oldScene)
             })
-            dynamicScenes[1][indexPath!.row] = scene // Setting edited scene on tableview to new scene
+            dynamicScenes[1][indexPath.row] = scene // Setting edited scene on tableview to new scene
             RGBDatabaseManager.write(to: realm, closure: { // Adding new scene to DB
                 realm.add(scene, update: .all)
             })
             // Dismiss modal and reload changed row
             sender.dismiss(animated: true, completion: nil)
-            tableView.reloadRows(at: [IndexPath(row: indexPath!.row, section: 1)], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
         }
     }
 
@@ -287,10 +303,19 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
 
     func dynamicSceneDeleted(_ sender: DynamicScenesAddViewController) {
         sender.dismiss(animated: true, completion: nil)
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            // TODO: DISPLAY ERROR MESSAGE TO USER
+            logger.error("Error receiving indexpath for selected row")
+            return
+        }
         RGBDatabaseManager.write(to: realm, closure: {
-            realm.delete(dynamicScenes[1][tableView.indexPathForSelectedRow!.row].xys)
-            realm.delete(dynamicScenes[1][tableView.indexPathForSelectedRow!.row])
+            realm.delete(dynamicScenes[1][indexPath.row].xys)
+            realm.delete(dynamicScenes[1][indexPath.row])
         })
+        dynamicScenes[1].remove(at: indexPath.row)
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
+        tableView.endUpdates()
     }
 }
 

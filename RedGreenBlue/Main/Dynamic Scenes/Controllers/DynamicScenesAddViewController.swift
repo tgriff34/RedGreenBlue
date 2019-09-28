@@ -116,8 +116,20 @@ extension DynamicScenesAddViewController {
         return super.tableView(tableView, cellForRowAt: indexPath)
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 2 {
-            addSceneDelegate?.dynamicSceneDeleted(self)
+            let actionSheet = UIAlertController(title: "Delete Scene",
+                                                message: "Are you sure you want to delete this scene?",
+                                                preferredStyle: .alert)
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                self.addSceneDelegate?.dynamicSceneDeleted(self)
+            })
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+            actionSheet.addAction(deleteAction)
+            actionSheet.addAction(cancelAction)
+
+            self.present(actionSheet, animated: true, completion: nil)
         }
     }
 }
