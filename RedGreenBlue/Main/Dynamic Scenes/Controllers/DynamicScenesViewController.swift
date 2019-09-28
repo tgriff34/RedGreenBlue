@@ -227,6 +227,7 @@ extension DynamicScenesViewController {
             if let cell = self.tableView.cellForRow(at: indexPath!) as? LightsDynamicSceneCustomCell,
                 cell.switch.isOn {
                 turnOffScene()
+                cell.switch.setOn(false, animated: true)
             }
             viewController?.scene = dynamicScenes[1][indexPath!.row]
         default:
