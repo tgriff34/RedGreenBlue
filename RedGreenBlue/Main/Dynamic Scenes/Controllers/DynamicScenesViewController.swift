@@ -20,6 +20,7 @@ class DynamicScenesViewController: UITableViewController {
     var navigationItems = [String]()
 
     var selectedGroupIndex = 0
+    var selectedSwitchIndex: IndexPath?
 
     let realm = RGBDatabaseManager.realm()!
 
@@ -188,8 +189,13 @@ var timer: Timer?
 extension DynamicScenesViewController: DynamicSceneCellDelegate {
     func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
                                sceneSwitchTappedFor scene: RGBDynamicScene) {
+        if let indexPath = selectedSwitchIndex,
+            let oldCell = tableView.cellForRow(at: indexPath) as? LightsDynamicSceneCustomCell {
+            oldCell.switch.setOn(false, animated: true)
+        }
         // Set selected row to current cell
         if dynamicTableViewCell.switch.isOn {
+            selectedSwitchIndex = tableView.indexPath(for: dynamicTableViewCell)
             timer?.invalidate()
 
             // Set scene
