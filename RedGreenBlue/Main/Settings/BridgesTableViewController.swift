@@ -153,6 +153,47 @@ extension BridgesTableViewController {
             break
         }
     }
+    @IBAction func handleLongPress(_ sender: UILongPressGestureRecognizer) {
+        let location = sender.location(in: self.tableView)
+        guard let indexPath = self.tableView.indexPathForRow(at: location) else {
+            logger.error("Error getting indexpath for cell from long press location")
+            return
+        }
+        switch sender.state {
+        case .began:
+            let actionSheet = UIAlertController(title: "Delete Bridge",
+                                                message: "Are you sure you want to delete this bridge?",
+                                                preferredStyle: .actionSheet)
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row != indexPath.row {
+                    RGBDatabaseManager.write(to: self.realm!, closure: {
+                        self.realm?.delete(self.authorizedBridges[indexPath.row])
+                    })
+                    self.authorizedBridges.remove(at: indexPath.row)
+                    self.tableView.beginUpdates()
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    self.tableView.endUpdates()
+                } else if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row == indexPath.row {
+                    // TODO: MODULARIZE
+                    let cannotDeleteRow: MessageView = MessageView.viewFromNib(layout: .messageView)
+                    var cannotDeleteRowConfig = SwiftMessages.Config()
+                    cannotDeleteRowConfig.presentationContext = .window(windowLevel: .normal)
+                    cannotDeleteRow.configureTheme(.warning)
+                    cannotDeleteRow.configureContent(title: "Error deleting bridge",
+                                                          body: "You may not delete a bridge that is selected!")
+                    cannotDeleteRow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+                    cannotDeleteRow.button?.isHidden = true
+                    SwiftMessages.show(config: cannotDeleteRowConfig, view: cannotDeleteRow)
+                }
+            })
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            actionSheet.addAction(deleteAction)
+            actionSheet.addAction(cancelAction)
+            self.present(actionSheet, animated: true, completion: nil)
+        default:
+            logger.error("Cell does not support deletion")
+        }
+    }
 }
 
 extension BridgesTableViewController: BridgeFinderDelegate {

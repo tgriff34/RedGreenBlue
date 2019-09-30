@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="MDD-cP-MKB">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,12 +13,13 @@
             <objects>
                 <viewController title="Bridges" id="oL2-gH-7Wg" customClass="BridgesTableViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9XZ-lv-JdP">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="vhZ-Ep-Tse">
-                                <rect key="frame" x="0.0" y="174" width="414" height="639"/>
+                                <rect key="frame" x="0.0" y="174" width="414" height="688"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <gestureRecognizers/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="BridgeCellIdentifier" textLabel="kSM-0W-qeb" detailTextLabel="ycG-dj-b8B" style="IBUITableViewCellStyleSubtitle" id="wNk-jt-QQ3" customClass="BridgesTableViewCell" customModule="RedGreenBlue" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="55.5"/>
@@ -44,6 +47,9 @@
                                         <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Pd5-uB-XRd" appends="YES" id="vbD-Dc-pIO"/>
+                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="civ-U1-JVk" customClass="TORoundedButton">
                                 <rect key="frame" x="8" y="116" width="398" height="50"/>
@@ -76,6 +82,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UlC-Dx-lsN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Pd5-uB-XRd">
+                    <connections>
+                        <action selector="handleLongPress:" destination="oL2-gH-7Wg" id="cZG-HW-VVi"/>
+                        <outlet property="delegate" destination="vhZ-Ep-Tse" id="mDY-i9-MBY"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2528" y="1600"/>
         </scene>
@@ -84,7 +96,7 @@
             <objects>
                 <tableViewController id="gpU-LM-PS1" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="5Fk-Kk-jVN">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
