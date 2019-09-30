@@ -57,7 +57,6 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     private func setUpInitialView() {
-        RGBRequest.shared.setUpConnectionListeners()
         // Checks if current bridge has changed if true
         // it starts HB and reloads data otherwise it just restarts HB
         // ip, bridge, sh are passed by reference so objects in this class are mutated

@@ -151,7 +151,9 @@ class RGBRequest {
     }
 
     // Sets connection observers so I know whether user is connected to the bridge or not
+    private var isConnected: Bool = false
     func setUpConnectionListeners() {
+        isConnected = false
         NotificationCenter.default.addObserver(self, selector: #selector(onConnectionUpdate(_:)),
                                                name: NSNotification.Name(rawValue:
                                                 BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
@@ -163,7 +165,6 @@ class RGBRequest {
     }
 
     // Connection observer helper functions
-    private var isConnected: Bool = false
     @objc private func onConnectionUpdate(_ notification: Notification) {
         if !isConnected {
             isConnected = true
