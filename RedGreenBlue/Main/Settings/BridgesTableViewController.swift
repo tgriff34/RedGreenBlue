@@ -161,35 +161,34 @@ extension BridgesTableViewController {
         }
         switch sender.state {
         case .began:
-            let actionSheet = UIAlertController(title: "Delete Bridge",
-                                                message: "Are you sure you want to delete this bridge?",
-                                                preferredStyle: .actionSheet)
-            let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-                if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row != indexPath.row {
+            if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row != indexPath.row {
+                let actionSheet = UIAlertController(title: "Delete Bridge",
+                                                    message: "Are you sure you want to delete this bridge?",
+                                                    preferredStyle: .actionSheet)
+                let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
                     RGBDatabaseManager.write(to: self.realm!, closure: {
                         self.realm?.delete(self.authorizedBridges[indexPath.row])
-                    })
-                    self.authorizedBridges.remove(at: indexPath.row)
-                    self.tableView.beginUpdates()
-                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                    self.tableView.endUpdates()
-                } else if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row == indexPath.row {
-                    // TODO: MODULARIZE
-                    let cannotDeleteRow: MessageView = MessageView.viewFromNib(layout: .messageView)
-                    var cannotDeleteRowConfig = SwiftMessages.Config()
-                    cannotDeleteRowConfig.presentationContext = .window(windowLevel: .normal)
-                    cannotDeleteRow.configureTheme(.warning)
-                    cannotDeleteRow.configureContent(title: "Error deleting bridge",
-                                                          body: "You may not delete a bridge that is selected!")
-                    cannotDeleteRow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-                    cannotDeleteRow.button?.isHidden = true
-                    SwiftMessages.show(config: cannotDeleteRowConfig, view: cannotDeleteRow)
-                }
-            })
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            actionSheet.addAction(deleteAction)
-            actionSheet.addAction(cancelAction)
-            self.present(actionSheet, animated: true, completion: nil)
+                        self.authorizedBridges.remove(at: indexPath.row)
+                        self.tableView.beginUpdates()
+                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        self.tableView.endUpdates()                    })
+                })
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                actionSheet.addAction(deleteAction)
+                actionSheet.addAction(cancelAction)
+                self.present(actionSheet, animated: true, completion: nil)
+            } else if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row == indexPath.row {
+                // TODO: MODULARIZE
+                let cannotDeleteRow: MessageView = MessageView.viewFromNib(layout: .messageView)
+                var cannotDeleteRowConfig = SwiftMessages.Config()
+                cannotDeleteRowConfig.presentationContext = .window(windowLevel: .normal)
+                cannotDeleteRow.configureTheme(.warning)
+                cannotDeleteRow.configureContent(title: "Error deleting bridge",
+                                                      body: "You may not delete a bridge that is selected!")
+                cannotDeleteRow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+                cannotDeleteRow.button?.isHidden = true
+                SwiftMessages.show(config: cannotDeleteRowConfig, view: cannotDeleteRow)
+            }
         default:
             logger.error("Cell does not support deletion")
         }
