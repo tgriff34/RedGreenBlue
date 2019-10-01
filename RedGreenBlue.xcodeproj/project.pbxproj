@@ -14,6 +14,7 @@
 		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
+		4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4669EBB323439F440097432B /* SettingsTableViewController.swift */; };
 		46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */; };
 		46736547233A61C700DA33AA /* DynamicScenesAddColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */; };
 		46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */; };
@@ -79,6 +80,7 @@
 		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
+		4669EBB323439F440097432B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddViewController.swift; sourceTree = "<group>"; };
 		46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddColorViewController.swift; sourceTree = "<group>"; };
 		46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneProtocol.swift; sourceTree = "<group>"; };
@@ -192,6 +194,23 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		4669EBB1234395DD0097432B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4669EBB2234395E40097432B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */,
+				4669EBB323439F440097432B /* SettingsTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		468CAD6D233C261C0023401C /* Groups And Lights */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,8 +307,8 @@
 			isa = PBXGroup;
 			children = (
 				468CAD7B233C27F30023401C /* Settings.storyboard */,
-				46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */,
-				6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */,
+				4669EBB1234395DD0097432B /* Views */,
+				4669EBB2234395E40097432B /* Controllers */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -654,6 +673,7 @@
 				46CCAA142307870B0054187A /* RGBRequest.swift in Sources */,
 				46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */,
 				46B6423D232000800047F233 /* RGBGroup.swift in Sources */,
+				4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */,
 				46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
 				46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */,

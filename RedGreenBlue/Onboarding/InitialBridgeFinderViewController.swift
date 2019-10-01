@@ -60,6 +60,8 @@ extension InitialBridgeFinderViewController {
         switch segue.identifier {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
+            UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
+            UserDefaults.standard.set("Default", forKey: "DefaultScene")
             RGBDatabaseManager.write(to: realm!, closure: {
                 let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0,
                                             isDefault: true, sequentialLightChange: false,
