@@ -11,8 +11,8 @@ import UIKit
 class ThemeTableViewController: UITableViewController {
     @IBOutlet weak var systemDarkModeSwitch: UISwitch!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
         systemDarkModeSwitch.addTarget(self, action: #selector(systemDarkModeDidChange(_:)), for: .valueChanged)
 

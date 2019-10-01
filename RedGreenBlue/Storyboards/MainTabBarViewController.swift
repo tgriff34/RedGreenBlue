@@ -11,7 +11,11 @@ import UIKit
 class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForground(_:)),
+                                               name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
 
+    @objc func applicationWillEnterForground(_ notification: NSNotification) {
         switch UserDefaults.standard.object(forKey: "AppTheme") as? String {
         case "dark":
             if #available(iOS 13.0, *) {
@@ -23,6 +27,15 @@ class MainTabBarViewController: UITabBarController {
             }
         case "system":
             if #available(iOS 13.0, *) {
+                UIScreen.main.traitCollection.userInterfaceStyle
+                switch UIScreen.main.traitCollection.userInterfaceStyle {
+                case .dark:
+                    console.debug("DARK")
+                case .light:
+                    console.debug("LIght")
+                case .unspecified:
+                    console.debug("Unspecified")
+                }
                 overrideUserInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
             }
         default:
