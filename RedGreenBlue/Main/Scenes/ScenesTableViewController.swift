@@ -28,7 +28,6 @@ class ScenesTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        RGBRequest.shared.setUpConnectionListeners()
         fetchData()
     }
 

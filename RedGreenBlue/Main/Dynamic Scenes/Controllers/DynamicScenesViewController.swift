@@ -254,7 +254,6 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             logger.error("Error receiving object at selected row from Realm")
             return
         }
-
         // If the name is the same of another scene except the edited scene display error
         if dynamicScenes[1].contains(where: { $0.name == scene.name }) &&
             oldScene.name != scene.name {

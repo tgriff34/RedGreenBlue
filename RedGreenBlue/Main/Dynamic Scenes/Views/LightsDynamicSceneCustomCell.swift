@@ -21,7 +21,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
             self.label.text = dynamicScene.name
         }
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {

@@ -36,7 +36,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        RGBRequest.shared.setUpConnectionListeners()
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
         self.swiftyHue.startHeartbeat()
