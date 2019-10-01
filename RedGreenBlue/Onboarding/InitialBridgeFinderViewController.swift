@@ -62,6 +62,7 @@ extension InitialBridgeFinderViewController {
             UserDefaults.standard.set(true, forKey: "isOnboard")
             UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
             UserDefaults.standard.set("Default", forKey: "DefaultScene")
+            UserDefaults.standard.set("system", forKey: "AppTheme")
             RGBDatabaseManager.write(to: realm!, closure: {
                 let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0,
                                             isDefault: true, sequentialLightChange: false,

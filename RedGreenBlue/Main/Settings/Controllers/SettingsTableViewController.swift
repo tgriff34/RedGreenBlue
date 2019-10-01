@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyHue
+import SwiftMessages
 
 class SettingsTableViewController: UITableViewController {
 
@@ -61,6 +62,7 @@ class SettingsTableViewController: UITableViewController {
     }
 }
 
+// MARK: - TableView
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
@@ -91,5 +93,28 @@ extension SettingsTableViewController {
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - Navigation
+extension SettingsTableViewController {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "ShowThemeOptionsSegue" {
+            if #available(iOS 13, *) {
+                return true
+            } else {
+                let iOSNotInstalled: MessageView = MessageView.viewFromNib(layout: .messageView)
+                var iOSNotInstalledConfig = SwiftMessages.Config()
+                iOSNotInstalledConfig.presentationContext = .window(windowLevel: .normal)
+                iOSNotInstalled.configureTheme(.warning)
+                iOSNotInstalled.configureContent(title: "Cannot Change Theme!",
+                                                 body: "You need to upgrade your phone to iOS13 to have this feature!")
+                iOSNotInstalled.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+                iOSNotInstalled.button?.isHidden = true
+                SwiftMessages.show(config: iOSNotInstalledConfig, view: iOSNotInstalled)
+                return false
+            }
+        }
+        return true
     }
 }
