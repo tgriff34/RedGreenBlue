@@ -36,6 +36,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        if swiftyHueDidChange.didIpChange {
+            navigationController?.popViewController(animated: true)
+        }
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
         self.swiftyHue.startHeartbeat()
@@ -153,7 +157,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!), optionsButton!]
+        if group.type == .LightGroup {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!),
+                                                  optionsButton!]
+        } else {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!)]
+        }
     }
 
     private func setupGroupBrightnessSlider() {
