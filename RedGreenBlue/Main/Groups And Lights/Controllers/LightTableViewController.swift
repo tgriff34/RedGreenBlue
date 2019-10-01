@@ -36,6 +36,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        if swiftyHueDidChange.didIpChange {
+            navigationController?.popViewController(animated: true)
+        }
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
         self.swiftyHue.startHeartbeat()
@@ -104,6 +108,14 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
             self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.group.identifier, completionHandler: { _ in
                 self.navigationController?.popViewController(animated: true)
+
+                // If you deleted a group that was a default selected scene for either
+                // scenes or custom scenes tab, reset the default to 'Default'
+                if self.group.name == UserDefaults.standard.object(forKey: "DefaultScene") as? String {
+                    UserDefaults.standard.set("Default", forKey: "DefaultScene")
+                } else if self.group.name == UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String {
+                    UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
+                }
             })
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -153,7 +165,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!), optionsButton!]
+        if group.type == .LightGroup {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!),
+                                                  optionsButton!]
+        } else {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!)]
+        }
     }
 
     private func setupGroupBrightnessSlider() {

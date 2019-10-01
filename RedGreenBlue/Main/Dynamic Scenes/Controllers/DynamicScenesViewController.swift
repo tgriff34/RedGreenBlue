@@ -65,7 +65,12 @@ class DynamicScenesViewController: UITableViewController {
             for group in self.groups {
                 self.navigationItems.append(group.name)
             }
-            if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
+            if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String,
+                defaultGroup != "Default" {
+                self.selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!
+            } else {
+                self.selectedGroupIndex = 0
+            }
             let menuView = BTNavigationDropdownMenu(title: BTTitle.index(self.selectedGroupIndex),
                                                     items: self.navigationItems)
 

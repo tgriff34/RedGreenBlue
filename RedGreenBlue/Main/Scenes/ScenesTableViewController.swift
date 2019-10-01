@@ -67,7 +67,12 @@ class ScenesTableViewController: UITableViewController {
     }
 
     func setUpDropdown() {
-        if self.selectedGroupIndex >= self.navigationItems.count { self.selectedGroupIndex = 0 }
+        if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
+            defaultGroup != "Default" {
+            selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!
+        } else {
+            selectedGroupIndex = 0
+        }
         let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
