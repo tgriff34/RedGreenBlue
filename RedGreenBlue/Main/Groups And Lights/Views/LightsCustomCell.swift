@@ -15,7 +15,7 @@ class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var subView: UIView!
-    @IBOutlet weak var lightImage: SVGView!
+    @IBOutlet weak var lightImage: UIView!
 
     weak var delegate: LightsCellDelegate?
 
@@ -31,16 +31,14 @@ class LightsCustomCell: UITableViewCell {
                 slider.setValue(1, animated: true)
             }
 
-            let image = UIView(SVGNamed:
-            RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)) { (svgLayer) in
-                if #available(iOS 13.0, *) {
+            let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
+            let image = UIView(SVGNamed: svgName) { (svgLayer) in
+                if #available(iOS 13, *) {
                     svgLayer.fillColor = UIColor.label.cgColor
-                } else {
-                    // Fallback on earlier versions
-                    svgLayer.fillColor = UIColor.black.cgColor
                 }
-                svgLayer.resizeToFit(self.lightImage.bounds)
             }
+            image.bounds = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+            image.center = CGPoint(x: 15.0, y: 15.0)
 
             lightImage.subviews.forEach({ $0.removeFromSuperview() })
             lightImage.addSubview(image)
@@ -50,12 +48,10 @@ class LightsCustomCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         subView.layer.cornerRadius = 20.0
-        if self.traitCollection.userInterfaceStyle != .dark {
-            subView.layer.shadowColor = UIColor.gray.cgColor
-            subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            subView.layer.shadowOpacity = 0.7
-            subView.layer.shadowRadius = 4.7
-        }
+        subView.layer.shadowColor = UIColor.black.cgColor
+        subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        subView.layer.shadowOpacity = 0.34
+        subView.layer.shadowRadius = 4.3
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
     }

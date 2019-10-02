@@ -83,10 +83,18 @@ extension SettingsTableViewController {
         switch indexPath.section {
         case 0:
             if indexPath.row == 1 {
-                createActionSheetForOption(title: nil, message: nil, style: .actionSheet,
+                let message = String(format: "%@%@", "This is the group that will be automatically",
+                                     " selected when changing to the scenes tab.")
+                createActionSheetForOption(title: "Change default group",
+                                           message: message,
+                                           style: .actionSheet,
                                            options: roomGroupNames, forKey: "DefaultScene")
             } else if indexPath.row == 2 {
-                createActionSheetForOption(title: nil, message: nil, style: .actionSheet,
+                let message = String(format: "%@%@", "This is the group that will be automatically",
+                                     " selected when changing to the custom scenes tab.")
+                createActionSheetForOption(title: "Change default group",
+                                           message: message,
+                                           style: .actionSheet,
                                            options: allGroupNames, forKey: "DefaultCustomScene")
             }
         default:

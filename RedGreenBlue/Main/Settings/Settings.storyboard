@@ -221,7 +221,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection footerTitle="If you change your default system theme, the app may require a restart to change theme" id="beo-q3-YbI">
+                            <tableViewSection footerTitle="If enabled and you change your default system theme, the app may require a restart to change theme." id="beo-q3-YbI">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="mHM-NI-dY5" style="IBUITableViewCellStyleDefault" id="9i3-ur-TUI">
                                         <rect key="frame" x="0.0" y="18" width="414" height="43.5"/>

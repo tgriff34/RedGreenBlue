@@ -212,6 +212,7 @@ class RGBRequest {
         })
     }
 
+    // Sets the application theme to whatever key is in UserDefaults
     func setApplicationTheme() {
         if let window = UIApplication.shared.keyWindow {
             switch UserDefaults.standard.object(forKey: "AppTheme") as? String {
