@@ -20,6 +20,7 @@ class DynamicScenesViewController: UITableViewController {
     var navigationItems = [String]()
 
     var selectedGroupIndex = 0
+    var selectedRowIndex: IndexPath?
 
     let realm = RGBDatabaseManager.realm()!
 
@@ -32,6 +33,12 @@ class DynamicScenesViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupDropdownNavigationBar()
+        tableView.selectRow(at: selectedRowIndex, animated: true, scrollPosition: .none)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        selectedRowIndex = tableView.indexPathForSelectedRow
     }
 
     // MARK: - Private Functions

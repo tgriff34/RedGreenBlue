@@ -38,7 +38,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
         subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         subView.layer.shadowOpacity = 0.34
         subView.layer.shadowRadius = 4.3
-        
+
         self.switch.addTarget(self, action: #selector(sceneSwitchTapped(_:)), for: .valueChanged)
     }
 
