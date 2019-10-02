@@ -15,11 +15,9 @@ class LightSceneCustomCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         subView.layer.cornerRadius = 20.0
-        if self.traitCollection.userInterfaceStyle != .dark {
-            subView.layer.shadowColor = UIColor.gray.cgColor
-            subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            subView.layer.shadowOpacity = 0.7
-            subView.layer.shadowRadius = 4.7
-        }
+        subView.layer.shadowColor = UIColor.black.cgColor
+        subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        subView.layer.shadowOpacity = 0.34
+        subView.layer.shadowRadius = 4.3
     }
 }
