@@ -11,8 +11,8 @@ import UIKit
 class ThemeTableViewController: UITableViewController {
     @IBOutlet weak var systemDarkModeSwitch: UISwitch!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
         systemDarkModeSwitch.addTarget(self, action: #selector(systemDarkModeDidChange(_:)), for: .valueChanged)
 
@@ -39,9 +39,7 @@ class ThemeTableViewController: UITableViewController {
         self.tableView(self.tableView, didDeselectRowAt: IndexPath(row: 1, section: 1))
         if sender.isOn {
             UserDefaults.standard.set("system", forKey: "AppTheme")
-            if #available(iOS 13.0, *) {
-                tabBarController?.overrideUserInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
-            }
+            RGBRequest.shared.setApplicationTheme()
         } else {
             tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: true, scrollPosition: .none)
             self.tableView(self.tableView, didSelectRowAt: IndexPath(row: 0, section: 1))
@@ -107,15 +105,14 @@ extension ThemeTableViewController {
 
             if indexPath.row == 0  && !systemDarkModeSwitch.isOn {
                 if #available(iOS 13.0, *) {
-                    tabBarController?.overrideUserInterfaceStyle = .dark
                     UserDefaults.standard.set("dark", forKey: "AppTheme")
                 }
             } else if !systemDarkModeSwitch.isOn {
                 if #available(iOS 13.0, *) {
-                    tabBarController?.overrideUserInterfaceStyle = .light
                     UserDefaults.standard.set("light", forKey: "AppTheme")
                 }
             }
+            RGBRequest.shared.setApplicationTheme()
         default:
             break
         }

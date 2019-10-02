@@ -211,6 +211,37 @@ class RGBRequest {
             completion()
         })
     }
+
+    func setApplicationTheme() {
+        if let window = UIApplication.shared.keyWindow {
+            switch UserDefaults.standard.object(forKey: "AppTheme") as? String {
+            case "dark":
+                if #available(iOS 13.0, *) {
+                    window.overrideUserInterfaceStyle = .dark
+                }
+            case "light":
+                if #available(iOS 13.0, *) {
+                    window.overrideUserInterfaceStyle = .light
+                }
+            case "system":
+                if #available(iOS 13.0, *) {
+                    window.overrideUserInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
+                }
+            default:
+                logger.error("Error AppTheme is nil")
+            }
+        } else {
+            let errorGettingUIWindow: MessageView = MessageView.viewFromNib(layout: .messageView)
+            var errorGettingUIWindowConfig = SwiftMessages.Config()
+            errorGettingUIWindowConfig.presentationContext = .window(windowLevel: .normal)
+            errorGettingUIWindow.configureTheme(.warning)
+            errorGettingUIWindow.configureContent(title: "Error Changing Theme",
+                                                  body: "An error ocurred while changing your theme!")
+            errorGettingUIWindow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
+            errorGettingUIWindow.button?.isHidden = true
+            SwiftMessages.show(config: errorGettingUIWindowConfig, view: errorGettingUIWindow)
+        }
+    }
 }
 
 enum ConnectionError: Error {
