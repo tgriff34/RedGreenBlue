@@ -15,7 +15,7 @@ class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var subView: UIView!
-    @IBOutlet weak var lightImage: SVGView!
+    @IBOutlet weak var lightImage: UIView!
 
     weak var delegate: LightsCellDelegate?
 
@@ -31,16 +31,14 @@ class LightsCustomCell: UITableViewCell {
                 slider.setValue(1, animated: true)
             }
 
-            let image = UIView(SVGNamed:
-            RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)) { (svgLayer) in
-                if #available(iOS 13.0, *) {
+            let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
+            let image = UIView(SVGNamed: svgName) { (svgLayer) in
+                if #available(iOS 13, *) {
                     svgLayer.fillColor = UIColor.label.cgColor
-                } else {
-                    // Fallback on earlier versions
-                    svgLayer.fillColor = UIColor.black.cgColor
                 }
-                svgLayer.resizeToFit(self.lightImage.bounds)
             }
+            image.bounds = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+            image.center = CGPoint(x: 15.0, y: 15.0)
 
             lightImage.subviews.forEach({ $0.removeFromSuperview() })
             lightImage.addSubview(image)
