@@ -16,7 +16,7 @@ enum SSCheckMarkStyle: UInt {
 class SSCheckMark: UIView {
     private var checkedBool: Bool = false
     // choose whether you like open or grayed out non-selected items
-    private var checkMarkStyleReal: SSCheckMarkStyle=SSCheckMarkStyle.grayedOut
+    private var checkMarkStyleReal: SSCheckMarkStyle=SSCheckMarkStyle.openCircle
 
     var checked: Bool {
         get {
