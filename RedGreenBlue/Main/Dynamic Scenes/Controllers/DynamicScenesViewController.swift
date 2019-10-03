@@ -42,6 +42,8 @@ class DynamicScenesViewController: UITableViewController {
             let cell = tableView.cellForRow(at: indexPath) as? LightsDynamicSceneCustomCell,
             cell.switch.isOn {
             selectedRowIndex = tableView.indexPathForSelectedRow
+        } else {
+            selectedRowIndex = nil
         }
     }
 
