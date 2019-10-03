@@ -38,7 +38,11 @@ class DynamicScenesViewController: UITableViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        selectedRowIndex = tableView.indexPathForSelectedRow
+        if let indexPath = tableView.indexPathForSelectedRow,
+            let cell = tableView.cellForRow(at: indexPath) as? LightsDynamicSceneCustomCell,
+            cell.switch.isOn {
+            selectedRowIndex = tableView.indexPathForSelectedRow
+        }
     }
 
     // MARK: - Private Functions

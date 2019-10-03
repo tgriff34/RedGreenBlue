@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -87,52 +88,62 @@
             <point key="canvasLocation" x="2481" y="727"/>
         </scene>
         <!--Colors-->
-        <scene sceneID="XUV-fI-P4n">
+        <scene sceneID="5oH-yU-r3b">
             <objects>
-                <tableViewController id="DQ9-d6-LhZ" customClass="DynamicScenesColorsTableViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="zoA-uT-uja">
+                <collectionViewController id="1fz-4I-qAj" customClass="DynamicScenesColorsCollectionViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5oG-4U-hAF">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="colorCell" textLabel="K49-Mi-J9a" style="IBUITableViewCellStyleDefault" id="T0i-q1-xjF">
-                                <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="T0i-q1-xjF" id="nro-pE-Rky">
-                                    <rect key="frame" x="0.0" y="0.0" width="382.5" height="43.5"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="cUR-aa-hm5">
+                            <size key="itemSize" width="64" height="69"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="colorCell" id="Ono-IV-96z" customClass="ColorDynamicSceneCustomCell" customModule="RedGreenBlue" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="OuO-Iw-J53">
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="K49-Mi-J9a">
-                                            <rect key="frame" x="20" y="0.0" width="354.5" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QnV-eI-Rdn">
+                                            <rect key="frame" x="8" y="8" width="84" height="84"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        </view>
                                     </subviews>
-                                </tableViewCellContentView>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="QnV-eI-Rdn" secondAttribute="bottom" constant="8" id="90x-s8-13a"/>
+                                        <constraint firstAttribute="trailing" secondItem="QnV-eI-Rdn" secondAttribute="trailing" constant="8" id="GW9-WN-ygZ"/>
+                                        <constraint firstItem="QnV-eI-Rdn" firstAttribute="top" secondItem="OuO-Iw-J53" secondAttribute="top" constant="8" id="SGK-ke-kMl"/>
+                                        <constraint firstItem="QnV-eI-Rdn" firstAttribute="leading" secondItem="OuO-Iw-J53" secondAttribute="leading" constant="8" id="SRW-My-wJF"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
+                                <size key="customSize" width="100" height="100"/>
                                 <connections>
-                                    <segue destination="CSL-J6-tar" kind="show" identifier="EditingColorSegue" id="YLg-Op-NIO"/>
+                                    <outlet property="subView" destination="QnV-eI-Rdn" id="ioj-ez-Flh"/>
+                                    <segue destination="CSL-J6-tar" kind="show" identifier="EditingColorSegue" id="fgW-76-eX5"/>
                                 </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <sections/>
+                            </collectionViewCell>
+                        </cells>
                         <connections>
-                            <outlet property="dataSource" destination="DQ9-d6-LhZ" id="9lK-P5-LI4"/>
-                            <outlet property="delegate" destination="DQ9-d6-LhZ" id="fOy-4Q-rb1"/>
+                            <outlet property="dataSource" destination="1fz-4I-qAj" id="Zd2-uW-DxU"/>
+                            <outlet property="delegate" destination="1fz-4I-qAj" id="Fcf-Yl-5cq"/>
                         </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Colors" id="5rJ-Fz-1n4">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="hUk-jx-HWc">
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="Colors" id="cNp-RK-oRV">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ntn-fa-Y3M">
                             <connections>
-                                <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="aY9-eB-Jnj"/>
+                                <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="ZC2-1J-l5j"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LQF-2w-lEz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fW4-qc-KmR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5832" y="1204"/>
+            <point key="canvasLocation" x="5832" y="1203"/>
         </scene>
         <!--Pick Color-->
         <scene sceneID="Ecc-pb-nRd">
@@ -273,7 +284,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="DQ9-d6-LhZ" kind="show" identifier="colorsSegue" id="JmK-Fb-boI"/>
+                                            <segue destination="1fz-4I-qAj" kind="show" identifier="colorsSegue" id="l4G-kw-uTB"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="UpZ-TD-LVg" detailTextLabel="RVe-nR-Q4n" rowHeight="56" style="IBUITableViewCellStyleSubtitle" id="P6O-62-IHe">
@@ -483,6 +494,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="wDs-Ad-SIh"/>
-        <segue reference="YLg-Op-NIO"/>
+        <segue reference="fgW-76-eX5"/>
     </inferredMetricsTieBreakers>
 </document>
