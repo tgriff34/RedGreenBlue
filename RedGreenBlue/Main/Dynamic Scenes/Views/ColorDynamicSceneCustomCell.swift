@@ -29,9 +29,7 @@ class ColorDynamicSceneCustomCell: UICollectionViewCell {
 
     override var isSelected: Bool {
         didSet {
-            if isInEditingMode {
-                checkmarkView.checked = isSelected
-            }
+            checkmarkView.checked = isSelected
         }
     }
 
