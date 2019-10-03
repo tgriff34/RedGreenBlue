@@ -63,8 +63,10 @@ class SSCheckMark: UIView {
 
         let checkedOvalPath = UIBezierPath(ovalIn: CGRect(x: group.minX + floor(group.width * 0.00000 + 0.5),
                                                           y: group.minY + floor(group.height * 0.00000 + 0.5),
-                                                          width: floor(group.width * 1.00000 + 0.5) - floor(group.width * 0.00000 + 0.5),
-                                                          height: floor(group.height * 1.00000 + 0.5) - floor(group.height * 0.00000 + 0.5)))
+                                                          width: floor(group.width * 1.00000 + 0.5) -
+                                                            floor(group.width * 0.00000 + 0.5),
+                                                          height: floor(group.height * 1.00000 + 0.5) -
+                                                            floor(group.height * 0.00000 + 0.5)))
 
         context!.saveGState()
         context!.setShadow(offset: shadow2Offset, blur: CGFloat(shadow2BlurRadius), color: shadow2.cgColor)
@@ -94,8 +96,10 @@ class SSCheckMark: UIView {
         let group = CGRect(x: frame.minX + 3, y: frame.minY + 3, width: frame.width - 6, height: frame.height - 6)
         let uncheckedOvalPath = UIBezierPath(ovalIn: CGRect(x: group.minX + floor(group.width * 0.00000 + 0.5),
                                                             y: group.minY + floor(group.height * 0.00000 + 0.5),
-                                                            width: floor(group.width * 1.00000 + 0.5) - floor(group.width * 0.00000 + 0.5),
-                                                            height: floor(group.height * 1.00000 + 0.5) - floor(group.height * 0.00000 + 0.5)))
+                                                            width: floor(group.width * 1.00000 + 0.5) -
+                                                                floor(group.width * 0.00000 + 0.5),
+                                                            height: floor(group.height * 1.00000 + 0.5) -
+                                                                floor(group.height * 0.00000 + 0.5)))
 
         context!.saveGState()
         context!.setShadow(offset: shadow2Offset, blur: CGFloat(shadow2BlurRadius), color: shadow2.cgColor)
@@ -128,8 +132,10 @@ class SSCheckMark: UIView {
         let group = CGRect(x: frame.minX + 3, y: frame.minY + 3, width: frame.width - 6, height: frame.height - 6)
         let emptyOvalPath = UIBezierPath(ovalIn: CGRect(x: group.minX + floor(group.width * 0.00000 + 0.5),
                                                         y: group.minY + floor(group.height * 0.00000 + 0.5),
-                                                        width: floor(group.width * 1.00000 + 0.5) - floor(group.width * 0.00000 + 0.5),
-                                                        height: floor(group.height * 1.00000 + 0.5) - floor(group.height * 0.00000 + 0.5)))
+                                                        width: floor(group.width * 1.00000 + 0.5) -
+                                                            floor(group.width * 0.00000 + 0.5),
+                                                        height: floor(group.height * 1.00000 + 0.5) -
+                                                            floor(group.height * 0.00000 + 0.5)))
 
         context!.saveGState()
         context!.setShadow(offset: shadow2Offset, blur: CGFloat(shadow2BlurRadius), color: shadow2.cgColor)
