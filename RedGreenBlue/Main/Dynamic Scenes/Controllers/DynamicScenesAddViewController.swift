@@ -139,7 +139,7 @@ extension DynamicScenesAddViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "colorsSegue":
-            let viewController = segue.destination as? DynamicScenesColorsTableViewController
+            let viewController = segue.destination as? DynamicScenesColorsCollectionViewController
             viewController?.colors = colors
             viewController?.addColorsDelegate = self
         case "timeBetweenChangingSegue":
