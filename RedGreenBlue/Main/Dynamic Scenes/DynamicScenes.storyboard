@@ -112,18 +112,19 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QnV-eI-Rdn">
                                             <rect key="frame" x="8" y="8" width="84" height="84"/>
                                             <subviews>
-                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="CfX-Og-ueF">
-                                                    <rect key="frame" x="46" y="46.5" width="30" height="29.5"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XBL-zO-EcF" customClass="SSCheckMark" customModule="RedGreenBlue" customModuleProvider="target">
+                                                    <rect key="frame" x="46" y="46" width="30" height="30"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="KVP-Ex-EEN"/>
-                                                        <constraint firstAttribute="height" constant="30" id="Syr-WI-jiE"/>
+                                                        <constraint firstAttribute="width" constant="30" id="OPr-bW-y1y"/>
+                                                        <constraint firstAttribute="height" constant="30" id="fab-9g-6M7"/>
                                                     </constraints>
-                                                </imageView>
+                                                </view>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="CfX-Og-ueF" secondAttribute="trailing" constant="8" id="c0M-vr-TzM"/>
-                                                <constraint firstAttribute="bottom" secondItem="CfX-Og-ueF" secondAttribute="bottom" constant="8" id="iRb-7i-siv"/>
+                                                <constraint firstAttribute="trailing" secondItem="XBL-zO-EcF" secondAttribute="trailing" constant="8" id="zhf-nb-cw7"/>
+                                                <constraint firstAttribute="bottom" secondItem="XBL-zO-EcF" secondAttribute="bottom" constant="8" id="zvw-yK-B8e"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -136,7 +137,7 @@
                                 </collectionViewCellContentView>
                                 <size key="customSize" width="100" height="100"/>
                                 <connections>
-                                    <outlet property="checkmark" destination="CfX-Og-ueF" id="I3J-Aq-sDx"/>
+                                    <outlet property="checkmarkView" destination="XBL-zO-EcF" id="jDs-tX-ern"/>
                                     <outlet property="subView" destination="QnV-eI-Rdn" id="ioj-ez-Flh"/>
                                     <segue destination="CSL-J6-tar" kind="show" identifier="EditingColorSegue" id="fgW-76-eX5"/>
                                 </connections>
@@ -148,12 +149,11 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Colors" id="cNp-RK-oRV">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ntn-fa-Y3M">
-                            <connections>
-                                <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="ZC2-1J-l5j"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="ntn-fa-Y3M"/>
                     </navigationItem>
+                    <connections>
+                        <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="Qa1-Py-eJU"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fW4-qc-KmR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -501,7 +501,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="circle" catalog="system" width="64" height="62"/>
         <image name="dynamicScenes" width="32" height="32"/>
         <namedColor name="cellColor">
             <color red="0.14300000667572021" green="0.15299999713897705" blue="0.1679999977350235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -509,6 +508,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="wDs-Ad-SIh"/>
-        <segue reference="fgW-76-eX5"/>
+        <segue reference="Qa1-Py-eJU"/>
     </inferredMetricsTieBreakers>
 </document>

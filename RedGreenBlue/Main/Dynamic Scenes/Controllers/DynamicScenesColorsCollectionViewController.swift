@@ -16,14 +16,22 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
     weak var addColorsDelegate: DynamicSceneAddAllColorsDelegate?
 
     var deleteButton: UIBarButtonItem?
+    var addButton: UIBarButtonItem?
+    var spacer: UIBarButtonItem?
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let editButton = editButtonItem
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        deleteButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteTapped(_:)))
+
+        navigationItem.rightBarButtonItem = editButtonItem
+
+        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self,
+                                    action: #selector(addTapped(_:)))
+        deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self,
+                                       action: #selector(deleteTapped(_:)))
+        spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+
         deleteButton?.isEnabled = false
-        toolbarItems = [editButton, spacer, deleteButton!]
+        toolbarItems = [spacer!, addButton!]
         navigationController?.setToolbarHidden(false, animated: false)
     }
 
@@ -34,6 +42,8 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+
+        if editing { toolbarItems = [spacer!, deleteButton!] }
 
         collectionView.allowsMultipleSelection = editing
         let indexPaths = collectionView.indexPathsForVisibleItems
@@ -48,19 +58,35 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
                 collectionView.deselectItem(at: index, animated: false)
             }
             deleteButton?.isEnabled = false
+            toolbarItems = [spacer!, addButton!]
         }
     }
 
+    @objc func addTapped(_ sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "addColorSegue", sender: self)
+    }
+
     @objc func deleteTapped(_ sender: UIBarButtonItem) {
-        if let selectedCells = collectionView.indexPathsForSelectedItems {
-            let items = selectedCells.map({ $0.item }).sorted().reversed()
-            for item in items {
-                colors.remove(at: item)
+        let actionSheet = UIAlertController(title: "Delete Colors",
+                                            message: "Are you sure you want to delete these colors?",
+                                            preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            if let selectedCells = self.collectionView.indexPathsForSelectedItems {
+                let items = selectedCells.map({ $0.item }).sorted().reversed()
+                for item in items {
+                    self.colors.remove(at: item)
+                }
+                self.collectionView.deleteItems(at: selectedCells)
+                self.setEditing(false, animated: true)
+                self.addColorsDelegate?.dynamicSceneColorsAdded(self.colors)
             }
-            collectionView.deleteItems(at: selectedCells)
-            deleteButton?.isEnabled = false
-            addColorsDelegate?.dynamicSceneColorsAdded(colors)
-        }
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        actionSheet.addAction(deleteAction)
+        actionSheet.addAction(cancelAction)
+
+        self.present(actionSheet, animated: true, completion: nil)
     }
 }
 
