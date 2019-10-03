@@ -108,7 +108,8 @@ class DynamicScenesViewController: UITableViewController {
     var lightsForScene = [Int]()
 
     private func setScene(scene: RGBDynamicScene) {
-        setLightsForScene(numberOfColors: scene.xys.count, isSequential: scene.sequentialLightChange,
+        setLightsForScene(numberOfColors: scene.xys.count,
+                          isSequential: scene.sequentialLightChange,
                           randomColors: scene.randomColors)
 
         for (index, light) in self.groups[self.selectedGroupIndex].lights.enumerated() {

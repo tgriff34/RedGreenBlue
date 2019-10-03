@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import BackgroundTasks
 import SwiftyBeaver
 
 let logger = SwiftyBeaver.self
 let console = SwiftyBeaver.self
+
+fileprivate let backgroundTaskIdentifier = "com.RedGreenBlue.task.refresh"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -43,6 +46,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = viewControllerToPresent
         self.window?.makeKeyAndVisible()
 
+        if #available(iOS 13.0, *) {
+            BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundTaskIdentifier, using: nil, launchHandler: { task in
+                //swiftlint:disable:next force_cast
+                self.handleAppRefresh(task: task as! BGAppRefreshTask)
+            })
+        }
+
         return true
     }
 
@@ -63,6 +73,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            If your application supports background execution, this method is called instead of
            applicationWillTerminate: when the user quits.
         */
+        if #available(iOS 13.0, *) {
+            scheduleAppRefresh()
+        } else {
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -80,5 +94,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate.
         // See also applicationDidEnterBackground:.
+    }
+    
+    @available(iOS 13.0, *)
+    func scheduleAppRefresh() {
+        let request = BGAppRefreshTaskRequest(identifier: backgroundTaskIdentifier)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 1 * 60)
+        
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            console.debug("Couldn't schedule app refresh: \(error)")
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func handleAppRefresh(task: BGAppRefreshTask) {
+        scheduleAppRefresh()
+        
+        console.debug("HELLO")
+        task.setTaskCompleted(success: true)
     }
 }
