@@ -14,6 +14,7 @@
 		462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E3B2343CE960088296B /* ThemeTableViewController.swift */; };
 		462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */; };
 		462A5E4A23467D330088296B /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4923467D330088296B /* SSCheckMark.swift */; };
+		462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 462A5E4C234794860088296B /* FeelinGood.mp3 */; };
 		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
@@ -83,6 +84,7 @@
 		462A5E3B2343CE960088296B /* ThemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewController.swift; sourceTree = "<group>"; };
 		462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDynamicSceneCustomCell.swift; sourceTree = "<group>"; };
 		462A5E4923467D330088296B /* SSCheckMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
+		462A5E4C234794860088296B /* FeelinGood.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = FeelinGood.mp3; sourceTree = "<group>"; };
 		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
@@ -169,6 +171,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		462A5E4B2347946F0088296B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				462A5E4C234794860088296B /* FeelinGood.mp3 */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		4651445F2315C5D000156659 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -382,6 +392,7 @@
 				465144652316DA2D00156659 /* Main */,
 				465144662318221200156659 /* Storyboards */,
 				4651445F2315C5D000156659 /* Onboarding */,
+				462A5E4B2347946F0088296B /* Supporting Files */,
 				6FA9CDF223062EF30011A2F8 /* Assets.xcassets */,
 				6FA9CDF723062EF30011A2F8 /* Info.plist */,
 			);
@@ -544,6 +555,7 @@
 				6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */,
 				6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */,
 				468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */,
+				462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */,
 				468CAD7C233C27F30023401C /* Settings.storyboard in Resources */,
 				6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */,
 				46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */,
