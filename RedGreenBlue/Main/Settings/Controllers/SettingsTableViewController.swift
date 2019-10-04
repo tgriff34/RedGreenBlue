@@ -64,6 +64,12 @@ class SettingsTableViewController: UITableViewController {
 
 // MARK: - TableView
 extension SettingsTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if #available(iOS 13, *) {
+            return 2
+        }
+        return 1
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         switch indexPath.section {
@@ -72,6 +78,8 @@ extension SettingsTableViewController {
                 cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "DefaultScene") as? String
             } else if indexPath.row == 2 {
                 cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String
+            } else if indexPath.row == 3 {
+                cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "SoundSetting") as? String
             }
         default:
             break
@@ -96,33 +104,15 @@ extension SettingsTableViewController {
                                            message: message,
                                            style: .actionSheet,
                                            options: allGroupNames, forKey: "DefaultCustomScene")
+            } else if indexPath.row == 3 {
+                createActionSheetForOption(title: nil,
+                                           message: nil,
+                                           style: .actionSheet,
+                                           options: ["Muted"], forKey: "SoundSetting")
             }
         default:
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-
-// MARK: - Navigation
-extension SettingsTableViewController {
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "ShowThemeOptionsSegue" {
-            if #available(iOS 13, *) {
-                return true
-            } else {
-                let iOSNotInstalled: MessageView = MessageView.viewFromNib(layout: .messageView)
-                var iOSNotInstalledConfig = SwiftMessages.Config()
-                iOSNotInstalledConfig.presentationContext = .window(windowLevel: .normal)
-                iOSNotInstalled.configureTheme(.warning)
-                iOSNotInstalled.configureContent(title: "Cannot Change Theme!",
-                                                 body: "You need to upgrade your phone to iOS13 to have this feature!")
-                iOSNotInstalled.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-                iOSNotInstalled.button?.isHidden = true
-                SwiftMessages.show(config: iOSNotInstalledConfig, view: iOSNotInstalled)
-                return false
-            }
-        }
-        return true
     }
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyHue
+import AVFoundation
 
 class RGBGroupsAndLightsHelper {
     static let shared = RGBGroupsAndLightsHelper()
@@ -86,5 +87,123 @@ class RGBGroupsAndLightsHelper {
             logger.error("Error getting image from modelId", modelId)
             return ""
         }
+    }
+
+    // MARK: - Dynamic Scenes
+    private var observer: NSObjectProtocol?
+    private lazy var songs: [AVPlayerItem] = {
+       let songNames = ["FeelinGood"]
+        return songNames.map {
+            let url = Bundle.main.url(forResource: $0, withExtension: "mp3")
+            return AVPlayerItem(url: url!)
+        }
+    }()
+    private func makePlayer() -> AVPlayer {
+        let url = Bundle.main.url(forResource: "FeelinGood", withExtension: "mp3")
+        let player = AVPlayer(url: url!)
+        if let observer = observer { NotificationCenter.default.removeObserver(observer) }
+        observer = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { _ in
+            player.seek(to: CMTime.zero)
+            player.play()
+        })
+        return player
+    }
+
+    private var player: AVPlayer?
+    func playDynamicScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
+        stopDynamicScene()
+        player = self.makePlayer()
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                AVAudioSession.Category.playback,
+                mode: .default, options: [])
+        } catch {
+            console.debug("Failed to set audio session category. Error: \(error)")
+        }
+
+        lightsForScene.removeAll()
+
+        player?.addPeriodicTimeObserver(
+            forInterval: CMTime(seconds: scene.timer, preferredTimescale: 1),
+            queue: DispatchQueue.main, using: { _ in
+                self.setScene(scene: scene, for: group, with: swiftyHue)
+        })
+        if let setting = UserDefaults.standard.object(forKey: "SoundSetting") as? String,
+            setting == "Muted" {
+            player?.isMuted = true
+        }
+        player?.play()
+    }
+
+    func stopDynamicScene() {
+        player?.pause()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                                  object: nil)
+        player = nil
+    }
+
+    private var lightsForScene = [Int]()
+
+    private func setScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
+        setLightsForScene(group: group,
+                          numberOfColors: scene.xys.count,
+                          isSequential: scene.sequentialLightChange,
+                          randomColors: scene.randomColors)
+
+        for (index, light) in group.lights.enumerated() {
+            // Create lightstate and turn light on
+            var lightState = LightState()
+            lightState.on = true
+
+            let lightIndex = lightsForScene[index]
+
+            lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
+
+            setLightState(for: light, using: swiftyHue, with: lightState, completion: nil)
+        }
+    }
+
+    private func setLightsForScene(group: RGBGroup, numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
+        // Set lights array whether lights should be in order of them picked or randomized
+        let iterator = group.lights
+        if numberOfColors > iterator.count && lightsForScene.isEmpty {
+            lightsForScene = Array(0..<numberOfColors)
+        } else {
+            for _ in iterator where lightsForScene.count < iterator.count {
+                if randomColors {
+                    lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
+                } else {
+                    let count = iterator.count - 1
+                    lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
+                    lightsForScene = Array(lightsForScene[...count])
+                }
+            }
+        }
+
+        if isSequential { // If it's sequential just shift to right
+            lightsForScene = lightsForScene.shiftRight()
+        } else { // Otherwise randomly shuffle
+            lightsForScene.shuffle()
+        }
+    }
+
+    private func genRandomNum(numberOfColors: Int) -> Int {
+        var randomNumber = Int(arc4random_uniform(UInt32(numberOfColors)))
+        if lightsForScene.count < numberOfColors {
+            while lightsForScene.contains(randomNumber) {
+                randomNumber = Int(arc4random_uniform(UInt32(numberOfColors)))
+            }
+        }
+        return randomNumber
+    }
+}
+
+extension Array {
+    func shiftRight(amount: Int = 1) -> [Element] {
+        var amount = amount
+        assert(-count...count ~= amount, "Shift amount out of bounds")
+        if amount < 0 { amount += count }
+        return Array(self[amount ..< count] + self[0 ..< amount])
     }
 }
