@@ -49,6 +49,11 @@
 		46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EF2DB02311CA620021B28B /* RGBDatabaseManager.swift */; };
 		46EF2DB32311F3180021B28B /* LightGroupsAddEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EF2DB22311F3180021B28B /* LightGroupsAddEditViewController.swift */; };
 		46F42E082326BDA300FB73FA /* DynamicScenesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F42E072326BDA300FB73FA /* DynamicScenesViewController.swift */; };
+		6F1F9BA82348FC7F00800EBA /* rgb-lamp-icon-dark-rounded.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F9BA72348FC7F00800EBA /* rgb-lamp-icon-dark-rounded.png */; };
+		6F1F9BAA2348FD1300800EBA /* rgb-lamp-icon-light-rounded.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F9BA92348FD1300800EBA /* rgb-lamp-icon-light-rounded.png */; };
+		6F1F9BAC2349074500800EBA /* rgb-lamp-icon-dark-@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F9BAB2349074400800EBA /* rgb-lamp-icon-dark-@3x.png */; };
+		6F1F9BAF2349074C00800EBA /* rgb-lamp-icon-dark-@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F9BAD2349074C00800EBA /* rgb-lamp-icon-dark-@1x.png */; };
+		6F1F9BB02349074C00800EBA /* rgb-lamp-icon-dark-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F1F9BAE2349074C00800EBA /* rgb-lamp-icon-dark-@2x.png */; };
 		6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F4B3E1A2308528A000F44DA /* CustomMessageView.xib */; };
 		6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */; };
 		6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA9CDEF23062EF20011A2F8 /* Main.storyboard */; };
@@ -58,6 +63,9 @@
 		6FA9CE0C23062EF40011A2F8 /* RedGreenBlueUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE0B23062EF40011A2F8 /* RedGreenBlueUITests.swift */; };
 		6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */; };
 		6FF6F4BE2323FCC500555EE7 /* SuccessCustomMessage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */; };
+		6FF709C3234834B3004FB6C2 /* rgb-lamp-icon-@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FF709C2234834B3004FB6C2 /* rgb-lamp-icon-@1x.png */; };
+		6FF709C5234834B9004FB6C2 /* rgb-lamp-icon-@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FF709C4234834B9004FB6C2 /* rgb-lamp-icon-@3x.png */; };
+		6FF709CB234834EB004FB6C2 /* rgb-lamp-icon-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FF709CA234834EB004FB6C2 /* rgb-lamp-icon-@2x.png */; };
 		D1C4E6685F2D264202C18A77 /* Pods_RedGreenBlueTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40FFE1F74C8594B37BA9BB6 /* Pods_RedGreenBlueTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +130,11 @@
 		46F42E072326BDA300FB73FA /* DynamicScenesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesViewController.swift; sourceTree = "<group>"; };
 		66085FF42EEB085036083DC7 /* Pods-RedGreenBlueUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.release.xcconfig"; sourceTree = "<group>"; };
 		68B1AC65FE92B8C07F009E19 /* Pods-RedGreenBlue.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlue.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlue/Pods-RedGreenBlue.debug.xcconfig"; sourceTree = "<group>"; };
+		6F1F9BA72348FC7F00800EBA /* rgb-lamp-icon-dark-rounded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-dark-rounded.png"; sourceTree = "<group>"; };
+		6F1F9BA92348FD1300800EBA /* rgb-lamp-icon-light-rounded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-light-rounded.png"; sourceTree = "<group>"; };
+		6F1F9BAB2349074400800EBA /* rgb-lamp-icon-dark-@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-dark-@3x.png"; sourceTree = "<group>"; };
+		6F1F9BAD2349074C00800EBA /* rgb-lamp-icon-dark-@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-dark-@1x.png"; sourceTree = "<group>"; };
+		6F1F9BAE2349074C00800EBA /* rgb-lamp-icon-dark-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-dark-@2x.png"; sourceTree = "<group>"; };
 		6F4B3E1A2308528A000F44DA /* CustomMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomMessageView.xib; sourceTree = "<group>"; };
 		6FA9CDE623062EF20011A2F8 /* RedGreenBlue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedGreenBlue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA9CDE923062EF20011A2F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -137,6 +150,9 @@
 		6FA9CE0D23062EF40011A2F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA9CE19230635E70011A2F8 /* BridgesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTableViewController.swift; sourceTree = "<group>"; };
 		6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessCustomMessage.xib; sourceTree = "<group>"; };
+		6FF709C2234834B3004FB6C2 /* rgb-lamp-icon-@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-@1x.png"; sourceTree = "<group>"; };
+		6FF709C4234834B9004FB6C2 /* rgb-lamp-icon-@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-@3x.png"; sourceTree = "<group>"; };
+		6FF709CA234834EB004FB6C2 /* rgb-lamp-icon-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rgb-lamp-icon-@2x.png"; sourceTree = "<group>"; };
 		71396FC2CCD8C1D60CD630F5 /* Pods-RedGreenBlueTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RedGreenBlueUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B64E619D6B85D176217C6898 /* Pods-RedGreenBlueUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueUITests.debug.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueUITests/Pods-RedGreenBlueUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -176,6 +192,7 @@
 		462A5E4B2347946F0088296B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6FF709BF23483480004FB6C2 /* IconImages */,
 				462A5E4C234794860088296B /* FeelinGood.mp3 */,
 			);
 			path = "Supporting Files";
@@ -420,6 +437,21 @@
 			path = RedGreenBlueUITests;
 			sourceTree = "<group>";
 		};
+		6FF709BF23483480004FB6C2 /* IconImages */ = {
+			isa = PBXGroup;
+			children = (
+				6F1F9BAD2349074C00800EBA /* rgb-lamp-icon-dark-@1x.png */,
+				6F1F9BAE2349074C00800EBA /* rgb-lamp-icon-dark-@2x.png */,
+				6F1F9BAB2349074400800EBA /* rgb-lamp-icon-dark-@3x.png */,
+				6FF709C2234834B3004FB6C2 /* rgb-lamp-icon-@1x.png */,
+				6FF709CA234834EB004FB6C2 /* rgb-lamp-icon-@2x.png */,
+				6FF709C4234834B9004FB6C2 /* rgb-lamp-icon-@3x.png */,
+				6F1F9BA72348FC7F00800EBA /* rgb-lamp-icon-dark-rounded.png */,
+				6F1F9BA92348FD1300800EBA /* rgb-lamp-icon-light-rounded.png */,
+			);
+			path = IconImages;
+			sourceTree = "<group>";
+		};
 		81A6609186B650ADBFC162B6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -552,17 +584,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F1F9BA82348FC7F00800EBA /* rgb-lamp-icon-dark-rounded.png in Resources */,
 				6FF6F4BE2323FCC500555EE7 /* SuccessCustomMessage.xib in Resources */,
 				468CAD7A233C27C60023401C /* Scenes.storyboard in Resources */,
+				6F1F9BAC2349074500800EBA /* rgb-lamp-icon-dark-@3x.png in Resources */,
 				6FA9CDF623062EF30011A2F8 /* LaunchScreen.storyboard in Resources */,
 				6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */,
 				6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */,
+				6FF709CB234834EB004FB6C2 /* rgb-lamp-icon-@2x.png in Resources */,
+				6F1F9BAF2349074C00800EBA /* rgb-lamp-icon-dark-@1x.png in Resources */,
+				6F1F9BB02349074C00800EBA /* rgb-lamp-icon-dark-@2x.png in Resources */,
+				6FF709C3234834B3004FB6C2 /* rgb-lamp-icon-@1x.png in Resources */,
 				468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */,
 				462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */,
+				6F1F9BAA2348FD1300800EBA /* rgb-lamp-icon-light-rounded.png in Resources */,
 				468CAD7C233C27F30023401C /* Settings.storyboard in Resources */,
 				6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */,
 				46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */,
 				468CAD7E233C28350023401C /* DynamicScenes.storyboard in Resources */,
+				6FF709C5234834B9004FB6C2 /* rgb-lamp-icon-@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,16 +942,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 68B1AC65FE92B8C07F009E19 /* Pods-RedGreenBlue.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7Y3STU6UA7;
+				DEVELOPMENT_TEAM = 56K2EF9V37;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -922,16 +961,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF6A693417FD821C9FDA979A /* Pods-RedGreenBlue.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7Y3STU6UA7;
+				DEVELOPMENT_TEAM = 56K2EF9V37;
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
