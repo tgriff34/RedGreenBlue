@@ -18,6 +18,7 @@ class ScenesTableViewController: UITableViewController {
     var allScenes = [[PartialScene]]()
 
     var selectedGroupIndex = 0
+    var shouldFetchDefault: Bool = true
 
     var navigationItems = [String]()
 
@@ -68,11 +69,13 @@ class ScenesTableViewController: UITableViewController {
 
     func setUpDropdown() {
         if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
-            defaultGroup != "Default" {
+            defaultGroup != "Default", shouldFetchDefault {
             selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!
-        } else {
+        } else if shouldFetchDefault {
             selectedGroupIndex = 0
         }
+        shouldFetchDefault = false
+
         let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
