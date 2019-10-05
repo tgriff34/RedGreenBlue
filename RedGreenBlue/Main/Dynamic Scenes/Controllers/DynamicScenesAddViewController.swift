@@ -19,6 +19,7 @@ class DynamicScenesAddViewController: UITableViewController {
     var colors = List<XYColor>()
     var time: Int = 1
     var name: String = ""
+    var soundFileName: String = "Default"
 
     var tapRecognizer: UITapGestureRecognizer?
 
@@ -45,8 +46,10 @@ class DynamicScenesAddViewController: UITableViewController {
             name = String(scene.name)
             sequentialLightChangeSwitch.isOn = scene.sequentialLightChange
             randomColorsSwitch.isOn = scene.randomColors
+            soundFileName = scene.soundFile
             tableView.reloadRows(at: [IndexPath(row: 0, section: 1),
-                                      IndexPath(row: 1, section: 1)],
+                                      IndexPath(row: 1, section: 1),
+                                      IndexPath(row: 0, section: 2)],
                                  with: .none)
         }
     }
@@ -61,7 +64,7 @@ class DynamicScenesAddViewController: UITableViewController {
                                     brightnessDifference: 0,
                                     isDefault: false,
                                     sequentialLightChange: sequentialLightChangeSwitch.isOn,
-                                    randomColors: randomColorsSwitch.isOn)
+                                    randomColors: randomColorsSwitch.isOn, soundFile: soundFileName)
         scene.xys = self.colors
         if self.scene != nil {
             addSceneDelegate?.dynamicSceneEdited(self, scene)
@@ -87,9 +90,9 @@ class DynamicScenesAddViewController: UITableViewController {
 extension DynamicScenesAddViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         if scene == nil {
-            return 2
+            return 3
         }
-        return 3
+        return 4
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
@@ -109,6 +112,9 @@ extension DynamicScenesAddViewController {
             }
             return cell
         case 2:
+            let cell = super.tableView(tableView, cellForRowAt: indexPath)
+            cell.detailTextLabel?.text = soundFileName
+        case 3:
             break
         default:
             logger.error("No section for \(indexPath.section)")
@@ -117,7 +123,7 @@ extension DynamicScenesAddViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 2 {
+        if indexPath.section == 3 {
             let actionSheet = UIAlertController(title: "Delete Scene",
                                                 message: "Are you sure you want to delete this scene?",
                                                 preferredStyle: .alert)
@@ -146,6 +152,10 @@ extension DynamicScenesAddViewController {
             let viewController = segue.destination as? DynamicScenesAddTimeViewController
             viewController?.addTimeDelegate = self
             viewController?.selectedTime = time
+        case "soundFileSegue":
+            let viewController = segue.destination as? DynamicScenesAddSoundViewController
+            viewController?.addSoundFileDelegate = self
+            viewController?.selectedSoundFile = soundFileName
         default:
             logger.error("segue identifier does not exist: \(segue.identifier ?? "nil")")
         }
@@ -153,7 +163,13 @@ extension DynamicScenesAddViewController {
 }
 
 // MARK: - Add Color / Time Delegate
-extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddTimeDelegate {
+extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddTimeDelegate,
+DynamicSceneAddSoundFileDelegate {
+    func dynamicSceneSoundFileAdded(_ name: String) {
+        self.soundFileName = name
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
+    }
+
     func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
         self.colors = colors
         tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .none)

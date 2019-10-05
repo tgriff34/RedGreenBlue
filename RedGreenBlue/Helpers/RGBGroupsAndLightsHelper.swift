@@ -91,15 +91,13 @@ class RGBGroupsAndLightsHelper {
 
     // MARK: - Dynamic Scenes
     private var observer: NSObjectProtocol?
-    private lazy var songs: [AVPlayerItem] = {
-       let songNames = ["FeelinGood"]
-        return songNames.map {
-            let url = Bundle.main.url(forResource: $0, withExtension: "mp3")
-            return AVPlayerItem(url: url!)
+    private func makePlayer(file: String) -> AVPlayer {
+        var url: URL?
+        if file == "Default" {
+            url = Bundle.main.url(forResource: "FeelinGood", withExtension: "mp3")
+        } else {
+            url = Bundle.main.url(forResource: file, withExtension: "mp3")
         }
-    }()
-    private func makePlayer() -> AVPlayer {
-        let url = Bundle.main.url(forResource: "FeelinGood", withExtension: "mp3")
         let player = AVPlayer(url: url!)
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
         observer = NotificationCenter.default.addObserver(
@@ -113,7 +111,7 @@ class RGBGroupsAndLightsHelper {
     private var player: AVPlayer?
     func playDynamicScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
         stopDynamicScene()
-        player = self.makePlayer()
+        player = self.makePlayer(file: scene.soundFile)
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 AVAudioSession.Category.playback,

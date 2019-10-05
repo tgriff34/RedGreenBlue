@@ -29,7 +29,6 @@ class DynamicScenesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         swiftyHue = RGBRequest.shared.getSwiftyHue()
-        
         fetchData()
     }
 
