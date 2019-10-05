@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "uicontrolsScenes.png",
+      "filename" : "paint-palette@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "paint-palette@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "paint-palette@3x.png",
       "scale" : "3x"
     }
   ],
