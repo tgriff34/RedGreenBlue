@@ -26,3 +26,7 @@ protocol DynamicSceneAddDelegate: AnyObject {
 protocol DynamicSceneAddTimeDelegate: AnyObject {
     func dynamicSceneTimeAdded(_ time: Int)
 }
+
+protocol DynamicSceneAddSoundFileDelegate: AnyObject {
+    func dynamicSceneSoundFileAdded(_ name: String)
+}
