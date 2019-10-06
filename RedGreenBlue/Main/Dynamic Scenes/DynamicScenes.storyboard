@@ -205,14 +205,93 @@
                     <view key="view" contentMode="scaleToFill" id="Gvj-aY-seQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ivH-Pe-qBm">
+                                <rect key="frame" x="0.0" y="56" width="414" height="752"/>
+                            </containerView>
+                        </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="9UT-6V-8pb" firstAttribute="bottom" secondItem="ivH-Pe-qBm" secondAttribute="bottom" id="FEn-PT-khM"/>
+                            <constraint firstItem="ivH-Pe-qBm" firstAttribute="top" secondItem="9UT-6V-8pb" secondAttribute="top" id="JYc-dr-KSY"/>
+                            <constraint firstItem="9UT-6V-8pb" firstAttribute="trailing" secondItem="ivH-Pe-qBm" secondAttribute="trailing" id="SrN-Xp-QBg"/>
+                            <constraint firstItem="ivH-Pe-qBm" firstAttribute="leading" secondItem="9UT-6V-8pb" secondAttribute="leading" id="kyy-u9-ypE"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="9UT-6V-8pb"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Add Color" id="Dh8-M6-nsl"/>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="Dh8-M6-nsl"/>
+                    <connections>
+                        <outlet property="containerView" destination="ivH-Pe-qBm" id="IcE-xD-eIW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xf8-hm-dAb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6852" y="1144"/>
+        </scene>
+        <!--Dynamic Scenes Colors Collection Picker View Controller-->
+        <scene sceneID="FSu-mA-r7f">
+            <objects>
+                <collectionViewController storyboardIdentifier="DefaultColorPickerStoryboard" id="VRg-4P-3dn" customClass="DynamicScenesColorsCollectionPickerViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="kRE-am-Diu">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Gb7-n3-DW0">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="colorCell" id="f13-fR-H6F" customClass="ColorDynamicSceneCustomCell" customModule="RedGreenBlue" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Os1-wX-d86">
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lPn-Uc-36s">
+                                            <rect key="frame" x="8" y="8" width="84" height="84"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dyw-TS-lDy" customClass="SSCheckMark" customModule="RedGreenBlue" customModuleProvider="target">
+                                                    <rect key="frame" x="46" y="46" width="30" height="30"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="LiQ-Uj-h2p"/>
+                                                        <constraint firstAttribute="width" constant="30" id="XdQ-Fh-9TK"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Dyw-TS-lDy" secondAttribute="trailing" constant="8" id="3Tg-Dg-Q5Y"/>
+                                                <constraint firstAttribute="bottom" secondItem="Dyw-TS-lDy" secondAttribute="bottom" constant="8" id="gw7-XE-BdN"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="lPn-Uc-36s" secondAttribute="trailing" constant="8" id="8w9-p6-c61"/>
+                                        <constraint firstAttribute="bottom" secondItem="lPn-Uc-36s" secondAttribute="bottom" constant="8" id="Uhw-jU-u96"/>
+                                        <constraint firstItem="lPn-Uc-36s" firstAttribute="top" secondItem="Os1-wX-d86" secondAttribute="top" constant="8" id="gBE-hL-JFR"/>
+                                        <constraint firstItem="lPn-Uc-36s" firstAttribute="leading" secondItem="Os1-wX-d86" secondAttribute="leading" constant="8" id="h4g-br-YFs"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
+                                <size key="customSize" width="100" height="100"/>
+                                <connections>
+                                    <outlet property="checkmarkView" destination="Dyw-TS-lDy" id="P19-sP-aqZ"/>
+                                    <outlet property="subView" destination="lPn-Uc-36s" id="h3X-z9-pYh"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="VRg-4P-3dn" id="iWj-S4-uLu"/>
+                            <outlet property="delegate" destination="VRg-4P-3dn" id="ZlS-D0-ggK"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Aja-nc-tW2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7886" y="919"/>
         </scene>
         <!--Custom Scenes-->
         <scene sceneID="xmA-L3-5yy">
@@ -404,7 +483,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection id="Tma-SZ-HpN">
+                            <tableViewSection footerTitle="Determines which audio file gets played when scene is on.  Sound settings can be adjusted in Settings tab." id="Tma-SZ-HpN">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="BwA-A6-x0x" detailTextLabel="aZB-DV-KBm" style="IBUITableViewCellStyleValue1" id="2ha-Bn-ezB">
                                         <rect key="frame" x="0.0" y="332.5" width="414" height="43.5"/>
@@ -438,7 +517,7 @@
                             <tableViewSection id="CLF-Ab-2l9">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yKE-kV-X3W">
-                                        <rect key="frame" x="0.0" y="412" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="440" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yKE-kV-X3W" id="imy-DJ-Gcz">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -568,6 +647,20 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4k-Ee-Pa4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5874" y="281"/>
+        </scene>
+        <!--Default Color Picker View Controller-->
+        <scene sceneID="Tjc-GW-Dyj">
+            <objects>
+                <viewController storyboardIdentifier="CustomColorPickerStoryboard" id="j0m-rc-Gif" customClass="DefaultColorPickerViewController" customModule="FlexColorPicker" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RrX-AU-TM0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TCo-1j-JeK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7886" y="1619"/>
         </scene>
     </scenes>
     <resources>
