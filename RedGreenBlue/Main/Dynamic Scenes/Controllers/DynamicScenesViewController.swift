@@ -120,9 +120,9 @@ extension DynamicScenesViewController {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Default custom scenes"
+            return "Default dynamic scenes"
         } else if section == 1 && dynamicScenes[1].count > 0 {
-            return "Your custom scenes"
+            return "Your dynamic scenes"
         }
         return ""
     }

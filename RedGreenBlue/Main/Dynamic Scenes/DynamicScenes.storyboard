@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Custom Scenes-->
+        <!--Dynamic Scenes-->
         <scene sceneID="Lso-xY-VL3">
             <objects>
                 <tableViewController id="TWh-2Z-qK0" customClass="DynamicScenesViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
@@ -75,7 +75,7 @@
                             <outlet property="delegate" destination="TWh-2Z-qK0" id="h9E-fk-OSj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Custom Scenes" id="34c-sp-Vj7">
+                    <navigationItem key="navigationItem" title="Dynamic Scenes" id="34c-sp-Vj7">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="BpQ-wx-WY7">
                             <connections>
                                 <segue destination="0Cf-Tc-3gr" kind="presentation" identifier="AddDynamicSceneSegue" id="wDs-Ad-SIh"/>
@@ -175,11 +175,11 @@
             </objects>
             <point key="canvasLocation" x="6872" y="1203"/>
         </scene>
-        <!--Custom Scenes-->
+        <!--Dynamic Scenes-->
         <scene sceneID="xmA-L3-5yy">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K1N-2Z-c64" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Custom Scenes" image="dynamicScenes" id="A63-6P-5cB"/>
+                    <tabBarItem key="tabBarItem" title="Dynamic Scenes" image="dynamicScenes" id="A63-6P-5cB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ho2-26-Yio">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -212,7 +212,7 @@
             </objects>
             <point key="canvasLocation" x="3658" y="727"/>
         </scene>
-        <!--Add Custom Scene-->
+        <!--Add Dynamic Scene-->
         <scene sceneID="ks9-by-ljE">
             <objects>
                 <tableViewController id="ZYO-Zx-6EK" customClass="DynamicScenesAddViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
@@ -323,7 +323,7 @@
                                                     <rect key="frame" x="20" y="31.5" width="197" height="14.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" systemColor="systemGrayColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -354,7 +354,7 @@
                                                     <rect key="frame" x="20" y="31.5" width="161" height="14.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" systemColor="systemGrayColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -377,7 +377,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete Scene" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jfy-GE-Mfk">
                                                     <rect key="frame" x="156" y="11.5" width="102" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -395,7 +395,7 @@
                             <outlet property="delegate" destination="ZYO-Zx-6EK" id="wvV-Cg-uFF"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add Custom Scene" id="FFI-NJ-cKp"/>
+                    <navigationItem key="navigationItem" title="Add Dynamic Scene" id="FFI-NJ-cKp"/>
                     <connections>
                         <outlet property="randomColorsSwitch" destination="J7a-7J-Gjp" id="Zmb-qn-xJN"/>
                         <outlet property="sequentialLightChangeSwitch" destination="6Dr-LI-fOA" id="iad-ct-dfr"/>
@@ -501,7 +501,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="dynamicScenes" width="32" height="32"/>
+        <image name="dynamicScenes" width="30" height="30"/>
         <namedColor name="cellColor">
             <color red="0.14300000667572021" green="0.15299999713897705" blue="0.1679999977350235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
