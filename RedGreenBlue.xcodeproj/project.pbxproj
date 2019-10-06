@@ -20,6 +20,7 @@
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
 		4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4669EBB323439F440097432B /* SettingsTableViewController.swift */; };
+		466BF093234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */; };
 		46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */; };
 		46736547233A61C700DA33AA /* DynamicScenesAddColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */; };
 		46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */; };
@@ -91,6 +92,7 @@
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
 		4669EBB323439F440097432B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorsCollectionPickerViewController.swift; sourceTree = "<group>"; };
 		46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddViewController.swift; sourceTree = "<group>"; };
 		46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddColorViewController.swift; sourceTree = "<group>"; };
 		46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneProtocol.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */,
 				4673654E233BD85300DA33AA /* DynamicScenesColorsCollectionViewController.swift */,
 				462A5E4E234839010088296B /* DynamicScenesAddSoundViewController.swift */,
+				466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -700,6 +703,7 @@
 				46B6423D232000800047F233 /* RGBGroup.swift in Sources */,
 				4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */,
 				46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */,
+				466BF093234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
 				462A5E4F234839010088296B /* DynamicScenesAddSoundViewController.swift in Sources */,
 				46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */,

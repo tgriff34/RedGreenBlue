@@ -10,32 +10,99 @@ import UIKit
 import FlexColorPicker
 import SwiftyHue
 
-class DynamicScenesAddColorViewController: DefaultColorPickerViewController {
+class DynamicScenesAddColorViewController: UIViewController {
     var swiftyHue: SwiftyHue?
     var color: XYColor?
 
+    @IBOutlet weak var containerView: UIView!
+
     weak var addColorDelegate: DynamicSceneAddColorDelegate?
+
+    private lazy var customColorPickerViewController: DefaultColorPickerViewController = {
+        let storyboard = UIStoryboard(name: "DynamicScenes", bundle: Bundle.main)
+        var viewController = storyboard.instantiateViewController(
+            withIdentifier: "CustomColorPickerStoryboard") as? DefaultColorPickerViewController
+        viewController?.brightnessSlider.isHidden = true
+        viewController?.colorPreview.isHidden = true
+        viewController?.delegate = self
+        self.add(asChildViewController: viewController!)
+        return viewController!
+    }()
+
+    private lazy var defaultColorPickerViewController: DynamicScenesColorsCollectionPickerViewController = {
+        let storyboard = UIStoryboard(name: "DynamicScenes", bundle: Bundle.main)
+        var viewController = storyboard.instantiateViewController(
+            withIdentifier: "DefaultColorPickerStoryboard") as? DynamicScenesColorsCollectionPickerViewController
+        viewController?.delegate = self
+        self.add(asChildViewController: viewController!)
+        return viewController!
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         swiftyHue = RGBRequest.shared.getSwiftyHue()
 
-        brightnessSlider.isHidden = true
-        colorPreview.isHidden = true
-
-        if let color = color {
-            self.colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
-                                                                      forModel: "LCT016")
-        }
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
+
+        let items = ["Custom", "Picker"]
+        let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.addTarget(self, action: #selector(segmentedControlChanged(_:)), for: .valueChanged)
+        self.navigationItem.titleView = segmentedControl
+
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.sendActions(for: .valueChanged)
+    }
+
+    private func add(asChildViewController viewController: UIViewController) {
+        addChild(viewController)
+        containerView.addSubview(viewController.view)
+        viewController.view.frame = containerView.bounds
+        viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        viewController.didMove(toParent: self)
+    }
+
+    private func remove(asChildViewController viewController: UIViewController) {
+        viewController.willMove(toParent: nil)
+        viewController.view.removeFromSuperview()
+        viewController.removeFromParent()
+    }
+
+    @objc func segmentedControlChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            remove(asChildViewController: defaultColorPickerViewController)
+            add(asChildViewController: customColorPickerViewController)
+            if let color = color {
+                customColorPickerViewController.colorPicker.selectedColor = HueUtilities.colorFromXY(
+                    CGPoint(x: color.xvalue, y: color.yvalue), forModel: "LCT016")
+            }
+        } else {
+            remove(asChildViewController: customColorPickerViewController)
+            add(asChildViewController: defaultColorPickerViewController)
+            if let color = color {
+                console.debug("Setting: \(color)")
+                defaultColorPickerViewController.selectedColor = color
+            }
+        }
     }
 
     @objc func save() {
         navigationController?.popViewController(animated: true)
-        let xyPoint: CGPoint = HueUtilities.calculateXY(self.colorPicker.selectedColor, forModel: "LCT016")
-        addColorDelegate?.dynamicSceneColorAdded(XYColor([Double(xyPoint.x), Double(xyPoint.y)]))
+        addColorDelegate?.dynamicSceneColorAdded(color!)
+    }
+}
+
+extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneAddColorDelegate {
+    func dynamicSceneColorAdded(_ color: XYColor) {
+        console.debug(color)
+        self.color = color
+    }
+    func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
+        let xyPoint: CGPoint = HueUtilities.calculateXY(
+            customColorPickerViewController.colorPicker.selectedColor, forModel: "LCT016")
+        color = XYColor([Double(xyPoint.x), Double(xyPoint.y)])
+    }
+    func colorPicker(_ colorPicker: ColorPickerController, confirmedColor: UIColor, usingControl: ColorControl) {
     }
 }
