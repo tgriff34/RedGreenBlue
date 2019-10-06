@@ -73,6 +73,8 @@ extension ThemeTableViewController {
             } else {
                 return 2
             }
+        } else if section == 2 {
+            return 2
         }
         return super.tableView(tableView, numberOfRowsInSection: section)
     }
@@ -86,6 +88,18 @@ extension ThemeTableViewController {
             } else if UserDefaults.standard.object(forKey: "AppTheme") as? String == "light" && indexPath.row == 1 {
                 tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
+        case 2:
+            if indexPath.row == 0 {
+                cell.imageView!.image = UIImage(named: "rgb-lamp-icon-dark-rounded.png")
+                if UIApplication.shared.alternateIconName == "darkIcon" {
+                    cell.accessoryType = .checkmark
+                }
+            } else if indexPath.row == 1 {
+                cell.imageView!.image = UIImage(named: "rgb-lamp-icon-light-rounded.png")
+                if UIApplication.shared.alternateIconName == nil {
+                    cell.accessoryType = .checkmark
+                }
+            }
         default:
             break
         }
@@ -98,24 +112,41 @@ extension ThemeTableViewController {
         return indexPath
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
         switch indexPath.section {
         case 1:
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.accessoryType = .checkmark
-
             if indexPath.row == 0  && !systemDarkModeSwitch.isOn {
-                if #available(iOS 13.0, *) {
-                    UserDefaults.standard.set("dark", forKey: "AppTheme")
-                }
+                tableView.deselectRow(at: IndexPath(row: 1, section: 1), animated: true)
+                self.tableView(self.tableView, didDeselectRowAt: IndexPath(row: 1, section: 1))
+                UserDefaults.standard.set("dark", forKey: "AppTheme")
             } else if !systemDarkModeSwitch.isOn {
-                if #available(iOS 13.0, *) {
-                    UserDefaults.standard.set("light", forKey: "AppTheme")
-                }
+                tableView.deselectRow(at: IndexPath(row: 0, section: 1), animated: true)
+                self.tableView(self.tableView, didDeselectRowAt: IndexPath(row: 0, section: 1))
+                UserDefaults.standard.set("light", forKey: "AppTheme")
             }
             RGBRequest.shared.setApplicationTheme()
+        case 2:
+            if UIApplication.shared.supportsAlternateIcons {
+                if indexPath.row == 0 {
+                    tableView.deselectRow(at: IndexPath(row: 1, section: 2), animated: true)
+                    self.tableView(self.tableView, didDeselectRowAt: IndexPath(row: 1, section: 2))
+                    UIApplication.shared.setAlternateIconName("darkIcon")
+                } else {
+                    tableView.deselectRow(at: IndexPath(row: 0, section: 2), animated: true)
+                    self.tableView(self.tableView, didDeselectRowAt: IndexPath(row: 0, section: 2))
+                    UIApplication.shared.setAlternateIconName(nil)
+                }
+            }
         default:
             break
         }
+    }
+    override func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        if (tableView.indexPathsForSelectedRows?.contains(indexPath))! {
+            return nil
+        }
+        return indexPath
     }
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
