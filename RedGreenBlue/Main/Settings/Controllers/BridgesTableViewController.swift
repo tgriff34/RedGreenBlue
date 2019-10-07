@@ -137,15 +137,12 @@ extension BridgesTableViewController {
             // Couldnt find the bridge so lets display the alert
             let bridge = bridges[indexPath.row]
             SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
-            bridgeAuthenticator = BridgeAuthenticator(bridge: HueBridge(ip: bridge.ipAddress,
-                                                                        deviceType: bridge.deviceType,
-                                                                        friendlyName: bridge.friendlyName,
-                                                                        modelDescription: bridge.modelDescription,
-                                                                        modelName: bridge.modelName,
-                                                                        serialNumber: bridge.serialNumber,
-                                                                        UDN: bridge.UDN,
-                                                                        icons: bridge.icons),
-                                                      uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
+            bridgeAuthenticator = BridgeAuthenticator(
+                bridge: HueBridge(ip: bridge.ipAddress, deviceType: bridge.deviceType,
+                                  friendlyName: bridge.friendlyName, modelDescription: bridge.modelDescription,
+                                  modelName: bridge.modelName, serialNumber: bridge.serialNumber,
+                                  UDN: bridge.UDN, icons: bridge.icons),
+                uniqueIdentifier: "swiftyhue#\(UIDevice.current.name)")
             selectedBridge = bridge
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()

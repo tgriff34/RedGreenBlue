@@ -21,10 +21,10 @@ class LightGroupsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 200
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
 
         console.debug(RGBDatabaseManager.realm()?.configuration.fileURL! as Any)
     }
@@ -106,8 +106,8 @@ class LightGroupsTableViewController: UITableViewController {
         for light in group.lights where light.state.on! == true {
             var lightState = LightState()
             lightState.brightness = Int(value * 2.54)
-            RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue,
-                                                          with: lightState, completion: nil)
+            RGBGroupsAndLightsHelper.shared.setLightState(
+                for: light, using: swiftyHue, with: lightState, completion: nil)
         }
     }
 }
@@ -156,9 +156,9 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
                                   lightSwitchTappedFor group: RGBGroup) {
         var lightState = LightState()
         lightState.on = lightGroupsTableViewCell.switch.isOn
-        RGBGroupsAndLightsHelper.shared.setLightState(for: group, using: swiftyHue,
-                                                      with: lightState, completion: {
-            self.fetchData(group: nil, completion: nil)
+        RGBGroupsAndLightsHelper.shared.setLightState(
+            for: group, using: swiftyHue, with: lightState, completion: {
+                self.fetchData(group: nil, completion: nil)
         })
     }
 
@@ -189,12 +189,11 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
 // MARK: - Add Group Delegate
 extension LightGroupsTableViewController: GroupAddDelegate {
     func groupAddedSuccess(_ name: String, _ lights: [String]) {
-        swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
-                                                    includeLightIds: lights,
-                                                    completionHandler: { _ in
-                                                        self.fetchData(group: nil, completion: {
-                                                            self.tableView.reloadData()
-                                                        })
+        swiftyHue.bridgeSendAPI.createGroupWithName(
+            name, andType: .LightGroup, includeLightIds: lights, completionHandler: { _ in
+                self.fetchData(group: nil, completion: {
+                    self.tableView.reloadData()
+                })
         })
     }
 }

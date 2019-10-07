@@ -154,14 +154,23 @@ class RGBRequest {
     private var isConnected: Bool = false
     func setUpConnectionListeners() {
         isConnected = false
-        NotificationCenter.default.addObserver(self, selector: #selector(onConnectionUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onNoConnectionUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onConnectionUpdate(_:)),
+            name: NSNotification.Name(rawValue: BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onNoConnectionUpdate(_:)),
+            name: NSNotification.Name(rawValue: BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
+            object: nil)
+    }
+
+    func tearDownConnectionListeners() {
+        NotificationCenter.default.removeObserver(
+            self, name: NSNotification.Name(BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
+            object: nil)
+        NotificationCenter.default.removeObserver(
+            self, name: NSNotification.Name(BridgeHeartbeatConnectionStatusNotification.nolocalConnection.rawValue),
+            object: nil)
     }
 
     // Connection observer helper functions

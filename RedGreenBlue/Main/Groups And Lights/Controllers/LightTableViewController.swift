@@ -40,10 +40,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         tableView.estimatedRowHeight = 400
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
         setupNavigationSwitch()
         groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
 
@@ -309,10 +309,9 @@ extension LightTableViewController {
 extension LightTableViewController: GroupAddDelegate {
     func groupAddedSuccess(_ name: String, _ lights: [String]) {
         navigationItem.title = name
-        swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier,
-                                                  newName: name, newLightIdentifiers: lights,
-                                                  completionHandler: { _ in
-                                                    self.fetchData(group: self.group, completion: nil)
+        swiftyHue.bridgeSendAPI.updateGroupWithId(
+            group.identifier, newName: name, newLightIdentifiers: lights, completionHandler: { _ in
+                self.fetchData(group: self.group, completion: nil)
         })
     }
 }
