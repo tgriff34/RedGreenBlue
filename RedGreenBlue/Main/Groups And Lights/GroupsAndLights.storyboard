@@ -361,13 +361,13 @@
         </scene>
     </scenes>
     <resources>
-        <image name="group" width="32" height="32"/>
+        <image name="group" width="30" height="30"/>
         <namedColor name="cellColor">
             <color red="0.14300000667572021" green="0.15299999713897705" blue="0.1679999977350235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="nEU-ED-2IC"/>
+        <segue reference="mOU-3U-XbY"/>
         <segue reference="YcE-EC-4rq"/>
     </inferredMetricsTieBreakers>
 </document>
