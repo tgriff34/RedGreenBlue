@@ -157,7 +157,7 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
             return
         }
         // Set selected row to current cell
-        if dynamicTableViewCell.switch.isOn {
+        if dynamicTableViewCell.switch.isOn && !groups.isEmpty {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             selectedRowIndex = indexPath
             RGBGroupsAndLightsHelper.shared.playDynamicScene(scene: scene,

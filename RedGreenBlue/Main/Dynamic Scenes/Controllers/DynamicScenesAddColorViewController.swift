@@ -81,7 +81,6 @@ class DynamicScenesAddColorViewController: UIViewController {
             remove(asChildViewController: customColorPickerViewController)
             add(asChildViewController: defaultColorPickerViewController)
             if let color = color {
-                console.debug("Setting: \(color)")
                 defaultColorPickerViewController.selectedColor = color
             }
         }

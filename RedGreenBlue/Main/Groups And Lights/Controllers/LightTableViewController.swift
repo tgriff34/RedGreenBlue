@@ -18,6 +18,20 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     var optionsButton: UIBarButtonItem?
     @IBOutlet weak var groupBrightnessSlider: UISlider!
 
+    @IBOutlet weak var scenesButton: UIButton!
+    @IBAction func scenesButton(_ sender: Any) {
+        tabBarController?.selectedViewController = tabBarController?.viewControllers![1] as? UINavigationController
+        let destination = tabBarController?.selectedViewController as? UINavigationController
+        let viewController = destination?.viewControllers.first as? ScenesTableViewController
+        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    }
+    @IBAction func customScenesButton(_ sender: Any) {
+        tabBarController?.selectedViewController = tabBarController?.viewControllers![2] as? UINavigationController
+        let destination = tabBarController?.selectedViewController as? UINavigationController
+        let viewController = destination?.viewControllers.first as? DynamicScenesViewController
+        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,6 +46,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                                                object: nil)
         setupNavigationSwitch()
         groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
+
+        if group.type != .Room {
+            scenesButton.isHidden = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
