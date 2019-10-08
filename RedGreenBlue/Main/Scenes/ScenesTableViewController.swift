@@ -81,10 +81,12 @@ class ScenesTableViewController: UITableViewController {
         self.tableView.reloadData()
 
         menuView.cellBackgroundColor = view.backgroundColor
+        menuView.checkMarkImage = UIImage(named: "checkmark")
         if #available(iOS 13, *) {
             menuView.menuTitleColor = UIColor.label
             menuView.arrowTintColor = UIColor.label
             menuView.cellTextLabelColor = UIColor.label
+            menuView.cellSeparatorColor = UIColor.label
         } else {
             menuView.menuTitleColor = .black
             menuView.arrowTintColor = .black

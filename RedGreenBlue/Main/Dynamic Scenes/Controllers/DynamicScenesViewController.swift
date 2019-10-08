@@ -95,10 +95,12 @@ class DynamicScenesViewController: UITableViewController {
             self.navigationItem.titleView = menuView
 
             menuView.cellBackgroundColor = self.view.backgroundColor
+            menuView.checkMarkImage = UIImage(named: "checkmark")
             if #available(iOS 13, *) {
                 menuView.menuTitleColor = UIColor.label
                 menuView.arrowTintColor = UIColor.label
                 menuView.cellTextLabelColor = UIColor.label
+                menuView.cellSeparatorColor = UIColor.label
             } else {
                 menuView.menuTitleColor = .black
                 menuView.arrowTintColor = .black
