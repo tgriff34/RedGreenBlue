@@ -108,7 +108,8 @@ class DynamicScenesViewController: UITableViewController {
             }
             menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
                 self.selectedGroupIndex = indexPath
-                if let cell = self.tableView.cellForRow(at: self.selectedRowIndex!) as? LightsDynamicSceneCustomCell,
+                if let selectedRowIndex = self.selectedRowIndex,
+                    let cell = self.tableView.cellForRow(at: selectedRowIndex) as? LightsDynamicSceneCustomCell,
                     cell.switch.isOn {
                     RGBGroupsAndLightsHelper.shared.stopDynamicScene()
                     cell.switch.setOn(false, animated: true)
