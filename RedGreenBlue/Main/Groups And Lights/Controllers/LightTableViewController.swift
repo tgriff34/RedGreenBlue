@@ -179,8 +179,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     private func setupNavigationSwitch() {
-        optionsButton = UIBarButtonItem(barButtonSystemItem: .action, target: self,
-                                        action: #selector(optionsButtonTapped(_:)))
+        optionsButton = UIBarButtonItem(
+            image: UIImage(named: "ellipsis"),
+            style: .plain, target: self, action: #selector(optionsButtonTapped(_:)))
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)

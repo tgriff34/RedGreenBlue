@@ -166,7 +166,8 @@ class RGBGroupsAndLightsHelper {
             lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
 
             if remainderForBrightness == 0 && scene.isBrightnessEnabled {
-                lightState.brightness = genRandomNum(minBrightness: scene.minBrightness, maxBrightness: scene.maxBrightness)
+                lightState.brightness = genRandomNum(minBrightness: scene.minBrightness,
+                                                     maxBrightness: scene.maxBrightness)
             }
 
             setLightState(for: light, using: swiftyHue, with: lightState, completion: nil)
