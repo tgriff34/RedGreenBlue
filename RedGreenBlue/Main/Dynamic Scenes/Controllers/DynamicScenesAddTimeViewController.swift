@@ -12,6 +12,7 @@ class DynamicScenesAddTimeViewController: UITableViewController {
 
     weak var addTimeDelegate: DynamicSceneAddTimeDelegate?
 
+    var type: TimeType?
     var selectedTime: Int?
 
     var timeArray: [Int: Int] = [1: 0, 3: 1, 5: 2, 10: 3]
@@ -32,7 +33,7 @@ class DynamicScenesAddTimeViewController: UITableViewController {
                 return
             }
             cell.accessoryType = .checkmark
-            addTimeDelegate?.dynamicSceneTimeAdded(number)
+            addTimeDelegate?.dynamicSceneTimeAdded(type!, number)
         }
     }
 

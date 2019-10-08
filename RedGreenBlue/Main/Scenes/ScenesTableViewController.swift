@@ -81,10 +81,12 @@ class ScenesTableViewController: UITableViewController {
         self.tableView.reloadData()
 
         menuView.cellBackgroundColor = view.backgroundColor
+        menuView.checkMarkImage = UIImage(named: "checkmark")
         if #available(iOS 13, *) {
             menuView.menuTitleColor = UIColor.label
             menuView.arrowTintColor = UIColor.label
             menuView.cellTextLabelColor = UIColor.label
+            menuView.cellSeparatorColor = UIColor.label
         } else {
             menuView.menuTitleColor = .black
             menuView.arrowTintColor = .black
@@ -113,15 +115,14 @@ extension ScenesTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        swiftyHue.bridgeSendAPI
-            .recallSceneWithIdentifier(allScenes[selectedGroupIndex][indexPath.row].identifier,
-                                       inGroupWithIdentifier: allScenes[selectedGroupIndex][indexPath.row].group,
-                                       completionHandler: { (error) in
-                                         guard error == nil else {
-                                             logger.warning("recallSceneWithIdentifier ",
-                                                            String(describing: error?.description))
-                                             return
-                                         }
-            })
+        swiftyHue.bridgeSendAPI.recallSceneWithIdentifier(
+            allScenes[selectedGroupIndex][indexPath.row].identifier,
+            inGroupWithIdentifier: allScenes[selectedGroupIndex][indexPath.row].group, completionHandler: { (error) in
+                guard error == nil else {
+                    logger.warning("recallSceneWithIdentifier ",
+                                   String(describing: error?.description))
+                    return
+                }
+        })
     }
 }

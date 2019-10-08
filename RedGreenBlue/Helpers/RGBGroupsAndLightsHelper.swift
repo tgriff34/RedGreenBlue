@@ -122,10 +122,12 @@ class RGBGroupsAndLightsHelper {
 
         lightsForScene.removeAll()
 
+        let timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer
+
         player?.addPeriodicTimeObserver(
-            forInterval: CMTime(seconds: scene.timer, preferredTimescale: 1),
-            queue: DispatchQueue.main, using: { _ in
-                self.setScene(scene: scene, for: group, with: swiftyHue)
+            forInterval: CMTime(seconds: timer, preferredTimescale: 1),
+            queue: DispatchQueue.main, using: { time in
+                self.setScene(scene: scene, for: group, time: Int(CMTimeGetSeconds(time)), with: swiftyHue)
         })
         if let setting = UserDefaults.standard.object(forKey: "SoundSetting") as? String,
             setting == "Muted" {
@@ -142,12 +144,17 @@ class RGBGroupsAndLightsHelper {
     }
 
     private var lightsForScene = [Int]()
+    private var globalTimer: Int = 0
 
-    private func setScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
-        setLightsForScene(group: group,
-                          numberOfColors: scene.xys.count,
-                          isSequential: scene.sequentialLightChange,
-                          randomColors: scene.randomColors)
+    private func setScene(scene: RGBDynamicScene, for group: RGBGroup, time: Int, with swiftyHue: SwiftyHue) {
+        let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
+        let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
+        if remainderForColor == 0 {
+            setLightsForScene(group: group,
+                              numberOfColors: scene.xys.count,
+                              isSequential: scene.sequentialLightChange,
+                              randomColors: scene.randomColors)
+        }
 
         for (index, light) in group.lights.enumerated() {
             // Create lightstate and turn light on
@@ -157,6 +164,11 @@ class RGBGroupsAndLightsHelper {
             let lightIndex = lightsForScene[index]
 
             lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
+
+            if remainderForBrightness == 0 && scene.isBrightnessEnabled {
+                lightState.brightness = genRandomNum(minBrightness: scene.minBrightness,
+                                                     maxBrightness: scene.maxBrightness)
+            }
 
             setLightState(for: light, using: swiftyHue, with: lightState, completion: nil)
         }
@@ -194,6 +206,11 @@ class RGBGroupsAndLightsHelper {
             }
         }
         return randomNumber
+    }
+
+    private func genRandomNum(minBrightness: Int, maxBrightness: Int) -> Int {
+        let randomNumber = Int(arc4random_uniform(UInt32(maxBrightness))) + minBrightness
+        return Int(Double(randomNumber) * 2.54)
     }
 }
 

@@ -65,9 +65,11 @@ extension InitialBridgeFinderViewController {
             UserDefaults.standard.set("system", forKey: "AppTheme")
             UserDefaults.standard.set("Default", forKey: "SoundSetting")
             RGBDatabaseManager.write(to: realm!, closure: {
-                let scene = RGBDynamicScene(name: "Christmas", timer: 10, brightnessDifference: 0,
+                let scene = RGBDynamicScene(name: "Christmas", timer: 10,
                                             isDefault: true, sequentialLightChange: false,
-                                            randomColors: true, soundFile: "Default")
+                                            randomColors: true, soundFile: "Default",
+                                            isBrightnessEnabled: false, brightnessTimer: 1,
+                                            minBrightness: 1, maxBrightness: 100)
                 scene.xys.append(XYColor([Double(0.1356), Double(0.0412)]))
                 scene.xys.append(XYColor([Double(0.6997), Double(0.3)]))
                 scene.xys.append(XYColor([Double(0), Double(1)]))

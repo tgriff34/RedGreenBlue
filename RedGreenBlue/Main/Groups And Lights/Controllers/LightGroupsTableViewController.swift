@@ -21,10 +21,10 @@ class LightGroupsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 200
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
 
         console.debug(RGBDatabaseManager.realm()?.configuration.fileURL! as Any)
     }
@@ -52,7 +52,7 @@ class LightGroupsTableViewController: UITableViewController {
                     }
                 }
             }
-            self.fetchData(group: nil, completion: nil)
+            self.fetchData(completion: nil)
         }
     }
 
@@ -63,12 +63,12 @@ class LightGroupsTableViewController: UITableViewController {
         let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
         if swiftyHueDidChange.didIpChange || groups.isEmpty {
             swiftyHue = swiftyHueDidChange.swiftyHue
-            fetchData(group: nil, completion: {
+            fetchData(completion: {
                 self.swiftyHue.startHeartbeat()
                 self.tableView.reloadData()
             })
         } else {
-            fetchData(group: nil, completion: {
+            fetchData(completion: {
                 self.swiftyHue.startHeartbeat()
                 if self.tableView.numberOfRows(inSection: 0) != self.groups[0].count ||
                     self.tableView.numberOfRows(inSection: 1) != self.groups[1].count {
@@ -79,7 +79,7 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     // Fetch all groups and lights and update cells
-    private func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
+    private func fetchData(completion: (() -> Void)?) {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
             guard error == nil, let groups = groups else {
                 RGBRequest.shared.errorsFromResponse(error: error, completion: {
@@ -88,14 +88,14 @@ class LightGroupsTableViewController: UITableViewController {
                 return
             }
             self.groups = groups
-            self.updateUI(group)
+            self.updateUI()
             completion?()
         })
     }
 
-    private func updateUI(_ group: RGBGroup?) {
+    private func updateUI() {
         for (section, groupsByType) in groups.enumerated() {
-            for (row, subGroup) in groupsByType.enumerated() where group?.identifier != subGroup.identifier {
+            for (row, subGroup) in groupsByType.enumerated() {
                 let cell = tableView.cellForRow(at: IndexPath(row: row, section: section)) as? LightsGroupCustomCell
                 cell?.group = subGroup
             }
@@ -106,8 +106,8 @@ class LightGroupsTableViewController: UITableViewController {
         for light in group.lights where light.state.on! == true {
             var lightState = LightState()
             lightState.brightness = Int(value * 2.54)
-            RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue,
-                                                          with: lightState, completion: nil)
+            RGBGroupsAndLightsHelper.shared.setLightState(
+                for: light, using: swiftyHue, with: lightState, completion: nil)
         }
     }
 }
@@ -156,9 +156,9 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
                                   lightSwitchTappedFor group: RGBGroup) {
         var lightState = LightState()
         lightState.on = lightGroupsTableViewCell.switch.isOn
-        RGBGroupsAndLightsHelper.shared.setLightState(for: group, using: swiftyHue,
-                                                      with: lightState, completion: {
-            self.fetchData(group: nil, completion: nil)
+        RGBGroupsAndLightsHelper.shared.setLightState(
+            for: group, using: swiftyHue, with: lightState, completion: {
+                self.fetchData(completion: nil)
         })
     }
 
@@ -180,21 +180,16 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
     func lightGroupsTableViewCell(_ lightGroupTableViewCell: LightsGroupCustomCell,
                                   lightSliderEndedFor group: RGBGroup) {
         self.updateLightsBrightnessForGroup(group: group, value: lightGroupTableViewCell.slider.value)
-        self.fetchData(group: group, completion: {
-            self.swiftyHue.startHeartbeat()
-        })
+        self.fetchData(completion: { self.swiftyHue.startHeartbeat() })
     }
 }
 
 // MARK: - Add Group Delegate
 extension LightGroupsTableViewController: GroupAddDelegate {
     func groupAddedSuccess(_ name: String, _ lights: [String]) {
-        swiftyHue.bridgeSendAPI.createGroupWithName(name, andType: .LightGroup,
-                                                    includeLightIds: lights,
-                                                    completionHandler: { _ in
-                                                        self.fetchData(group: nil, completion: {
-                                                            self.tableView.reloadData()
-                                                        })
+        swiftyHue.bridgeSendAPI.createGroupWithName(
+            name, andType: .LightGroup, includeLightIds: lights, completionHandler: { _ in
+                self.fetchData(completion: { self.tableView.reloadData() })
         })
     }
 }

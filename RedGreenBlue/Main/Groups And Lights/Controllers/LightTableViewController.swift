@@ -18,6 +18,20 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     var optionsButton: UIBarButtonItem?
     @IBOutlet weak var groupBrightnessSlider: UISlider!
 
+    @IBOutlet weak var scenesButton: UIButton!
+    @IBAction func scenesButton(_ sender: Any) {
+        tabBarController?.selectedViewController = tabBarController?.viewControllers![1] as? UINavigationController
+        let destination = tabBarController?.selectedViewController as? UINavigationController
+        let viewController = destination?.viewControllers.first as? ScenesTableViewController
+        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    }
+    @IBAction func customScenesButton(_ sender: Any) {
+        tabBarController?.selectedViewController = tabBarController?.viewControllers![2] as? UINavigationController
+        let destination = tabBarController?.selectedViewController as? UINavigationController
+        let viewController = destination?.viewControllers.first as? DynamicScenesViewController
+        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,12 +40,16 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         tableView.estimatedRowHeight = 400
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidLightUpdate(_:)),
-                                               name: NSNotification.Name(rawValue:
-                                                ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
         setupNavigationSwitch()
         groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
+
+        if group.type != .Room {
+            scenesButton.isHidden = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +81,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
+        // If the group has not been changed then no need to reload table, just update cells
         guard let group = group else {
             self.updateUI(group: self.group)
             return
@@ -160,8 +179,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     private func setupNavigationSwitch() {
-        optionsButton = UIBarButtonItem(barButtonSystemItem: .action, target: self,
-                                        action: #selector(optionsButtonTapped(_:)))
+        optionsButton = UIBarButtonItem(
+            image: UIImage(named: "ellipsis"),
+            style: .plain, target: self, action: #selector(optionsButtonTapped(_:)))
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
@@ -291,10 +311,9 @@ extension LightTableViewController {
 extension LightTableViewController: GroupAddDelegate {
     func groupAddedSuccess(_ name: String, _ lights: [String]) {
         navigationItem.title = name
-        swiftyHue.bridgeSendAPI.updateGroupWithId(group.identifier,
-                                                  newName: name, newLightIdentifiers: lights,
-                                                  completionHandler: { _ in
-                                                    self.fetchData(group: self.group, completion: nil)
+        swiftyHue.bridgeSendAPI.updateGroupWithId(
+            group.identifier, newName: name, newLightIdentifiers: lights, completionHandler: { _ in
+                self.fetchData(group: self.group, completion: nil)
         })
     }
 }

@@ -95,10 +95,12 @@ class DynamicScenesViewController: UITableViewController {
             self.navigationItem.titleView = menuView
 
             menuView.cellBackgroundColor = self.view.backgroundColor
+            menuView.checkMarkImage = UIImage(named: "checkmark")
             if #available(iOS 13, *) {
                 menuView.menuTitleColor = UIColor.label
                 menuView.arrowTintColor = UIColor.label
                 menuView.cellTextLabelColor = UIColor.label
+                menuView.cellSeparatorColor = UIColor.label
             } else {
                 menuView.menuTitleColor = .black
                 menuView.arrowTintColor = .black
@@ -106,6 +108,13 @@ class DynamicScenesViewController: UITableViewController {
             }
             menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
                 self.selectedGroupIndex = indexPath
+                if let selectedRowIndex = self.selectedRowIndex,
+                    let cell = self.tableView.cellForRow(at: selectedRowIndex) as? LightsDynamicSceneCustomCell,
+                    cell.switch.isOn {
+                    RGBGroupsAndLightsHelper.shared.stopDynamicScene()
+                    cell.switch.setOn(false, animated: true)
+                    self.selectedRowIndex = nil
+                }
             }
         })
     }
@@ -157,7 +166,7 @@ extension DynamicScenesViewController: DynamicSceneCellDelegate {
             return
         }
         // Set selected row to current cell
-        if dynamicTableViewCell.switch.isOn {
+        if dynamicTableViewCell.switch.isOn && !groups.isEmpty {
             tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             selectedRowIndex = indexPath
             RGBGroupsAndLightsHelper.shared.playDynamicScene(scene: scene,
