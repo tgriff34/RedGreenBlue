@@ -88,7 +88,17 @@ class DynamicScenesAddColorViewController: UIViewController {
 
     @objc func save() {
         navigationController?.popViewController(animated: true)
-        addColorDelegate?.dynamicSceneColorAdded(color!)
+        if let color = color {
+            addColorDelegate?.dynamicSceneColorAdded(color)
+        } else {
+            addColorDelegate?.dynamicSceneColorAdded(convertColorFromPicker())
+        }
+    }
+
+    private func convertColorFromPicker() -> XYColor {
+        let xyPoint: CGPoint = HueUtilities.calculateXY(
+            customColorPickerViewController.colorPicker.selectedColor, forModel: "LCT016")
+        return XYColor([Double(xyPoint.x), Double(xyPoint.y)])
     }
 }
 
@@ -98,9 +108,7 @@ extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicScene
         self.color = color
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
-        let xyPoint: CGPoint = HueUtilities.calculateXY(
-            customColorPickerViewController.colorPicker.selectedColor, forModel: "LCT016")
-        color = XYColor([Double(xyPoint.x), Double(xyPoint.y)])
+        color = convertColorFromPicker()
     }
     func colorPicker(_ colorPicker: ColorPickerController, confirmedColor: UIColor, usingControl: ColorControl) {
     }

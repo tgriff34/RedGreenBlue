@@ -196,7 +196,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fW4-qc-KmR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5874" y="1145"/>
+            <point key="canvasLocation" x="5916" y="624"/>
         </scene>
         <!--Pick Color-->
         <scene sceneID="Ecc-pb-nRd">
@@ -226,7 +226,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xf8-hm-dAb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6852" y="1144"/>
+            <point key="canvasLocation" x="6896" y="623"/>
         </scene>
         <!--Dynamic Scenes Colors Collection Picker View Controller-->
         <scene sceneID="FSu-mA-r7f">
@@ -291,7 +291,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Aja-nc-tW2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7886" y="919"/>
+            <point key="canvasLocation" x="7807" y="623"/>
         </scene>
         <!--Dynamic Scenes-->
         <scene sceneID="xmA-L3-5yy">
@@ -416,7 +416,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="1fz-4I-qAj" kind="show" identifier="ColorsSegue" id="l4G-kw-uTB"/>
+                                            <segue destination="1fz-4I-qAj" kind="show" identifier="ColorsSegue" id="Iq5-qc-Dvy"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="UpZ-TD-LVg" detailTextLabel="RVe-nR-Q4n" rowHeight="56" style="IBUITableViewCellStyleSubtitle" id="P6O-62-IHe">
@@ -540,7 +540,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="ibw-WN-gAU" kind="show" identifier="TimeBetweenChangingBrightnessSegue" id="iNT-A6-Elh"/>
+                                            <segue destination="ibw-WN-gAU" kind="show" identifier="TimeBetweenChangingBrightnessSegue" id="ZtY-z3-UuD"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="44" id="lnE-aN-h1F">
@@ -730,7 +730,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qc0-3O-VP7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5874" y="473"/>
+            <point key="canvasLocation" x="5916" y="1324"/>
         </scene>
         <!--Color Timer-->
         <scene sceneID="vS1-3f-Biv">
@@ -823,7 +823,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4k-Ee-Pa4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5874" y="-199"/>
+            <point key="canvasLocation" x="5916" y="-104"/>
         </scene>
         <!--Default Color Picker View Controller-->
         <scene sceneID="Tjc-GW-Dyj">
@@ -838,7 +838,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TCo-1j-JeK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7886" y="1619"/>
+            <point key="canvasLocation" x="8675" y="623"/>
         </scene>
     </scenes>
     <resources>
@@ -849,6 +849,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="wDs-Ad-SIh"/>
-        <segue reference="Qa1-Py-eJU"/>
+        <segue reference="fgW-76-eX5"/>
     </inferredMetricsTieBreakers>
 </document>
