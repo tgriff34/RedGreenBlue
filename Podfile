@@ -18,6 +18,7 @@ target 'RedGreenBlue' do
   pod 'SwiftSVG', :git => 'https://github.com/matejukmar/SwiftSVG.git', :branch => 'cached_svg_layer_fix'
   pod 'BTNavigationDropdownMenu'
   pod 'SwiftyBeaver'
+  pod 'MARKRangeSlider'
 
 
   target 'RedGreenBlueTests' do

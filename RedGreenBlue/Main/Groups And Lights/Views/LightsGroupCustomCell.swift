@@ -70,8 +70,10 @@ class LightsGroupCustomCell: UITableViewCell {
             switch touchEvent.phase {
             case .began:
                 delegate?.lightGroupsTableViewCell(self, lightSliderStartedFor: self.group)
+                self.label.text = "\(Int(sender.value))%"
             case .moved:
                 delegate?.lightGroupsTableViewCell(self, lightSliderMovedFor: self.group)
+                self.label.text = "\(Int(sender.value))%"
             case .ended:
                 delegate?.lightGroupsTableViewCell(self, lightSliderEndedFor: self.group)
             default:

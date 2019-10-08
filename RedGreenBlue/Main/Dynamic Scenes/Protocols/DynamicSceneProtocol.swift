@@ -24,9 +24,14 @@ protocol DynamicSceneAddDelegate: AnyObject {
 }
 
 protocol DynamicSceneAddTimeDelegate: AnyObject {
-    func dynamicSceneTimeAdded(_ time: Int)
+    func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int)
 }
 
 protocol DynamicSceneAddSoundFileDelegate: AnyObject {
     func dynamicSceneSoundFileAdded(_ name: String)
+}
+
+enum TimeType {
+    case color
+    case brightness
 }

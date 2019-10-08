@@ -13,23 +13,31 @@ class RGBDynamicScene: Object {
 
     @objc dynamic var name: String = ""
     @objc dynamic var timer: Double = 0
-    @objc dynamic var brightnessDifference: Int = 0
     @objc dynamic var isDefault: Bool = false
     @objc dynamic var sequentialLightChange: Bool = false
     @objc dynamic var randomColors: Bool = false
     @objc dynamic var soundFile: String = ""
+    @objc dynamic var isBrightnessEnabled: Bool = false
+    @objc dynamic var brightnessTimer: Double = 0
+    @objc dynamic var minBrightness: Int = 1
+    @objc dynamic var maxBrightness: Int = 100
     var xys = List<XYColor>()
 
-    convenience init(name: String, timer: Double, brightnessDifference: Int,
-                     isDefault: Bool, sequentialLightChange: Bool, randomColors: Bool, soundFile: String) {
+    convenience init(name: String, timer: Double, isDefault: Bool,
+                     sequentialLightChange: Bool, randomColors: Bool,
+                     soundFile: String, isBrightnessEnabled: Bool, brightnessTimer: Double,
+                     minBrightness: Int, maxBrightness: Int) {
         self.init()
         self.name = name
         self.timer = timer
-        self.brightnessDifference = brightnessDifference
         self.isDefault = isDefault
         self.sequentialLightChange = sequentialLightChange
         self.randomColors = randomColors
         self.soundFile = soundFile
+        self.isBrightnessEnabled = isBrightnessEnabled
+        self.brightnessTimer = brightnessTimer
+        self.minBrightness = minBrightness
+        self.maxBrightness = maxBrightness
     }
 
     override static func primaryKey() -> String? {

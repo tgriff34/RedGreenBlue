@@ -81,6 +81,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
+        // If the group has not been changed then no need to reload table, just update cells
         guard let group = group else {
             self.updateUI(group: self.group)
             return

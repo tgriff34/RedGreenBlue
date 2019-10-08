@@ -168,7 +168,8 @@ extension BridgesTableViewController {
                         self.authorizedBridges.remove(at: indexPath.row)
                         self.tableView.beginUpdates()
                         self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                        self.tableView.endUpdates()                    })
+                        self.tableView.endUpdates()
+                    })
                 })
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 actionSheet.addAction(deleteAction)
@@ -228,19 +229,15 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
 
         // Authenticated so hide the warning
         SwiftMessages.hideAll()
-
         guard let selectedBridge = selectedBridge else {
             return
         }
-
         selectedBridge.username = username
-
         if let realm = realm {
             RGBDatabaseManager.write(to: realm, closure: {
                 realm.add(selectedBridge)
             })
         }
-
         authorizedBridges.append(selectedBridge)
         bridges = bridges.filter { $0.ipAddress != selectedBridge.ipAddress }
         tableView.reloadData()
