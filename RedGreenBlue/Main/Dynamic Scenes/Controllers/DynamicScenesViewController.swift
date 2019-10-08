@@ -108,18 +108,8 @@ class DynamicScenesViewController: UITableViewController {
             }
             menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> Void in
                 self.selectedGroupIndex = indexPath
-                self.stopSceneIfPlaying()
             }
         })
-    }
-
-    private func stopSceneIfPlaying() {
-        if let selectedRowIndex = self.selectedRowIndex,
-            let cell = self.tableView.cellForRow(at: selectedRowIndex) as? LightsDynamicSceneCustomCell {
-            RGBGroupsAndLightsHelper.shared.stopDynamicScene()
-            cell.switch.setOn(false, animated: true)
-            self.selectedRowIndex = nil
-        }
     }
 }
 
@@ -197,10 +187,11 @@ extension DynamicScenesViewController {
             break
         case "EditDynamicSceneSegue":
             viewController?.title = "Edit Custom Scene"
-            // If the scene that is playing the one selected, stop the scene.
             let indexPath = self.tableView.indexPathForSelectedRow
-            if indexPath == selectedRowIndex {
-                stopSceneIfPlaying()
+            if let cell = self.tableView.cellForRow(at: indexPath!) as? LightsDynamicSceneCustomCell,
+                cell.switch.isOn {
+                RGBGroupsAndLightsHelper.shared.stopDynamicScene()
+                cell.switch.setOn(false, animated: true)
             }
             viewController?.scene = dynamicScenes[1][indexPath!.row]
         default:
