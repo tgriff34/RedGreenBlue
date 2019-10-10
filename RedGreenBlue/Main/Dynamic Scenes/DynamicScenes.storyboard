@@ -189,11 +189,12 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Colors" id="cNp-RK-oRV">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="ntn-fa-Y3M"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ntn-fa-Y3M">
+                            <connections>
+                                <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="gcI-gz-Z4N"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <segue destination="CSL-J6-tar" kind="show" identifier="addColorSegue" id="Qa1-Py-eJU"/>
-                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fW4-qc-KmR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -850,6 +851,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="wDs-Ad-SIh"/>
-        <segue reference="fgW-76-eX5"/>
+        <segue reference="gcI-gz-Z4N"/>
     </inferredMetricsTieBreakers>
 </document>
