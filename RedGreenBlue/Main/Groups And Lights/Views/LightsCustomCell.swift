@@ -33,7 +33,7 @@ class LightsCustomCell: UITableViewCell {
 
             let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
             let image = UIView(SVGNamed: svgName) { (svgLayer) in
-                if let theme = UserDefaults.standard.object(forKey: "AppTheme") as? String, theme == "dark" {
+                if self.traitCollection.userInterfaceStyle == .dark {
                     svgLayer.fillColor = UIColor.white.cgColor
                 } else {
                     svgLayer.fillColor = UIColor.black.cgColor

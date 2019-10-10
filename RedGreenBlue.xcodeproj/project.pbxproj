@@ -28,6 +28,7 @@
 		46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */; };
 		4673654D233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */; };
 		4673654F233BD85300DA33AA /* DynamicScenesColorsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4673654E233BD85300DA33AA /* DynamicScenesColorsCollectionViewController.swift */; };
+		46767D3C234FB88B00D8B73E /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46767D3B234FB88B00D8B73E /* CustomButton.swift */; };
 		468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD77233C27AE0023401C /* GroupsAndLights.storyboard */; };
 		468CAD7A233C27C60023401C /* Scenes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD79233C27C60023401C /* Scenes.storyboard */; };
 		468CAD7C233C27F30023401C /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 468CAD7B233C27F30023401C /* Settings.storyboard */; };
@@ -110,6 +111,7 @@
 		46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneProtocol.swift; sourceTree = "<group>"; };
 		4673654C233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddTimeViewController.swift; sourceTree = "<group>"; };
 		4673654E233BD85300DA33AA /* DynamicScenesColorsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorsCollectionViewController.swift; sourceTree = "<group>"; };
+		46767D3B234FB88B00D8B73E /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		468CAD77233C27AE0023401C /* GroupsAndLights.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GroupsAndLights.storyboard; sourceTree = "<group>"; };
 		468CAD79233C27C60023401C /* Scenes.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Scenes.storyboard; sourceTree = "<group>"; };
 		468CAD7B233C27F30023401C /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */,
 				46EF2DAB230ED09C0021B28B /* LightsCustomCell.swift */,
 				464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */,
+				46767D3B234FB88B00D8B73E /* CustomButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -743,6 +746,7 @@
 				462A5E4A23467D330088296B /* SSCheckMark.swift in Sources */,
 				46EF2DB32311F3180021B28B /* LightGroupsAddEditViewController.swift in Sources */,
 				46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */,
+				46767D3C234FB88B00D8B73E /* CustomButton.swift in Sources */,
 				46736547233A61C700DA33AA /* DynamicScenesAddColorViewController.swift in Sources */,
 				46CCAA142307870B0054187A /* RGBRequest.swift in Sources */,
 				46EF2DB12311CA620021B28B /* RGBDatabaseManager.swift in Sources */,

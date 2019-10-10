@@ -23,7 +23,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     // When Buttons are pushed down, make effect
     @IBAction func buttonTouchedDown(_ sender: UIButton) {
         UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.965)
+            sender.transform = CGAffineTransform.init(scaleX: 0.85, y: 0.865)
         })
     }
 
@@ -76,15 +76,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         if group.type != .Room {
             scenesButton.isHidden = true
         }
-
-        if let theme = UserDefaults.standard.object(forKey: "AppTheme") as? String, theme == "dark" {
-            let image = scenesButton.image(for: .normal)?.withRenderingMode(.alwaysTemplate)
-            scenesButton.setImage(image, for: .normal)
-            scenesButton.tintColor = UIColor.white
-            let image2 = customScenesButton.image(for: .normal)?.withRenderingMode(.alwaysTemplate)
-            customScenesButton.setImage(image2, for: .normal)
-            customScenesButton.tintColor = UIColor.white
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -101,6 +92,13 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         swiftyHue.stopHeartbeat()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.tableView.reloadData()
+        scenesButton.awakeFromNib()
+        customScenesButton.awakeFromNib()
     }
 
     // MARK: - Private funcs
