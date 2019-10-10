@@ -23,7 +23,8 @@ class DynamicScenesAddColorViewController: UIViewController {
         var viewController = storyboard.instantiateViewController(
             withIdentifier: "CustomColorPickerStoryboard") as? DefaultColorPickerViewController
         viewController?.brightnessSlider.isHidden = true
-        viewController?.colorPreview.isHidden = true
+        viewController?.colorPreview.displayHex = false
+        viewController?.colorPreview.cornerRadius = 20
         viewController?.delegate = self
         self.add(asChildViewController: viewController!)
         return viewController!

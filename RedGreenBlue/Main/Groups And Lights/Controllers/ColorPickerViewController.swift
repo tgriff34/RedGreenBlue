@@ -19,7 +19,8 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         super.viewDidLoad()
 
         brightnessSlider.isHidden = true
-        colorPreview.isHidden = true
+        colorPreview.displayHex = false
+        colorPreview.cornerRadius = 20
 
         colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lights[0].state.xy![0],
                                                                      y: lights[0].state.xy![1]),

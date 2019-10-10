@@ -21,6 +21,18 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
     var dynamicScene: RGBDynamicScene! {
         didSet {
             self.label.text = dynamicScene.name
+            var uiColors = [UIColor]()
+            let colors = dynamicScene.xys
+            for color in colors {
+                uiColors.append(HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
+                                                         forModel: "LCT016"))
+            }
+            if uiColors.count > 1 {
+                subView.layer.colors = uiColors.map({ return $0.cgColor })
+                    .sorted(by: { $0.components![0] < $1.components![0] })
+            } else {
+                subView.backgroundColor = uiColors[0]
+            }
         }
     }
 
@@ -48,22 +60,6 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
     }
 
     @objc func sceneSwitchTapped(_ sender: UISwitch!) {
-        if sender.isOn {
-            var uiColors = [UIColor]()
-            let colors = dynamicScene.xys
-            for color in colors {
-                uiColors.append(HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
-                                                         forModel: "LCT016"))
-            }
-            if uiColors.count > 1 {
-                subView.layer.colors = uiColors.map({ return $0.cgColor })
-                    .sorted(by: { $0.components![0] < $1.components![0] })
-            } else {
-                subView.backgroundColor = uiColors[0]
-            }
-        } else {
-            subView.layer.colors = nil
-        }
         delegate?.dynamicSceneTableView(self, sceneSwitchTappedFor: dynamicScene)
     }
 }

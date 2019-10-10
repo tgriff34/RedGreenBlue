@@ -118,8 +118,6 @@ class RGBGroupsAndLightsHelper {
             console.debug("Failed to set audio session category. Error: \(error)")
         }
 
-        lightsForScene.removeAll()
-
         let timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer
 
         player?.addPeriodicTimeObserver(
@@ -142,12 +140,12 @@ class RGBGroupsAndLightsHelper {
     }
 
     private var lightsForScene = [Int]()
-    private var globalTimer: Int = 0
 
     private func setScene(scene: RGBDynamicScene, for group: RGBGroup, time: Int, with swiftyHue: SwiftyHue) {
         let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
         let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
         if remainderForColor == 0 {
+            lightsForScene.removeAll()
             setLightsForScene(group: group, numberOfColors: scene.xys.count,
                               isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
