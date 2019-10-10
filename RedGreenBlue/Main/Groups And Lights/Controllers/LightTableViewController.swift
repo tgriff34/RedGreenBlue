@@ -18,18 +18,44 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     var optionsButton: UIBarButtonItem?
     @IBOutlet weak var groupBrightnessSlider: UISlider!
 
+    @IBOutlet weak var customScenesButton: UIButton!
     @IBOutlet weak var scenesButton: UIButton!
-    @IBAction func scenesButton(_ sender: Any) {
-        tabBarController?.selectedViewController = tabBarController?.viewControllers![1] as? UINavigationController
-        let destination = tabBarController?.selectedViewController as? UINavigationController
-        let viewController = destination?.viewControllers.first as? ScenesTableViewController
-        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    // When Buttons are pushed down, make effect
+    @IBAction func buttonTouchedDown(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.965)
+        })
     }
-    @IBAction func customScenesButton(_ sender: Any) {
-        tabBarController?.selectedViewController = tabBarController?.viewControllers![2] as? UINavigationController
-        let destination = tabBarController?.selectedViewController as? UINavigationController
-        let viewController = destination?.viewControllers.first as? DynamicScenesViewController
-        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+
+    // When buttons released
+    @IBAction func groupsColorButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.performSegue(withIdentifier: "GroupColorPickerSegue", sender: self)
+        })
+    }
+    @IBAction func scenesButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![1]
+                as? UINavigationController
+            let destination = self.tabBarController?.selectedViewController as? UINavigationController
+            let viewController = destination?.viewControllers.first as? ScenesTableViewController
+            if let index = viewController?.groups.index(of: self.group) { viewController?.selectedGroupIndex = index }
+        })
+    }
+    @IBAction func customScenesButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![2]
+                as? UINavigationController
+            let destination = self.tabBarController?.selectedViewController as? UINavigationController
+            let viewController = destination?.viewControllers.first as? DynamicScenesViewController
+            if let index = viewController?.groups.index(of: self.group) { viewController?.selectedGroupIndex = index }
+        })
     }
 
     override func viewDidLoad() {
@@ -49,6 +75,15 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
         if group.type != .Room {
             scenesButton.isHidden = true
+        }
+
+        if let theme = UserDefaults.standard.object(forKey: "AppTheme") as? String, theme == "dark" {
+            let image = scenesButton.image(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            scenesButton.setImage(image, for: .normal)
+            scenesButton.tintColor = UIColor.white
+            let image2 = customScenesButton.image(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            customScenesButton.setImage(image2, for: .normal)
+            customScenesButton.tintColor = UIColor.white
         }
     }
 

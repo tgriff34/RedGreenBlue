@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import SwiftyHue
 
 class LightsDynamicSceneCustomCell: UITableViewCell {
 
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var subView: UIView!
+    @IBOutlet weak var subView: GradientLayerView!
     @IBOutlet weak var `switch`: UISwitch!
 
     weak var delegate: DynamicSceneCellDelegate?
+    var gradientLayer = CAGradientLayer()
 
     var dynamicScene: RGBDynamicScene! {
         didSet {
@@ -39,10 +41,29 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
         subView.layer.shadowOpacity = 0.34
         subView.layer.shadowRadius = 4.3
 
+        subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
         self.switch.addTarget(self, action: #selector(sceneSwitchTapped(_:)), for: .valueChanged)
     }
 
     @objc func sceneSwitchTapped(_ sender: UISwitch!) {
+        if sender.isOn {
+            var uiColors = [UIColor]()
+            let colors = dynamicScene.xys
+            for color in colors {
+                uiColors.append(HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
+                                                         forModel: "LCT016"))
+            }
+            if uiColors.count > 1 {
+                subView.layer.colors = uiColors.map({ return $0.cgColor })
+                    .sorted(by: { $0.components![0] < $1.components![0] })
+            } else {
+                subView.backgroundColor = uiColors[0]
+            }
+        } else {
+            subView.layer.colors = nil
+        }
         delegate?.dynamicSceneTableView(self, sceneSwitchTappedFor: dynamicScene)
     }
 }

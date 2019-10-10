@@ -19,6 +19,8 @@
 		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
+		46637A4A234E483D0000E8CB /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46637A49234E483D0000E8CB /* TabBarViewController.swift */; };
+		46637A4E234E86D40000E8CB /* GradientLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46637A4D234E86D40000E8CB /* GradientLayerView.swift */; };
 		4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4669EBB323439F440097432B /* SettingsTableViewController.swift */; };
 		466BF093234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */; };
 		46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */; };
@@ -99,6 +101,8 @@
 		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
+		46637A49234E483D0000E8CB /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		46637A4D234E86D40000E8CB /* GradientLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLayerView.swift; sourceTree = "<group>"; };
 		4669EBB323439F440097432B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorsCollectionPickerViewController.swift; sourceTree = "<group>"; };
 		46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 				6F4B3E1A2308528A000F44DA /* CustomMessageView.xib */,
 				6FA9CDF423062EF30011A2F8 /* LaunchScreen.storyboard */,
 				6FF6F4BD2323FCC500555EE7 /* SuccessCustomMessage.xib */,
+				46637A49234E483D0000E8CB /* TabBarViewController.swift */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -332,6 +337,7 @@
 				46E22732233270E40031CE0C /* LightsDynamicSceneCustomCell.swift */,
 				462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */,
 				462A5E4923467D330088296B /* SSCheckMark.swift */,
+				46637A4D234E86D40000E8CB /* GradientLayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -745,6 +751,7 @@
 				46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */,
 				466BF093234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
+				46637A4E234E86D40000E8CB /* GradientLayerView.swift in Sources */,
 				462A5E4F234839010088296B /* DynamicScenesAddSoundViewController.swift in Sources */,
 				46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */,
 				4673654F233BD85300DA33AA /* DynamicScenesColorsCollectionViewController.swift in Sources */,
@@ -765,6 +772,7 @@
 				46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
+				46637A4A234E483D0000E8CB /* TabBarViewController.swift in Sources */,
 				46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */,
 				4673654D233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift in Sources */,
 				46E22733233270E40031CE0C /* LightsDynamicSceneCustomCell.swift in Sources */,

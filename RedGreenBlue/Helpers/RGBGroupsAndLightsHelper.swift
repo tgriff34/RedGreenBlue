@@ -15,27 +15,25 @@ class RGBGroupsAndLightsHelper {
 
     func setLightState(for group: RGBGroup, using swiftyHue: SwiftyHue,
                        with lightState: LightState, completion: @escaping () -> Void) {
-        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(group.identifier, withLightState: lightState,
-                                                            completionHandler: { (error) in
-                                                                guard error == nil else {
-                                                                    logger.warning("setLightStateForGroupWithId: ",
-                                                                          String(describing: error?.description))
-                                                                    return
-                                                                }
-                                                                completion()
+        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(
+            group.identifier, withLightState: lightState, completionHandler: { (error) in
+                guard error == nil else {
+                logger.warning("setLightStateForGroupWithId: ", String(describing: error?.description))
+                return
+            }
+            completion()
         })
     }
 
     func setLightState(for light: Light, using swiftyHue: SwiftyHue,
                        with lightState: LightState, completion: (() -> Void)?) {
-        swiftyHue.bridgeSendAPI.updateLightStateForId(light.identifier, withLightState: lightState,
-                                                      completionHandler: { (error) in
-                                                        guard error == nil else {
-                                                            logger.warning("Error updateLightStateForId: ",
-                                                                  String(describing: error?.description))
-                                                            return
-                                                        }
-                                                        completion?()
+        swiftyHue.bridgeSendAPI.updateLightStateForId(
+            light.identifier, withLightState: lightState, completionHandler: { (error) in
+                guard error == nil else {
+                    logger.warning("Error updateLightStateForId: ", String(describing: error?.description))
+                    return
+                }
+                completion?()
         })
     }
 
@@ -102,8 +100,8 @@ class RGBGroupsAndLightsHelper {
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
         observer = NotificationCenter.default.addObserver(
             forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { _ in
-            player.seek(to: CMTime.zero)
-            player.play()
+                player.seek(to: CMTime.zero)
+                player.play()
         })
         return player
     }
@@ -150,10 +148,8 @@ class RGBGroupsAndLightsHelper {
         let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
         let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
         if remainderForColor == 0 {
-            setLightsForScene(group: group,
-                              numberOfColors: scene.xys.count,
-                              isSequential: scene.sequentialLightChange,
-                              randomColors: scene.randomColors)
+            setLightsForScene(group: group, numberOfColors: scene.xys.count,
+                              isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
 
         for (index, light) in group.lights.enumerated() {

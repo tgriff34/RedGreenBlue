@@ -26,17 +26,18 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="236"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGz-XA-YEV">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGz-XA-YEV" customClass="GradientLayerView" customModule="RedGreenBlue" customModuleProvider="target">
                                             <rect key="frame" x="8" y="8" width="398" height="220"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ln-O8-09X">
-                                                    <rect key="frame" x="20" y="20" width="42" height="180"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="20" y="20" width="43" height="180"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ocS-TD-BMs">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ocS-TD-BMs">
                                                     <rect key="frame" x="329" y="20" width="51" height="180"/>
+                                                    <color key="onTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </switch>
                                             </subviews>
                                             <color key="backgroundColor" name="cellColor"/>
@@ -64,7 +65,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                 <connections>
                                     <outlet property="label" destination="3Ln-O8-09X" id="xZ9-hG-AVG"/>
-                                    <outlet property="subView" destination="LGz-XA-YEV" id="cAE-k1-jEL"/>
+                                    <outlet property="subView" destination="LGz-XA-YEV" id="Yyl-yy-jeb"/>
                                     <outlet property="switch" destination="ocS-TD-BMs" id="eMR-Lc-Mpv"/>
                                     <segue destination="0Cf-Tc-3gr" kind="presentation" identifier="EditDynamicSceneSegue" id="0Hb-Ut-t81"/>
                                 </connections>

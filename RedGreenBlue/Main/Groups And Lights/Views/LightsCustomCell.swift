@@ -33,8 +33,10 @@ class LightsCustomCell: UITableViewCell {
 
             let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
             let image = UIView(SVGNamed: svgName) { (svgLayer) in
-                if #available(iOS 13, *) {
-                    svgLayer.fillColor = UIColor.label.cgColor
+                if let theme = UserDefaults.standard.object(forKey: "AppTheme") as? String, theme == "dark" {
+                    svgLayer.fillColor = UIColor.white.cgColor
+                } else {
+                    svgLayer.fillColor = UIColor.black.cgColor
                 }
             }
             image.bounds = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
