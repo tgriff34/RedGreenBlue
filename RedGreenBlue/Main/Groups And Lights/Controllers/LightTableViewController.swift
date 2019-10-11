@@ -54,7 +54,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
             let viewController = destination?.viewControllers.first as? DynamicScenesViewController
-            if let index = viewController?.groups.index(of: self.group) { viewController?.selectedGroupIndex = index }
+            if let index = viewController?.groups.index(of: self.group) {
+                viewController?.selectedGroupIndex = index
+            }
         })
     }
 
