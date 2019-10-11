@@ -88,21 +88,16 @@ class RGBGroupsAndLightsHelper {
     }
 
     // MARK: - Dynamic Scenes
-    private var observer: NSObjectProtocol?
-    private func makePlayer(file: String) -> AVPlayer {
+    private var playerLooper: AVPlayerLooper?
+    private func makePlayer(file: String) -> AVQueuePlayer {
         var url: URL?
         if file == "Default" {
             url = Bundle.main.url(forResource: "FeelinGood", withExtension: "mp3")
         } else {
             url = Bundle.main.url(forResource: file, withExtension: "mp3")
         }
-        let player = AVPlayer(url: url!)
-        if let observer = observer { NotificationCenter.default.removeObserver(observer) }
-        observer = NotificationCenter.default.addObserver(
-            forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { _ in
-                player.seek(to: CMTime.zero)
-                player.play()
-        })
+        let player = AVQueuePlayer(url: url!)
+        playerLooper = AVPlayerLooper(player: player, templateItem: player.currentItem!)
         return player
     }
 
@@ -112,7 +107,7 @@ class RGBGroupsAndLightsHelper {
         player = self.makePlayer(file: scene.soundFile)
         do {
             try AVAudioSession.sharedInstance().setCategory(
-                AVAudioSession.Category.playback,
+                AVAudioSession.Category.playAndRecord,
                 mode: .default, options: [])
         } catch {
             console.debug("Failed to set audio session category. Error: \(error)")
