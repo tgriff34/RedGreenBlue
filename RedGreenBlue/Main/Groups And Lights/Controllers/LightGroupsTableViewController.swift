@@ -61,15 +61,14 @@ class LightGroupsTableViewController: UITableViewController {
         // it starts HB and reloads data otherwise it just restarts HB
         // ip, bridge, sh are passed by reference so objects in this class are mutated
         let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        self.swiftyHue.startHeartbeat()
         if swiftyHueDidChange.didIpChange || groups.isEmpty {
             swiftyHue = swiftyHueDidChange.swiftyHue
             fetchData(completion: {
-                self.swiftyHue.startHeartbeat()
                 self.tableView.reloadData()
             })
         } else {
             fetchData(completion: {
-                self.swiftyHue.startHeartbeat()
                 if self.tableView.numberOfRows(inSection: 0) != self.groups[0].count ||
                     self.tableView.numberOfRows(inSection: 1) != self.groups[1].count {
                     self.tableView.reloadData()
