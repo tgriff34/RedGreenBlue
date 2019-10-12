@@ -117,7 +117,7 @@ class RGBGroupsAndLightsHelper {
                 AVAudioSession.Category.playback,
                 mode: .default, options: [])
         } catch {
-            console.debug("Failed to set audio session category. Error: \(error)")
+            logger.error("Failed to set audio session category. Error: \(error)")
         }
 
         let timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer

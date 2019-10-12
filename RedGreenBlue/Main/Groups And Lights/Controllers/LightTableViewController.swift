@@ -123,13 +123,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
         RGBRequest.shared.getGroup(with: group.identifier, using: self.swiftyHue, completion: { (group) in
             if self.group != group { // If the group has changed just reload the entire table
-                console.debug("Group has changed")
                 self.group = group
                 self.tableView.reloadData()
                 self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
                 self.setupGroupBrightnessSlider()
             } else { // Otherwise go cell by cell for smoother UI update
-                console.debug("Group has not changed")
                 self.group = group
                 self.updateUI(group: group)
             }

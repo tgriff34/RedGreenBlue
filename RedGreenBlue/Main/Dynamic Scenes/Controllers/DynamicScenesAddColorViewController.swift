@@ -105,7 +105,6 @@ class DynamicScenesAddColorViewController: UIViewController {
 
 extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneAddColorDelegate {
     func dynamicSceneColorAdded(_ color: XYColor) {
-        console.debug(color)
         self.color = color
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
