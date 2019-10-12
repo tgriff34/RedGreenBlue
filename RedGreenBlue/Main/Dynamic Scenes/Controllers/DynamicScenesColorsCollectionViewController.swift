@@ -16,22 +16,17 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
     weak var addColorsDelegate: DynamicSceneAddAllColorsDelegate?
 
     var deleteButton: UIBarButtonItem?
-    var addButton: UIBarButtonItem?
     var spacer: UIBarButtonItem?
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        navigationItem.rightBarButtonItem = editButtonItem
-
-        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self,
-                                    action: #selector(addTapped(_:)))
-        deleteButton = UIBarButtonItem(title: "Delete", style: .done, target: self,
+        deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self,
                                        action: #selector(deleteTapped(_:)))
         spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
 
         deleteButton?.isEnabled = false
-        toolbarItems = [spacer!, addButton!]
+        toolbarItems = [spacer!, editButtonItem]
         navigationController?.setToolbarHidden(false, animated: false)
     }
 
@@ -43,7 +38,10 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
-        if editing { toolbarItems = [spacer!, deleteButton!] }
+        if editing {
+            toolbarItems = [deleteButton!, spacer!, editButtonItem]
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
 
         collectionView.allowsMultipleSelection = editing
         let indexPaths = collectionView.indexPathsForVisibleItems
@@ -58,12 +56,9 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
                 collectionView.deselectItem(at: index, animated: false)
             }
             deleteButton?.isEnabled = false
-            toolbarItems = [spacer!, addButton!]
+            toolbarItems = [spacer!, editButtonItem]
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
-    }
-
-    @objc func addTapped(_ sender: UIBarButtonItem) {
-        self.performSegue(withIdentifier: "addColorSegue", sender: self)
     }
 
     @objc func deleteTapped(_ sender: UIBarButtonItem) {

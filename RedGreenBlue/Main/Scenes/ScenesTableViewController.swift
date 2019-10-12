@@ -13,7 +13,7 @@ import BTNavigationDropdownMenu
 
 class ScenesTableViewController: UITableViewController {
 
-    var swiftyHue: SwiftyHue!
+    var swiftyHue: SwiftyHue = RGBRequest.shared.getSwiftyHue()
     var groups = [RGBGroup]()
     var allScenes = [[PartialScene]]()
 
@@ -24,7 +24,6 @@ class ScenesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        swiftyHue = RGBRequest.shared.getSwiftyHue()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +48,7 @@ class ScenesTableViewController: UITableViewController {
         })
     }
 
-    func retrieveScenesFor(groups: [RGBGroup]) {
+    private func retrieveScenesFor(groups: [RGBGroup]) {
         RGBRequest.shared.getScenes(with: self.swiftyHue, completion: { (scenes, error) in
             guard error == nil, let scenes = scenes else {
                 return
@@ -67,7 +66,7 @@ class ScenesTableViewController: UITableViewController {
         })
     }
 
-    func setUpDropdown() {
+    private func setUpDropdown() {
         if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
             defaultGroup != "Default", shouldFetchDefault {
             selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!

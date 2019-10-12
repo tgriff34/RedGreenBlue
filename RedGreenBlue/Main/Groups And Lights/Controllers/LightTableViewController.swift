@@ -18,18 +18,46 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     var optionsButton: UIBarButtonItem?
     @IBOutlet weak var groupBrightnessSlider: UISlider!
 
+    @IBOutlet weak var customScenesButton: UIButton!
     @IBOutlet weak var scenesButton: UIButton!
-    @IBAction func scenesButton(_ sender: Any) {
-        tabBarController?.selectedViewController = tabBarController?.viewControllers![1] as? UINavigationController
-        let destination = tabBarController?.selectedViewController as? UINavigationController
-        let viewController = destination?.viewControllers.first as? ScenesTableViewController
-        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+    // When Buttons are pushed down, make effect
+    @IBAction func buttonTouchedDown(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.init(scaleX: 0.85, y: 0.865)
+        })
     }
-    @IBAction func customScenesButton(_ sender: Any) {
-        tabBarController?.selectedViewController = tabBarController?.viewControllers![2] as? UINavigationController
-        let destination = tabBarController?.selectedViewController as? UINavigationController
-        let viewController = destination?.viewControllers.first as? DynamicScenesViewController
-        if let index = viewController?.groups.index(of: group) { viewController?.selectedGroupIndex = index }
+
+    // When buttons released
+    @IBAction func groupsColorButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.performSegue(withIdentifier: "GroupColorPickerSegue", sender: self)
+        })
+    }
+    @IBAction func scenesButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![1]
+                as? UINavigationController
+            let destination = self.tabBarController?.selectedViewController as? UINavigationController
+            let viewController = destination?.viewControllers.first as? ScenesTableViewController
+            if let index = viewController?.groups.index(of: self.group) { viewController?.selectedGroupIndex = index }
+        })
+    }
+    @IBAction func customScenesButton(_ sender: UIButton) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![2]
+                as? UINavigationController
+            let destination = self.tabBarController?.selectedViewController as? UINavigationController
+            let viewController = destination?.viewControllers.first as? DynamicScenesViewController
+            if let index = viewController?.groups.index(of: self.group) {
+                viewController?.selectedGroupIndex = index
+            }
+        })
     }
 
     override func viewDidLoad() {
@@ -68,6 +96,13 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         swiftyHue.stopHeartbeat()
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.tableView.reloadData()
+        scenesButton.awakeFromNib()
+        customScenesButton.awakeFromNib()
+    }
+
     // MARK: - Private funcs
     @objc func onDidLightUpdate(_ notification: Notification) {
         if let cache = swiftyHue.resourceCache {
@@ -88,13 +123,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
         RGBRequest.shared.getGroup(with: group.identifier, using: self.swiftyHue, completion: { (group) in
             if self.group != group { // If the group has changed just reload the entire table
-                console.debug("Group has changed")
                 self.group = group
                 self.tableView.reloadData()
                 self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
                 self.setupGroupBrightnessSlider()
             } else { // Otherwise go cell by cell for smoother UI update
-                console.debug("Group has not changed")
                 self.group = group
                 self.updateUI(group: group)
             }

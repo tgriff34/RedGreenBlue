@@ -15,7 +15,7 @@ import AVFoundation
 
 class DynamicScenesViewController: UITableViewController {
 
-    var swiftyHue: SwiftyHue!
+    var swiftyHue: SwiftyHue = RGBRequest.shared.getSwiftyHue()
     var groups = [RGBGroup]()
     var dynamicScenes: [[RGBDynamicScene]] = []
     var navigationItems = [String]()
@@ -28,7 +28,6 @@ class DynamicScenesViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        swiftyHue = RGBRequest.shared.getSwiftyHue()
         fetchData()
     }
 
@@ -50,7 +49,7 @@ class DynamicScenesViewController: UITableViewController {
     }
 
     // MARK: - Private Functions
-    private func fetchData() {
+    func fetchData() {
         guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self).filter("isDefault = true") else {
             logger.error("could not retrieve results of RGBDynamicScenes from DB")
             return

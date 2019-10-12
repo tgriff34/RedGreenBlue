@@ -13,7 +13,7 @@ class DynamicScenesAddSoundViewController: UITableViewController {
 
     var selectedSoundFile: String?
 
-    let soundFiles: [String] = ["FeelinGood"]
+    let soundFiles: [String] = ["FeelinGood", "test"]
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

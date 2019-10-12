@@ -23,7 +23,8 @@ class DynamicScenesAddColorViewController: UIViewController {
         var viewController = storyboard.instantiateViewController(
             withIdentifier: "CustomColorPickerStoryboard") as? DefaultColorPickerViewController
         viewController?.brightnessSlider.isHidden = true
-        viewController?.colorPreview.isHidden = true
+        viewController?.colorPreview.displayHex = false
+        viewController?.colorPreview.cornerRadius = 20
         viewController?.delegate = self
         self.add(asChildViewController: viewController!)
         return viewController!
@@ -104,7 +105,6 @@ class DynamicScenesAddColorViewController: UIViewController {
 
 extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneAddColorDelegate {
     func dynamicSceneColorAdded(_ color: XYColor) {
-        console.debug(color)
         self.color = color
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {

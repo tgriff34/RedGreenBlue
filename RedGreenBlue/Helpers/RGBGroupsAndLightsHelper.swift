@@ -15,27 +15,25 @@ class RGBGroupsAndLightsHelper {
 
     func setLightState(for group: RGBGroup, using swiftyHue: SwiftyHue,
                        with lightState: LightState, completion: @escaping () -> Void) {
-        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(group.identifier, withLightState: lightState,
-                                                            completionHandler: { (error) in
-                                                                guard error == nil else {
-                                                                    logger.warning("setLightStateForGroupWithId: ",
-                                                                          String(describing: error?.description))
-                                                                    return
-                                                                }
-                                                                completion()
+        swiftyHue.bridgeSendAPI.setLightStateForGroupWithId(
+            group.identifier, withLightState: lightState, completionHandler: { (error) in
+                guard error == nil else {
+                logger.warning("setLightStateForGroupWithId: ", String(describing: error?.description))
+                return
+            }
+            completion()
         })
     }
 
     func setLightState(for light: Light, using swiftyHue: SwiftyHue,
                        with lightState: LightState, completion: (() -> Void)?) {
-        swiftyHue.bridgeSendAPI.updateLightStateForId(light.identifier, withLightState: lightState,
-                                                      completionHandler: { (error) in
-                                                        guard error == nil else {
-                                                            logger.warning("Error updateLightStateForId: ",
-                                                                  String(describing: error?.description))
-                                                            return
-                                                        }
-                                                        completion?()
+        swiftyHue.bridgeSendAPI.updateLightStateForId(
+            light.identifier, withLightState: lightState, completionHandler: { (error) in
+                guard error == nil else {
+                    logger.warning("Error updateLightStateForId: ", String(describing: error?.description))
+                    return
+                }
+                completion?()
         })
     }
 
@@ -90,25 +88,27 @@ class RGBGroupsAndLightsHelper {
     }
 
     // MARK: - Dynamic Scenes
+    private var player: AVPlayer?
+    private var timeObserver: NSObjectProtocol?
     private var observer: NSObjectProtocol?
     private func makePlayer(file: String) -> AVPlayer {
         var url: URL?
         if file == "Default" {
-            url = Bundle.main.url(forResource: "FeelinGood", withExtension: "mp3")
+            url = Bundle.main.url(forResource: "default", withExtension: "mp3")
         } else {
             url = Bundle.main.url(forResource: file, withExtension: "mp3")
         }
         let player = AVPlayer(url: url!)
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
         observer = NotificationCenter.default.addObserver(
-            forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { _ in
-            player.seek(to: CMTime.zero)
-            player.play()
+            forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem,
+            queue: nil, using: { _ in
+                player.seek(to: CMTime.zero)
+                player.play()
         })
         return player
     }
 
-    private var player: AVPlayer?
     func playDynamicScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
         stopDynamicScene()
         player = self.makePlayer(file: scene.soundFile)
@@ -117,18 +117,23 @@ class RGBGroupsAndLightsHelper {
                 AVAudioSession.Category.playback,
                 mode: .default, options: [])
         } catch {
-            console.debug("Failed to set audio session category. Error: \(error)")
+            logger.error("Failed to set audio session category. Error: \(error)")
         }
-
-        lightsForScene.removeAll()
 
         let timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer
 
-        player?.addPeriodicTimeObserver(
+        lightsForScene.removeAll()
+        if !scene.lightsChangeColor {
+            self.setLightsForScene(group: group, numberOfColors: scene.xys.count,
+                                   isSequential: scene.sequentialLightChange,
+                                   randomColors: scene.randomColors)
+        }
+
+        self.timeObserver = player?.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: timer, preferredTimescale: 1),
             queue: DispatchQueue.main, using: { time in
                 self.setScene(scene: scene, for: group, time: Int(CMTimeGetSeconds(time)), with: swiftyHue)
-        })
+        }) as? NSObjectProtocol
         if let setting = UserDefaults.standard.object(forKey: "SoundSetting") as? String,
             setting == "Muted" {
             player?.isMuted = true
@@ -140,20 +145,18 @@ class RGBGroupsAndLightsHelper {
         player?.pause()
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                   object: nil)
+        player?.removeTimeObserver(timeObserver as Any)
         player = nil
     }
 
     private var lightsForScene = [Int]()
-    private var globalTimer: Int = 0
 
     private func setScene(scene: RGBDynamicScene, for group: RGBGroup, time: Int, with swiftyHue: SwiftyHue) {
         let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
         let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
-        if remainderForColor == 0 {
-            setLightsForScene(group: group,
-                              numberOfColors: scene.xys.count,
-                              isSequential: scene.sequentialLightChange,
-                              randomColors: scene.randomColors)
+        if remainderForColor == 0 && scene.lightsChangeColor {
+            setLightsForScene(group: group, numberOfColors: scene.xys.count,
+                              isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
 
         for (index, light) in group.lights.enumerated() {
@@ -176,15 +179,15 @@ class RGBGroupsAndLightsHelper {
 
     private func setLightsForScene(group: RGBGroup, numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
-        let iterator = group.lights
-        if numberOfColors > iterator.count && lightsForScene.isEmpty {
+        let groupLights = group.lights
+        if numberOfColors > groupLights.count && lightsForScene.isEmpty {
             lightsForScene = Array(0..<numberOfColors)
         } else {
-            for _ in iterator where lightsForScene.count < iterator.count {
+            for _ in groupLights where lightsForScene.count < groupLights.count {
                 if randomColors {
                     lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
                 } else {
-                    let count = iterator.count - 1
+                    let count = groupLights.count - 1
                     lightsForScene = Array(repeating: 0..<numberOfColors, count: count).flatMap({$0})
                     lightsForScene = Array(lightsForScene[...count])
                 }
