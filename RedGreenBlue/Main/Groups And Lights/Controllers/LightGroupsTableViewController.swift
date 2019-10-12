@@ -64,9 +64,9 @@ class LightGroupsTableViewController: UITableViewController {
         if swiftyHueDidChange.didIpChange || groups.isEmpty {
             swiftyHue = swiftyHueDidChange.swiftyHue
             fetchData(completion: {
-                self.swiftyHue.startHeartbeat()
                 self.tableView.reloadData()
             })
+            self.swiftyHue.startHeartbeat()
         } else {
             fetchData(completion: {
                 self.swiftyHue.startHeartbeat()

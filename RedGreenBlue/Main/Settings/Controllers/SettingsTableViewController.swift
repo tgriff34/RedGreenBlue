@@ -8,7 +8,6 @@
 
 import UIKit
 import SwiftyHue
-import SwiftMessages
 
 class SettingsTableViewController: UITableViewController {
 
