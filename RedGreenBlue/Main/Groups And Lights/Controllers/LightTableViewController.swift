@@ -88,12 +88,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
-        self.swiftyHue.startHeartbeat()
+//        self.swiftyHue.startHeartbeat()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        swiftyHue.stopHeartbeat()
+//        swiftyHue.stopHeartbeat()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

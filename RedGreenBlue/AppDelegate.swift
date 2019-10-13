@@ -64,6 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            applicationWillTerminate: when the user quits.
         */
         RGBRequest.shared.tearDownConnectionListeners()
+        let swiftyHue = RGBRequest.shared.getSwiftyHue()
+        swiftyHue.stopHeartbeat()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -76,6 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If the application was previously in the background, optionally refresh the user interface.
         RGBRequest.shared.setUpConnectionListeners()
         RGBRequest.shared.setApplicationTheme()
+        let swiftyHue = RGBRequest.shared.getSwiftyHue()
+        swiftyHue.startHeartbeat()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

@@ -36,7 +36,7 @@ class LightGroupsTableViewController: UITableViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        swiftyHue.stopHeartbeat()
+//        swiftyHue.stopHeartbeat()
     }
 
     // MARK: - Private Funcs
@@ -61,7 +61,7 @@ class LightGroupsTableViewController: UITableViewController {
         // it starts HB and reloads data otherwise it just restarts HB
         // ip, bridge, sh are passed by reference so objects in this class are mutated
         let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
-        self.swiftyHue.startHeartbeat()
+//        self.swiftyHue.startHeartbeat()
         if swiftyHueDidChange.didIpChange || groups.isEmpty {
             swiftyHue = swiftyHueDidChange.swiftyHue
             fetchData(completion: {
@@ -208,7 +208,7 @@ extension LightGroupsTableViewController {
                     " from tableview.indexPathForSelectedRow?.row")
                     return
             }
-            swiftyHue.stopHeartbeat()
+//            swiftyHue.stopHeartbeat()
             lightTableViewController.swiftyHue = swiftyHue
             lightTableViewController.title = groups[index.section][index.row].name
             lightTableViewController.group = groups[index.section][index.row]
