@@ -10,7 +10,6 @@
 		22312DAF47E6FE51235D1AC8 /* Pods_RedGreenBlue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D37A15058741D24ED3DD3B /* Pods_RedGreenBlue.framework */; };
 		45B6C0AFDACD263DB6F68320 /* Pods_RedGreenBlueUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */; };
 		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
-		461F2E2A23511FCA0029D3DC /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 461F2E2923511FCA0029D3DC /* default.mp3 */; };
 		461F2E2C235121640029D3DC /* test.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 461F2E2B235121640029D3DC /* test.mp3 */; };
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
 		462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E3B2343CE960088296B /* ThemeTableViewController.swift */; };
@@ -25,6 +24,7 @@
 		46637A4E234E86D40000E8CB /* GradientLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46637A4D234E86D40000E8CB /* GradientLayerView.swift */; };
 		4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4669EBB323439F440097432B /* SettingsTableViewController.swift */; };
 		466BF093234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */; };
+		466DEAA82353665A009A1164 /* default.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 466DEAA72353665A009A1164 /* default.mp3 */; };
 		46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */; };
 		46736547233A61C700DA33AA /* DynamicScenesAddColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */; };
 		46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */; };
@@ -95,7 +95,6 @@
 /* Begin PBXFileReference section */
 		128E4C0BD168185191980114 /* Pods-RedGreenBlueTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.release.xcconfig"; sourceTree = "<group>"; };
 		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
-		461F2E2923511FCA0029D3DC /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
 		461F2E2B235121640029D3DC /* test.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = test.mp3; sourceTree = "<group>"; };
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
 		462A5E3B2343CE960088296B /* ThemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewController.swift; sourceTree = "<group>"; };
@@ -110,6 +109,7 @@
 		46637A4D234E86D40000E8CB /* GradientLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientLayerView.swift; sourceTree = "<group>"; };
 		4669EBB323439F440097432B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		466BF092234940DE005FEA1B /* DynamicScenesColorsCollectionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorsCollectionPickerViewController.swift; sourceTree = "<group>"; };
+		466DEAA72353665A009A1164 /* default.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = default.mp3; sourceTree = "<group>"; };
 		46736544233A598D00DA33AA /* DynamicScenesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddViewController.swift; sourceTree = "<group>"; };
 		46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddColorViewController.swift; sourceTree = "<group>"; };
 		46736548233A78EC00DA33AA /* DynamicSceneProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneProtocol.swift; sourceTree = "<group>"; };
@@ -206,7 +206,7 @@
 			children = (
 				6FF709BF23483480004FB6C2 /* IconImages */,
 				462A5E4C234794860088296B /* FeelinGood.mp3 */,
-				461F2E2923511FCA0029D3DC /* default.mp3 */,
+				466DEAA72353665A009A1164 /* default.mp3 */,
 				461F2E2B235121640029D3DC /* test.mp3 */,
 			);
 			path = "Supporting Files";
@@ -607,6 +607,7 @@
 				468CAD7A233C27C60023401C /* Scenes.storyboard in Resources */,
 				6F1F9BAC2349074500800EBA /* rgb-lamp-icon-dark-@3x.png in Resources */,
 				6FA9CDF623062EF30011A2F8 /* LaunchScreen.storyboard in Resources */,
+				466DEAA82353665A009A1164 /* default.mp3 in Resources */,
 				461F2E2C235121640029D3DC /* test.mp3 in Resources */,
 				6F4B3E1B2308528A000F44DA /* CustomMessageView.xib in Resources */,
 				6FA9CDF323062EF30011A2F8 /* Assets.xcassets in Resources */,
@@ -617,7 +618,6 @@
 				468CAD78233C27AE0023401C /* GroupsAndLights.storyboard in Resources */,
 				462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */,
 				6F1F9BAA2348FD1300800EBA /* rgb-lamp-icon-light-rounded.png in Resources */,
-				461F2E2A23511FCA0029D3DC /* default.mp3 in Resources */,
 				468CAD7C233C27F30023401C /* Settings.storyboard in Resources */,
 				6FA9CDF123062EF20011A2F8 /* Main.storyboard in Resources */,
 				46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */,

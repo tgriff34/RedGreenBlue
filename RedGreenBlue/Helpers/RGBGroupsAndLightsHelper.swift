@@ -102,7 +102,8 @@ class RGBGroupsAndLightsHelper {
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
         observer = NotificationCenter.default.addObserver(
             forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem,
-            queue: nil, using: { _ in
+            queue: .main, using: { _ in
+                self.lightsForScene.removeAll()
                 player.seek(to: CMTime.zero)
                 player.play()
         })
@@ -154,7 +155,10 @@ class RGBGroupsAndLightsHelper {
     private func setScene(scene: RGBDynamicScene, for group: RGBGroup, time: Int, with swiftyHue: SwiftyHue) {
         let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
         let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
-        if remainderForColor == 0 && scene.lightsChangeColor {
+        let currentSongDuration = CMTimeGetSeconds(player!.currentItem!.duration)
+
+        if remainderForColor == 0 && scene.lightsChangeColor &&
+            time != Int(currentSongDuration)  && (lightsForScene.isEmpty || time != 0) {
             setLightsForScene(group: group, numberOfColors: scene.xys.count,
                               isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
