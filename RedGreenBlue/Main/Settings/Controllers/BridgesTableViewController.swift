@@ -22,44 +22,17 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
     var bridgeAuthenticator: BridgeAuthenticator?
     let realm: Realm? = RGBDatabaseManager.realm()
 
-    // swiftlint:disable:next force_try
-    let linkBridgeMessageAlert: MessageView = try! SwiftMessages.viewFromNib(named: "CustomMessageView")
-    let linkFailMessageAlert = MessageView.viewFromNib(layout: .cardView)
-    var warningAlertConfig = SwiftMessages.Config()
-    var errorAlertConfig = SwiftMessages.Config()
-
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var startBridgeFinderButton: RoundedButton!
     var activityIndicatorView: NVActivityIndicatorView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
 
         logger.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
         console.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
-
-        // set up warning message card
-        warningAlertConfig.duration = .forever
-        linkBridgeMessageAlert.configureTheme(.warning)
-        warningAlertConfig.dimMode = .gray(interactive: false)
-        warningAlertConfig.interactiveHide = false
-        linkBridgeMessageAlert.configureDropShadow()
-        linkBridgeMessageAlert.configureContent(title: "", body: "Please press the button on your bridge to link")
-        linkBridgeMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        linkBridgeMessageAlert.button?.isHidden = true
-        (linkBridgeMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
-
-        // set up error message card
-        errorAlertConfig.duration = .forever
-        errorAlertConfig.dimMode = .gray(interactive: true)
-        linkFailMessageAlert.configureTheme(.error)
-        linkFailMessageAlert.configureDropShadow()
-        linkFailMessageAlert.layoutMarginAdditions = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        linkFailMessageAlert.button?.isHidden = true
-        (linkFailMessageAlert.backgroundView as? CornerRoundingView)?.cornerRadius = 10
 
         startBridgeFinderButton.addTarget(self, action: #selector(startBridgeFinder), for: .touchUpInside)
         activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: self.view.frame.width / 2 - 50,
@@ -77,6 +50,10 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
         authorizedBridges = Array(results)
 
         tableView.reloadData()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        SwiftMessages.hideAll()
     }
 
     @objc func startBridgeFinder() {
@@ -136,7 +113,14 @@ extension BridgesTableViewController {
         case 1:
             // Couldnt find the bridge so lets display the alert
             let bridge = bridges[indexPath.row]
-            SwiftMessages.show(config: warningAlertConfig, view: linkBridgeMessageAlert)
+
+            let warningAlertView = RGBSwiftMessages
+                .createAlertInView(type: .info, fromNib: .infiniteSpinner,
+                                   forever: true, content: ("", "Please press the button on your Hue bridge"))
+            let warningAlertConfig = RGBSwiftMessages
+                .createMessageConfig(duration: .forever, dim: true, interactiveHide: false)
+            SwiftMessages.show(config: warningAlertConfig, view: warningAlertView)
+
             bridgeAuthenticator = BridgeAuthenticator(
                 bridge: HueBridge(ip: bridge.ipAddress, deviceType: bridge.deviceType,
                                   friendlyName: bridge.friendlyName, modelDescription: bridge.modelDescription,
@@ -176,16 +160,12 @@ extension BridgesTableViewController {
                 actionSheet.addAction(cancelAction)
                 self.present(actionSheet, animated: true, completion: nil)
             } else if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row == indexPath.row {
-                // TODO: MODULARIZE
-                let cannotDeleteRow: MessageView = MessageView.viewFromNib(layout: .messageView)
-                var cannotDeleteRowConfig = SwiftMessages.Config()
-                cannotDeleteRowConfig.presentationContext = .window(windowLevel: .normal)
-                cannotDeleteRow.configureTheme(.warning)
-                cannotDeleteRow.configureContent(title: "Error deleting bridge",
-                                                      body: "You may not delete a bridge that is selected!")
-                cannotDeleteRow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-                cannotDeleteRow.button?.isHidden = true
-                SwiftMessages.show(config: cannotDeleteRowConfig, view: cannotDeleteRow)
+                let cantDeleteRowMessage = RGBSwiftMessages
+                    .createAlertInView(type: .warning, fromNib: .cardView,
+                                       content: ("", "You may not delete a bridge that is selected."))
+                let cantDeleteRowConfig = RGBSwiftMessages.createMessageConfig()
+                SwiftMessages.show(config: cantDeleteRowConfig,
+                                   view: cantDeleteRowMessage)
             }
         default:
             logger.error("Cell does not support deletion")
@@ -206,16 +186,13 @@ extension BridgesTableViewController: BridgeFinderDelegate {
         }
 
         if !foundNewUndiscoveredBridges {
-            // swiftlint:disable:next force_try
-            let emptyMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
-            var emptyMessageConfig = SwiftMessages.Config()
-            emptyMessageConfig.presentationContext = .window(windowLevel: .normal)
-            emptyMessage.configureTheme(backgroundColor: view.tintColor, foregroundColor: .white)
-            emptyMessage.configureContent(title: "No new bridges found", body: "")
-            emptyMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            emptyMessage.button?.isHidden = true
-            (emptyMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
-            SwiftMessages.show(config: emptyMessageConfig, view: emptyMessage)
+            let noNewBridgesMessage = RGBSwiftMessages
+                .createAlertInView(type: .info, fromNib: .cardView,
+                                   content: ("No new bridges found", ""),
+                                   layoutMarginAdditions: UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20))
+            let noNewBridgesConfig = RGBSwiftMessages.createMessageConfig()
+            SwiftMessages.show(config: noNewBridgesConfig, view: noNewBridgesMessage)
+
         } else {
             tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
@@ -245,8 +222,11 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
 
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
         SwiftMessages.hideAll()
-        linkFailMessageAlert.configureContent(title: "", body: "Bridge link failed with error: \(error)")
-        SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
+        let linkTimeoutError = RGBSwiftMessages
+            .createAlertInView(type: .error, fromNib: .cardView, forever: true,
+                               content: ("", "Bridge link failed with error: \(error)"))
+        let linkTimeoutErrorConfig = RGBSwiftMessages.createMessageConfig(dimInteractive: true)
+        SwiftMessages.show(config: linkTimeoutErrorConfig, view: linkTimeoutError)
     }
 
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
@@ -255,9 +235,11 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
 
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
         SwiftMessages.hideAll()
-        linkFailMessageAlert.configureContent(title: "",
-                                              body: "Bridge link timed out.\nPlease press bridge " +
-                                                    "button within 30 seconds of selecting a bridge")
-        SwiftMessages.show(config: errorAlertConfig, view: linkFailMessageAlert)
+        let linkTimeoutError = RGBSwiftMessages
+            .createAlertInView(type: .error, fromNib: .cardView, forever: true,
+                               content: ("", "Bridge link timed out.\nPlease press bridge " +
+                                         "button within 30 seconds of selecting a bridge"))
+        let linkTimeoutErrorConfig = RGBSwiftMessages.createMessageConfig(dimInteractive: true)
+        SwiftMessages.show(config: linkTimeoutErrorConfig, view: linkTimeoutError)
     }
 }
