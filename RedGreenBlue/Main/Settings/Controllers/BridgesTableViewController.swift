@@ -47,6 +47,7 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         guard let results = realm?.objects(RGBHueBridge.self) else {
             logger.error("no bridges")
             return
@@ -57,6 +58,7 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         SwiftMessages.hideAll()
     }
 

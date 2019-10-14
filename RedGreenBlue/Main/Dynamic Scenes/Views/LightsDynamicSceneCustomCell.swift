@@ -29,23 +29,13 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
             }
             if uiColors.count > 1 {
                 subView.backgroundColor = nil
+                uiColors.sort(by: { $0.hue < $1.hue })
                 subView.layer.colors = uiColors.map({ return $0.cgColor })
-                    .sorted(by: { $0.components![0] < $1.components![0] })
             } else {
                 subView.backgroundColor = uiColors[0]
                 subView.layer.colors = nil
             }
-            let firstColor = uiColors[0].cgColor
-            var brightness = (firstColor.components![0] * 299)
-            brightness += (firstColor.components![1] * 587)
-            brightness += (firstColor.components![2] * 114)
-            brightness /= 1000
-            let floatBrightness = Float(brightness)
-            if floatBrightness > 0.7 {
-                self.label.textColor = UIColor.black
-            } else {
-                self.label.textColor = UIColor.white
-            }
+            label.textColor = RGBColorUtilities.colorForLabel(from: uiColors)
         }
     }
 
