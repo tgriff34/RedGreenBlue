@@ -76,8 +76,8 @@ class RGBSwiftMessages {
 
     static func createMessageConfig(presentStyle: SwiftMessages.PresentationStyle = .top,
                                     duration: SwiftMessages.Duration = .automatic, dim: Bool = false,
-                                    dimInteractive: Bool = false, interactiveHide: Bool = true,
-                                    windowLevel: UIWindow.Level = .alert) -> SwiftMessages.Config {
+                                    dimInteractive: Bool = false, interactiveHide: Bool = true)
+                                    -> SwiftMessages.Config {
 
         var messageConfig = SwiftMessages.Config()
 
@@ -87,7 +87,6 @@ class RGBSwiftMessages {
         } else if dimInteractive == true {
             messageConfig.dimMode = .gray(interactive: true)
         }
-        messageConfig.presentationContext = .window(windowLevel: windowLevel)
         messageConfig.presentationStyle = presentStyle
         messageConfig.interactiveHide = interactiveHide
 
