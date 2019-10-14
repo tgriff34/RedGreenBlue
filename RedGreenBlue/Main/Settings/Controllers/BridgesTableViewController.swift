@@ -22,6 +22,8 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
     var bridgeAuthenticator: BridgeAuthenticator?
     let realm: Realm? = RGBDatabaseManager.realm()
 
+    var selectedBridgeIndex: IndexPath?
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var startBridgeFinderButton: RoundedButton!
     var activityIndicatorView: NVActivityIndicatorView?
@@ -40,6 +42,8 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
                                                                       width: 100, height: 100),
                                                         type: .ballPulse, color: .white, padding: 0)
         view.addSubview(activityIndicatorView!)
+
+        navigationItem.rightBarButtonItem = editButtonItem
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -54,6 +58,17 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
 
     override func viewWillDisappear(_ animated: Bool) {
         SwiftMessages.hideAll()
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+        if editing {
+            startBridgeFinderButton.isEnabled = false
+        } else {
+            startBridgeFinderButton.isEnabled = true
+            tableView.selectRow(at: selectedBridgeIndex, animated: true, scrollPosition: .none)
+        }
     }
 
     @objc func startBridgeFinder() {
@@ -88,28 +103,33 @@ extension BridgesTableViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier") as! BridgesTableViewCell
-
         switch indexPath.section {
         case 0:
+            //swiftlint:disable:next force_cast
+            let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier") as! BridgesTableViewCell
             if let selectedBridge = UserDefaults.standard.object(forKey: "DefaultBridge"),
                 self.authorizedBridges[indexPath.row].ipAddress == selectedBridge as? String {
+                self.selectedBridgeIndex = indexPath
                 self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
             cell.bridge = self.authorizedBridges[indexPath.row]
+            return cell
         case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "FoundBridgeCellIdentifier")
+                as! FoundBridgesTableViewCell //swiftlint:disable:this force_cast
             cell.bridge = self.bridges[indexPath.row]
+            return cell
         default:
-            break
+            return tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier")!
         }
-        return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
             UserDefaults.standard.set(authorizedBridges[indexPath.row].ipAddress, forKey: "DefaultBridge")
+            tableView.deselectRow(at: selectedBridgeIndex!, animated: true)
+            selectedBridgeIndex = indexPath
         case 1:
             // Couldnt find the bridge so lets display the alert
             let bridge = bridges[indexPath.row]
@@ -130,45 +150,44 @@ extension BridgesTableViewController {
             selectedBridge = bridge
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()
+            tableView.deselectRow(at: indexPath, animated: false)
         default:
             break
         }
     }
-    @IBAction func handleLongPress(_ sender: UILongPressGestureRecognizer) {
-        let location = sender.location(in: self.tableView)
-        guard let indexPath = self.tableView.indexPathForRow(at: location) else {
-            logger.error("Error getting indexpath for cell from long press location")
-            return
+
+    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 0, indexPath == selectedBridgeIndex {
+            return nil
         }
-        switch sender.state {
-        case .began:
-            if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row != indexPath.row {
-                let actionSheet = UIAlertController(title: "Delete Bridge",
-                                                    message: "Are you sure you want to delete this bridge?",
-                                                    preferredStyle: .actionSheet)
-                let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-                    RGBDatabaseManager.write(to: self.realm!, closure: {
-                        self.realm?.delete(self.authorizedBridges[indexPath.row])
-                        self.authorizedBridges.remove(at: indexPath.row)
-                        self.tableView.beginUpdates()
-                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                        self.tableView.endUpdates()
-                    })
-                })
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                actionSheet.addAction(deleteAction)
-                actionSheet.addAction(cancelAction)
-                self.present(actionSheet, animated: true, completion: nil)
-            } else if indexPath.section == 0 && self.tableView.indexPathForSelectedRow?.row == indexPath.row {
+        return indexPath
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 0 {
+            return true
+        }
+        return false
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if indexPath == selectedBridgeIndex {
                 let cantDeleteRowMessage = RGBSwiftMessages
                     .createAlertInView(type: .warning, fromNib: .cardView,
                                        content: ("", "You may not delete a bridge that is selected."))
                 let cantDeleteRowConfig = RGBSwiftMessages.createMessageConfig()
-                SwiftMessages.show(config: cantDeleteRowConfig,
-                                   view: cantDeleteRowMessage)
+                SwiftMessages.show(config: cantDeleteRowConfig, view: cantDeleteRowMessage)
+            } else {
+                RGBDatabaseManager.write(to: self.realm!, closure: {
+                    self.realm?.delete(self.authorizedBridges[indexPath.row])
+                    self.authorizedBridges.remove(at: indexPath.row)
+                    self.tableView.beginUpdates()
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    self.tableView.endUpdates()
+                })
             }
-        default:
-            logger.error("Cell does not support deletion")
         }
     }
 }
