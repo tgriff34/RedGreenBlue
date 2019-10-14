@@ -210,29 +210,28 @@ extension DynamicScenesViewController {
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
     func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
         // Get the old realm object from row selected
+        let genericErrorAdding = RGBSwiftMessages.createAlertInView(type: .error,
+                                                                    fromNib: .cardView,
+                                                                    content: ("Error editing scene", ""))
+        let genericConfig = RGBSwiftMessages.createMessageConfig()
         guard let indexPath = tableView.indexPathForSelectedRow else {
-            // TODO: DISPLAY ERROR MESSAGE TO USER
+            SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
             logger.error("Error receiving indexpath for selected row")
             return
         }
         guard let oldScene = realm.object(ofType: RGBDynamicScene.self,
                                           forPrimaryKey: dynamicScenes[1][indexPath.row].name) else {
-            // TODO: DISPLAY ERROR MESSAGE TO USER
+            SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
             logger.error("Error receiving object at selected row from Realm")
             return
         }
         // If the name is the same of another scene except the edited scene display error
         if dynamicScenes[1].contains(where: { $0.name == scene.name }) &&
             oldScene.name != scene.name {
-            // TODO: MODULARIZE THIS AS WELL
-            let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
-            var sameNameErrorConfig = SwiftMessages.Config()
-            sameNameErrorConfig.presentationContext = .window(windowLevel: .normal)
-            sameNameErrorMessage.configureTheme(.warning)
-            sameNameErrorMessage.configureContent(title: "Error Adding Scene",
-                                                  body: "Name is the same as another scene!")
-            sameNameErrorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            sameNameErrorMessage.button?.isHidden = true
+            let sameNameErrorMessage = RGBSwiftMessages
+                .createAlertInView(type: .warning, fromNib: .cardView,
+                                   content: ("", "A scene by that name already exists"))
+            let sameNameErrorConfig = RGBSwiftMessages.createMessageConfig()
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // If the user edited the name or not, delete old scene and create a new scene in DB
             RGBDatabaseManager.write(to: realm, closure: { // Deleting old scene
@@ -253,15 +252,11 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
         // If the name is the same as another scene display error
         if dynamicScenes[1].contains(where: { $0.name == scene.name }) ||
             dynamicScenes[0].contains(where: { $0.name == scene.name }) {
-            // TODO: MODULARIZE THIS AS WELL
-            let sameNameErrorMessage: MessageView = MessageView.viewFromNib(layout: .messageView)
-            var sameNameErrorConfig = SwiftMessages.Config()
+            let sameNameErrorMessage = RGBSwiftMessages
+                .createAlertInView(type: .warning, fromNib: .cardView,
+                                   content: ("", "A scene by that name already exists"))
+            var sameNameErrorConfig = RGBSwiftMessages.createMessageConfig()
             sameNameErrorConfig.presentationContext = .window(windowLevel: .normal)
-            sameNameErrorMessage.configureTheme(.warning)
-            sameNameErrorMessage.configureContent(title: "Error Adding Scene",
-                                                  body: "Name is the same as another scene!")
-            sameNameErrorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            sameNameErrorMessage.button?.isHidden = true
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // Add to DB and insert row
             sender.dismiss(animated: true, completion: nil)
@@ -280,8 +275,13 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
 
     func dynamicSceneDeleted(_ sender: DynamicScenesAddViewController) {
         sender.dismiss(animated: true, completion: nil)
+
         guard let indexPath = tableView.indexPathForSelectedRow else {
-            // TODO: DISPLAY ERROR MESSAGE TO USER
+            let genericErrorAdding = RGBSwiftMessages.createAlertInView(type: .error,
+                                                                        fromNib: .cardView,
+                                                                        content: ("Error deleting scene", ""))
+            let genericConfig = RGBSwiftMessages.createMessageConfig()
+            SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
             logger.error("Error receiving indexpath for selected row")
             return
         }

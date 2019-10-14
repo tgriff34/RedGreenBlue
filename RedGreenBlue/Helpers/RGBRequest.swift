@@ -188,29 +188,19 @@ class RGBRequest {
 
     private func setConnected(_ connected: Bool) {
         if connected {
-            SwiftMessages.hide()
-            // swiftlint:disable:next force_try
-            let connectedMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
-            var connectedMessageConfig = SwiftMessages.Config()
-            connectedMessageConfig.presentationContext = .window(windowLevel: .normal)
-            connectedMessage.configureTheme(.success)
-            connectedMessage.configureContent(title: "Connected", body: "")
-            connectedMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            connectedMessage.button?.isHidden = true
+            SwiftMessages.hideAll()
+            let connectedMessage = RGBSwiftMessages
+                .createAlertInView(type: .success, fromNib: .successCustomMessage, content: ("Connected", ""),
+                                   layoutMarginAdditions: UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20))
+            let connectedMessageConfig = RGBSwiftMessages.createMessageConfig(presentStyle: .bottom)
             SwiftMessages.show(config: connectedMessageConfig, view: connectedMessage)
         } else {
-            // swiftlint:disable:next force_try
-            let errorMessage: MessageView = try! SwiftMessages.viewFromNib(named: "SuccessCustomMessage")
-            var errorMessageConfig = SwiftMessages.Config()
-            errorMessageConfig.presentationContext = .window(windowLevel: .normal)
-            errorMessageConfig.duration = .forever
-            errorMessageConfig.interactiveHide = false
-            errorMessage.configureTheme(.error)
-            errorMessage.configureContent(title: "Not connected", body: "")
-            errorMessage.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            errorMessage.button?.isHidden = true
-            (errorMessage.backgroundView as? CornerRoundingView)?.cornerRadius = 10
-            SwiftMessages.show(config: errorMessageConfig, view: errorMessage)
+            let notConnectedMessage = RGBSwiftMessages
+                .createAlertInView(type: .error, fromNib: .successCustomMessage, content: ("Not connected", ""),
+                                   layoutMarginAdditions: UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20))
+            let notConnectedMessageConfig = RGBSwiftMessages
+                .createMessageConfig(presentStyle: .bottom, duration: .forever, interactiveHide: false)
+            SwiftMessages.show(config: notConnectedMessageConfig, view: notConnectedMessage)
         }
     }
 
@@ -241,15 +231,11 @@ class RGBRequest {
                 logger.error("Error AppTheme is nil")
             }
         } else {
-            let errorGettingUIWindow: MessageView = MessageView.viewFromNib(layout: .messageView)
-            var errorGettingUIWindowConfig = SwiftMessages.Config()
-            errorGettingUIWindowConfig.presentationContext = .window(windowLevel: .normal)
-            errorGettingUIWindow.configureTheme(.warning)
-            errorGettingUIWindow.configureContent(title: "Error Changing Theme",
-                                                  body: "An error ocurred while changing your theme!")
-            errorGettingUIWindow.layoutMarginAdditions = UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20)
-            errorGettingUIWindow.button?.isHidden = true
-            SwiftMessages.show(config: errorGettingUIWindowConfig, view: errorGettingUIWindow)
+            let errorChangingTheme = RGBSwiftMessages
+                .createAlertInView(type: .error, fromNib: .cardView,
+                                   content: ("", "Error while attempting to change your theme"))
+            let errorChangingThemeConfig = RGBSwiftMessages.createMessageConfig()
+            SwiftMessages.show(config: errorChangingThemeConfig, view: errorChangingTheme)
         }
     }
 }
