@@ -88,24 +88,25 @@ class RGBGroupsAndLightsHelper {
     }
 
     // MARK: - Dynamic Scenes
-    private var player: AVPlayer?
+    private var player: AVQueuePlayer?
+    private var looper: AVPlayerLooper?
     private var timeObserver: NSObjectProtocol?
     private var observer: NSObjectProtocol?
-    private func makePlayer(file: String) -> AVPlayer {
+    private func makePlayer(file: String) -> AVQueuePlayer {
         var url: URL?
         if file == "Default" {
             url = Bundle.main.url(forResource: "default", withExtension: "mp3")
         } else {
             url = Bundle.main.url(forResource: file, withExtension: "mp3")
         }
-        let player = AVPlayer(url: url!)
+        let player = AVQueuePlayer(url: url!)
+//        let player = AVPlayer(url: url!)
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
         observer = NotificationCenter.default.addObserver(
             forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem,
             queue: .main, using: { _ in
                 self.lightsForScene.removeAll()
-                player.seek(to: CMTime.zero)
-                player.play()
+//                player.seek(to: CMTime.zero)
         })
         return player
     }
@@ -113,6 +114,7 @@ class RGBGroupsAndLightsHelper {
     func playDynamicScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
         stopDynamicScene()
         player = self.makePlayer(file: scene.soundFile)
+        looper = AVPlayerLooper(player: player!, templateItem: player!.currentItem!)
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 AVAudioSession.Category.playback,
@@ -147,6 +149,7 @@ class RGBGroupsAndLightsHelper {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                   object: nil)
         player?.removeTimeObserver(timeObserver as Any)
+        looper = nil
         player = nil
     }
 
@@ -155,10 +158,15 @@ class RGBGroupsAndLightsHelper {
     private func setScene(scene: RGBDynamicScene, for group: RGBGroup, time: Int, with swiftyHue: SwiftyHue) {
         let (_, remainderForColor) = time.quotientAndRemainder(dividingBy: Int(scene.timer))
         let (_, remainderForBrightness) = time.quotientAndRemainder(dividingBy: Int(scene.brightnessTimer))
-        let currentSongDuration = CMTimeGetSeconds(player!.currentItem!.duration)
 
-        if remainderForColor == 0 && scene.lightsChangeColor &&
-            time != Int(currentSongDuration)  && (lightsForScene.isEmpty || time != 0) {
+        var durationTime: Int?
+        if let currentItem = player?.currentItem, currentItem.status == AVPlayerItem.Status.readyToPlay {
+            durationTime = Int(CMTimeGetSeconds(currentItem.duration))
+        }
+
+        if remainderForColor == 0 && scene.lightsChangeColor && (lightsForScene.isEmpty || time != 0)
+            && durationTime != time {
+
             setLightsForScene(group: group, numberOfColors: scene.xys.count,
                               isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
