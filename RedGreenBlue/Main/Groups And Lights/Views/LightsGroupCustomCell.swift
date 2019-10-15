@@ -13,7 +13,7 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
-    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var slider: CustomUISlider!
     @IBOutlet weak var subView: GradientLayerView!
 
     weak var delegate: LightsGroupsCellDelegate?
@@ -97,7 +97,7 @@ class LightsGroupCustomCell: UITableViewCell {
 
         subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
         subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
-
+        
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
     }
