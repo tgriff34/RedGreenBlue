@@ -13,7 +13,7 @@ import SwiftSVG
 class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var slider: CustomUISlider!
     @IBOutlet weak var subView: UIView!
     @IBOutlet weak var lightImage: UIView!
 
