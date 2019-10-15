@@ -148,7 +148,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         var lightState = LightState()
         lightState.on = sender.isOn
         RGBGroupsAndLightsHelper.shared.setLightState(for: group, using: swiftyHue, with: lightState, completion: {
-            self.fetchData(group: self.group, completion: nil)
+            self.fetchData(group: self.group, completion: {
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            })
         })
     }
 
@@ -272,7 +275,10 @@ extension LightTableViewController: LightsCellDelegate {
         var lightState = LightState()
         lightState.on = lightsTableViewCell.switch.isOn
         RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: swiftyHue, with: lightState, completion: {
-            self.fetchData(group: self.group, completion: nil)
+            self.fetchData(group: self.group, completion: {
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            })
         })
     }
 

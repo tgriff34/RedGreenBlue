@@ -34,13 +34,11 @@ class DynamicScenesAddViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
                                                            target: self, action: #selector(cancel))
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(save))
-
         textField.delegate = self
         tapRecognizer = UITapGestureRecognizer()
         tapRecognizer?.addTarget(self, action: #selector(viewTapped))
@@ -56,9 +54,9 @@ class DynamicScenesAddViewController: UITableViewController {
         brightnessSlider.backgroundColor = tableView.cellForRow(at: IndexPath(row: 0, section: 2))?.backgroundColor
 
         // TODO: A little hacky, might want to consider changing the images
-        guard let arrayOfImages = brightnessSlider.subviews as? [UIImageView], arrayOfImages.indices.contains(1) else {
-            return
-        }
+        guard let arrayOfImages = brightnessSlider.subviews as? [UIImageView],
+            arrayOfImages.indices.contains(1) else { return }
+
         let trackImage = arrayOfImages[1]
         trackImage.image = trackImage.image?.withRenderingMode(.alwaysTemplate)
         trackImage.tintColor = view.tintColor
@@ -81,10 +79,8 @@ class DynamicScenesAddViewController: UITableViewController {
             minBrightness = scene.minBrightness
             maxBrightness = scene.maxBrightness
             brightnessSlider.setLeftValue(CGFloat(scene.minBrightness), rightValue: CGFloat(scene.maxBrightness))
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 1),
-                                      IndexPath(row: 1, section: 1),
-                                      IndexPath(row: 0, section: 2),
-                                      IndexPath(row: 0, section: 3)],
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1),
+                                      IndexPath(row: 0, section: 2), IndexPath(row: 0, section: 3)],
                                  with: .none)
         }
     }
@@ -172,28 +168,22 @@ extension DynamicScenesAddViewController {
             textField.text = name
             enableOrDisableSaveButton()
         case 1:
-            if indexPath.row == 2 {
-                if time == 1 {
-                    cell.detailTextLabel?.text = "\(time) second"
-                } else {
-                    cell.detailTextLabel?.text = "\(time) seconds"
-                }
+            if indexPath.row == 2 && time == 1 {
+                cell.detailTextLabel?.text = "\(time) second"
+            } else if indexPath.row == 2 {
+                cell.detailTextLabel?.text = "\(time) seconds"
             } else if indexPath.row == 0 {
                 cell.detailTextLabel?.text = "\(colors.count) colors"
             }
         case 2:
-            if indexPath.row == 0 {
-                if fluctuatingBrightnessSwitch.isOn {
-                    cell.detailTextLabel?.text = "\(minBrightness)% - \(maxBrightness)%"
-                } else {
-                    cell.detailTextLabel?.text = ""
-                }
+            if indexPath.row == 0 && fluctuatingBrightnessSwitch.isOn {
+                cell.detailTextLabel?.text = "\(minBrightness)% - \(maxBrightness)%"
+            } else if indexPath.row == 0 {
+                cell.detailTextLabel?.text = ""
+            } else if indexPath.row == 1 && brightnessTime == 1 {
+                cell.detailTextLabel?.text = "\(brightnessTime) second"
             } else if indexPath.row == 1 {
-                if brightnessTime == 1 {
-                    cell.detailTextLabel?.text = "\(brightnessTime) second"
-                } else {
-                    cell.detailTextLabel?.text = "\(brightnessTime) seconds"
-                }
+                cell.detailTextLabel?.text = "\(brightnessTime) seconds"
             }
         case 3:
             cell.detailTextLabel?.text = soundFileName

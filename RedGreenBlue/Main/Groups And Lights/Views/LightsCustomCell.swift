@@ -27,12 +27,14 @@ class LightsCustomCell: UITableViewCell {
 
             if light.state.on! {
                 slider.setValue(Float(light.state.brightness!) / 2.54, animated: true)
+                slider.isHidden = false
 
                 subView.backgroundColor = HueUtilities.colorFromXY(
                     CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
                     forModel: "LCT016")
             } else {
                 slider.setValue(1, animated: true)
+                slider.isHidden = true
                 subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
             }
 

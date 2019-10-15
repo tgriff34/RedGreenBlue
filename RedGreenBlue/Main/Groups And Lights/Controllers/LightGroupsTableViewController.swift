@@ -18,7 +18,7 @@ class LightGroupsTableViewController: UITableViewController {
 
         swiftyHue = RGBRequest.shared.getSwiftyHue()
 
-        tableView.estimatedRowHeight = 200
+        tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
 
         NotificationCenter.default.addObserver(
@@ -73,6 +73,8 @@ class LightGroupsTableViewController: UITableViewController {
                     self.tableView.numberOfRows(inSection: 1) != self.groups[1].count {
                     self.tableView.reloadData()
                 }
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
             })
         }
     }
@@ -157,7 +159,10 @@ extension LightGroupsTableViewController: LightsGroupsCellDelegate {
         lightState.on = lightGroupsTableViewCell.switch.isOn
         RGBGroupsAndLightsHelper.shared.setLightState(
             for: group, using: swiftyHue, with: lightState, completion: {
-                self.fetchData(completion: nil)
+                self.fetchData(completion: {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                })
         })
     }
 
