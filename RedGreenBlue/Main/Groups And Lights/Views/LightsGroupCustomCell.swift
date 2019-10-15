@@ -14,7 +14,7 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var subView: UIView!
+    @IBOutlet weak var subView: GradientLayerView!
 
     weak var delegate: LightsGroupsCellDelegate?
 
@@ -31,8 +31,45 @@ class LightsGroupCustomCell: UITableViewCell {
 
             if numberOfLightsOn > 0 {
                 self.slider.setValue(Float(avgBrightness / numberOfLightsOn) / 2.54, animated: true)
+
+                // For every light that is on get the color of the light
+                var colorsOfLightsOn = [UIColor]()
+                for light in group.lights where light.state.on! {
+                    let color = HueUtilities.colorFromXY(
+                        CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
+                        forModel: "LCT016")
+                    if !colorsOfLightsOn.contains(color) {
+                        colorsOfLightsOn.append(color)
+                    }
+                }
+
+                // Sort colors based on hue and set them to gradient colors
+                colorsOfLightsOn.sort(by: { $0.hue < $1.hue })
+                if colorsOfLightsOn.count > 1 {
+                    subView.backgroundColor = nil
+                    subView.layer.colors = colorsOfLightsOn.map({ return $0.cgColor })
+                } else {
+                    subView.layer.colors = nil
+                    subView.backgroundColor = colorsOfLightsOn[0]
+                }
+
+                // Set colors for text labels
+                let textColor = RGBColorUtilities.colorForLabel(from: colorsOfLightsOn)
+                self.label.textColor = textColor
+                self.numberOfLightsLabel.textColor = textColor
             } else {
                 self.slider.setValue(1, animated: true)
+
+                // Set colors for layer and labels
+                subView.layer.colors = nil
+                subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
+                if #available(iOS 13.0, *) {
+                    self.label.textColor = UIColor.label
+                    self.numberOfLightsLabel.textColor = UIColor.label
+                } else {
+                    self.label.textColor = UIColor.black
+                    self.numberOfLightsLabel.textColor = UIColor.black
+                }
             }
         }
     }
@@ -57,6 +94,10 @@ class LightsGroupCustomCell: UITableViewCell {
         subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         subView.layer.shadowOpacity = 0.34
         subView.layer.shadowRadius = 4.3
+
+        subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
     }

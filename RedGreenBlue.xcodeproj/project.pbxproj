@@ -45,6 +45,7 @@
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
 		46CCAA142307870B0054187A /* RGBRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* RGBRequest.swift */; };
 		46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA15230848F90054187A /* LightTableViewController.swift */; };
+		46D1544B23552093003196A5 /* RGBColorUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D1544A23552093003196A5 /* RGBColorUtilities.swift */; };
 		46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DABC222327ED4F00E8C81D /* RGBDynamicScene.swift */; };
 		46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */; };
 		46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */; };
@@ -132,6 +133,7 @@
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
 		46CCAA132307870B0054187A /* RGBRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBRequest.swift; sourceTree = "<group>"; };
 		46CCAA15230848F90054187A /* LightTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTableViewController.swift; sourceTree = "<group>"; };
+		46D1544A23552093003196A5 /* RGBColorUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBColorUtilities.swift; sourceTree = "<group>"; };
 		46DABC222327ED4F00E8C81D /* RGBDynamicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBDynamicScene.swift; sourceTree = "<group>"; };
 		46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneCellProtocol.swift; sourceTree = "<group>"; };
 		46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSliderProtocol.swift; sourceTree = "<group>"; };
@@ -228,6 +230,8 @@
 		465144652316DA2D00156659 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				46637A4D234E86D40000E8CB /* GradientLayerView.swift */,
+				46D1544A23552093003196A5 /* RGBColorUtilities.swift */,
 				468CAD76233C27150023401C /* Settings */,
 				468CAD72233C26D20023401C /* Dynamic Scenes */,
 				468CAD71233C26750023401C /* Scenes */,
@@ -351,7 +355,6 @@
 				46E22732233270E40031CE0C /* LightsDynamicSceneCustomCell.swift */,
 				462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */,
 				462A5E4923467D330088296B /* SSCheckMark.swift */,
-				46637A4D234E86D40000E8CB /* GradientLayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -782,6 +785,7 @@
 				46B642402321A7510047F233 /* BridgesTableViewCell.swift in Sources */,
 				46F42E082326BDA300FB73FA /* DynamicScenesViewController.swift in Sources */,
 				46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */,
+				46D1544B23552093003196A5 /* RGBColorUtilities.swift in Sources */,
 				462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */,
 				462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,

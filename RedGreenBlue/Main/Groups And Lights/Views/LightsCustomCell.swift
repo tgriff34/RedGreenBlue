@@ -27,13 +27,30 @@ class LightsCustomCell: UITableViewCell {
 
             if light.state.on! {
                 slider.setValue(Float(light.state.brightness!) / 2.54, animated: true)
+
+                subView.backgroundColor = HueUtilities.colorFromXY(
+                    CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
+                    forModel: "LCT016")
             } else {
                 slider.setValue(1, animated: true)
+                subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
+            }
+
+            var colorForLabels: UIColor?
+            if let backgroundColor = subView.backgroundColor, light.state.on! {
+                colorForLabels = RGBColorUtilities.colorForLabel(from: [backgroundColor])
+                label.textColor = colorForLabels!
+            } else if #available(iOS 13, *) {
+                label.textColor = UIColor.label
+            } else {
+                label.textColor = UIColor.black
             }
 
             let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
             let image = UIView(SVGNamed: svgName) { (svgLayer) in
-                if self.traitCollection.userInterfaceStyle == .dark {
+                if self.light.state.on! {
+                    svgLayer.fillColor = colorForLabels!.cgColor
+                } else if self.traitCollection.userInterfaceStyle == .dark {
                     svgLayer.fillColor = UIColor.white.cgColor
                 } else {
                     svgLayer.fillColor = UIColor.black.cgColor
