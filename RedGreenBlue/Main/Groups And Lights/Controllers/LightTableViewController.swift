@@ -65,7 +65,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.estimatedRowHeight = 400
+        tableView.estimatedRowHeight = 75
         tableView.rowHeight = UITableView.automaticDimension
 
         NotificationCenter.default.addObserver(
@@ -88,12 +88,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
-//        self.swiftyHue.startHeartbeat()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        swiftyHue.stopHeartbeat()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

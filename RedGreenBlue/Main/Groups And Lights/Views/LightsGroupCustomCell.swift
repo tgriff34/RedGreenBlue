@@ -14,6 +14,7 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var slider: CustomUISlider!
+    @IBOutlet weak var sliderView: UIView!
     @IBOutlet weak var subView: GradientLayerView!
 
     weak var delegate: LightsGroupsCellDelegate?
@@ -31,11 +32,11 @@ class LightsGroupCustomCell: UITableViewCell {
 
             if numberOfLightsOn > 0 {
                 self.slider.setValue(Float(avgBrightness / numberOfLightsOn) / 2.54, animated: true)
-                self.slider.isHidden = false
+                self.sliderView.isHidden = false
                 setBackgroundAndLabelColors(lightsAreOn: true)
             } else {
                 self.slider.setValue(1, animated: true)
-                self.slider.isHidden = true
+                self.sliderView.isHidden = true
                 setBackgroundAndLabelColors(lightsAreOn: false)
             }
         }
