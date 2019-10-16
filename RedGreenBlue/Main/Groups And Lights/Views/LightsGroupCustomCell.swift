@@ -31,7 +31,7 @@ class LightsGroupCustomCell: UITableViewCell {
             numberOfLightsOn > 0 ? self.switch.setOn(true, animated: true) : self.switch.setOn(false, animated: true)
 
             if numberOfLightsOn > 0 {
-                self.slider.setValue(Float(avgBrightness / numberOfLightsOn) / 2.54, animated: true)
+                self.slider.setValue((Float(avgBrightness / numberOfLightsOn) / 2.54), animated: true)
                 self.sliderView.isHidden = false
                 setBackgroundAndLabelColors(lightsAreOn: true)
             } else {

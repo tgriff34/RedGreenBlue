@@ -21,21 +21,26 @@ class LightGroupsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(onDidLightUpdate(_:)),
-            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-            object: nil)
-
         console.debug(RGBDatabaseManager.realm()?.configuration.fileURL! as Any)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Observer for when the lights change in another app or wall switch
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
         setUpInitialView()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Remove the observer when navigating away
+        NotificationCenter.default.removeObserver(
+            self, name: NSNotification.Name(
+                rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
     }
 
     // MARK: - Private Funcs

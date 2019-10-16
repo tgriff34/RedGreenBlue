@@ -27,7 +27,7 @@ class LightsCustomCell: UITableViewCell {
             self.switch.setOn(light.state.on!, animated: true)
 
             if light.state.on! {
-                slider.setValue(Float(light.state.brightness!) / 2.54, animated: true)
+                slider.setValue((Float(light.state.brightness!) / 2.54), animated: true)
                 sliderView.isHidden = false
 
                 subView.backgroundColor = HueUtilities.colorFromXY(

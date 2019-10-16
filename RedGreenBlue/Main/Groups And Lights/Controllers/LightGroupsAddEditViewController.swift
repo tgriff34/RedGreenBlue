@@ -57,7 +57,6 @@ class LightGroupsAddEditViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
     }
 
-    // TODO: Modularize with Dynamic Scene add
     private func enableOrDisableSaveButton() {
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LightsGroupAddNameCell
         if selectedLights.isEmpty || cell?.textField.text?.isEmpty ?? false {

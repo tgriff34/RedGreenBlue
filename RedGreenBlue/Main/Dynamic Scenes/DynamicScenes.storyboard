@@ -130,7 +130,7 @@
         <!--Colors-->
         <scene sceneID="5oH-yU-r3b">
             <objects>
-                <collectionViewController id="1fz-4I-qAj" customClass="DynamicScenesColorsCollectionViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController id="1fz-4I-qAj" customClass="DynamicScenesColorsViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5oG-4U-hAF">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -230,10 +230,10 @@
             </objects>
             <point key="canvasLocation" x="6896" y="623"/>
         </scene>
-        <!--Dynamic Scenes Colors Collection Picker View Controller-->
+        <!--Dynamic Scenes Colors Picker View Controller-->
         <scene sceneID="FSu-mA-r7f">
             <objects>
-                <collectionViewController storyboardIdentifier="DefaultColorPickerStoryboard" id="VRg-4P-3dn" customClass="DynamicScenesColorsCollectionPickerViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="DefaultColorPickerStoryboard" id="VRg-4P-3dn" customClass="DynamicScenesColorsPickerViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="kRE-am-Diu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -577,15 +577,15 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SPl-X8-dgk" customClass="MARKRangeSlider">
-                                                    <rect key="frame" x="20" y="8" width="374" height="28"/>
+                                                    <rect key="frame" x="10" y="0.0" width="394" height="44"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="top" secondItem="WcA-e3-Ra6" secondAttribute="top" constant="8" id="6q0-aC-6Vp"/>
-                                                <constraint firstAttribute="trailing" secondItem="SPl-X8-dgk" secondAttribute="trailing" constant="20" id="Q4G-Qj-7Sd"/>
-                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="leading" secondItem="WcA-e3-Ra6" secondAttribute="leading" constant="20" id="lsY-P1-SaF"/>
-                                                <constraint firstAttribute="bottom" secondItem="SPl-X8-dgk" secondAttribute="bottom" constant="8" id="whh-aC-Gwv"/>
+                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="width" secondItem="WcA-e3-Ra6" secondAttribute="width" priority="999" constant="-20" id="Dux-DZ-DDl"/>
+                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="centerX" secondItem="WcA-e3-Ra6" secondAttribute="centerX" id="E86-JA-iWK"/>
+                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="height" secondItem="WcA-e3-Ra6" secondAttribute="height" priority="999" id="Xoz-4U-Pd7"/>
+                                                <constraint firstItem="SPl-X8-dgk" firstAttribute="centerY" secondItem="WcA-e3-Ra6" secondAttribute="centerY" id="jSM-Ok-zJN"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class DynamicScenesColorsCollectionPickerViewController: UICollectionViewController {
+class DynamicScenesColorsPickerViewController: UICollectionViewController {
     var colors = [XYColor]()
 
     var selectedColor: XYColor? {
@@ -41,7 +41,7 @@ class DynamicScenesColorsCollectionPickerViewController: UICollectionViewControl
 }
 
 // MARK: - CollectionView
-extension DynamicScenesColorsCollectionPickerViewController: UICollectionViewDelegateFlowLayout {
+extension DynamicScenesColorsPickerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width / 2.0 - 8

@@ -27,7 +27,8 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
 
-    // When buttons released
+    // When buttons released have then transform back to normal size
+    // and navigate to appropriate tab.
     @IBAction func groupsColorButton(_ sender: UIButton) {
         UIButton.animate(withDuration: 0.2, animations: {
             sender.transform = CGAffineTransform.identity
@@ -62,16 +63,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.estimatedRowHeight = 75
+        tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
 
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(onDidLightUpdate(_:)),
-            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
-            object: nil)
         setupNavigationSwitch()
         groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
 
@@ -82,20 +78,36 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Observer for when the lights change in another app or wall switch
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(onDidLightUpdate(_:)),
+            name: NSNotification.Name(rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
+
+        // If the bridge change and they were in this view, pop to group view controller
         let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
         if swiftyHueDidChange.didIpChange {
             navigationController?.popViewController(animated: true)
         }
+
+        // Set up group switch button in nav bar, and group brightness slider
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        // Remove the observer from the notification center when navigating away.
+        NotificationCenter.default.removeObserver(
+            self, name: NSNotification.Name(
+                rawValue: ResourceCacheUpdateNotification.lightsUpdated.rawValue),
+            object: nil)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        // If the user changed theme, makes sure that the labels
+        // and icons change to the appropriate color
         self.tableView.reloadData()
         scenesButton.awakeFromNib()
         customScenesButton.awakeFromNib()
@@ -103,20 +115,26 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
 
     // MARK: - Private funcs
     @objc func onDidLightUpdate(_ notification: Notification) {
+        // If the lights have change outside of the app, update the current datasource
         if let cache = swiftyHue.resourceCache {
             for light in Array(cache.lights.values) {
                 if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
                     self.group.lights[lightIndex] = light
                 }
             }
+            // Once the data source has updated, update tableview
             self.fetchData(group: nil, completion: nil)
         }
     }
 
+    // Allows you to update the UI two ways.
+    // Pass in the group if something about the group has changed. (ie. # of lights, name, etc.)
+    // Otherwise if group is nil, it will just update the cells with current datasource and not fetch the group.
     func fetchData(group: RGBGroup?, completion: (() -> Void)?) {
         // If the group has not been changed then no need to reload table, just update cells
         guard let group = group else {
             self.updateUI(group: self.group)
+            completion?()
             return
         }
         RGBRequest.shared.getGroup(with: group.identifier, using: self.swiftyHue, completion: { (group) in
@@ -133,15 +151,18 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
 
+    // Update the cells light object with the light from the data source
     private func updateUI(group: RGBGroup) {
         for (index, light) in group.lights.enumerated() {
             let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LightsCustomCell
             cell?.light = light
         }
+        // Make sure to update the group switch and the brightness slider
         navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         setupGroupBrightnessSlider()
     }
 
+    // Group switch, if switched on manually all lights are on and vice versa.
     @objc func navigationSwitchChanged(_ sender: UISwitch!) {
         var lightState = LightState()
         lightState.on = sender.isOn
@@ -153,6 +174,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
 
+    // Show options for group. (ie. editing group lights and names, deleting group)
     @objc func optionsButtonTapped(_ sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let editAction = UIAlertAction(title: "Edit Group", style: .default, handler: { _ in
@@ -172,14 +194,13 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             })
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-
         actionSheet.addAction(editAction)
         actionSheet.addAction(deleteAction)
         actionSheet.addAction(cancelAction)
-
         self.present(actionSheet, animated: true, completion: nil)
     }
 
+    // Group slider at top of view.  If moved, all lights change to its value.
     @objc func groupSliderChanged(_ sender: UISlider!, _ event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -212,13 +233,20 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
+    // Right bar navigation items setup
     private func setupNavigationSwitch() {
+        // Options button for group
         optionsButton = UIBarButtonItem(
             image: UIImage(named: "ellipsis"),
             style: .plain, target: self, action: #selector(optionsButtonTapped(_:)))
+
+        // Group lights switch for group
         navigationSwitch = UISwitch(frame: .zero)
         navigationSwitch?.addTarget(self, action: #selector(navigationSwitchChanged(_:)), for: .valueChanged)
         navigationSwitch?.setOn(ifAnyLightsAreOnInGroup(), animated: true)
+
+        // If the group is a 'light group' type allow the user to customize the group.
+        // Any group under the 'Room' type does not allow their lights/name to be changed.
         if group.type == .LightGroup {
             navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navigationSwitch!),
                                                   optionsButton!]
@@ -231,7 +259,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         if ifAnyLightsAreOnInGroup() {
             let avgBrightness = RGBGroupsAndLightsHelper.shared.getAverageBrightnessOfLightsInGroup(group.lights)
             let numOfLightsOn = RGBGroupsAndLightsHelper.shared.getNumberOfLightsOnInGroup(group.lights)
-            groupBrightnessSlider.setValue(Float(avgBrightness / numOfLightsOn) / 2.54, animated: true)
+            groupBrightnessSlider.setValue((Float(avgBrightness / numOfLightsOn) / 2.54), animated: true)
         } else {
             groupBrightnessSlider.setValue(0, animated: true)
         }
