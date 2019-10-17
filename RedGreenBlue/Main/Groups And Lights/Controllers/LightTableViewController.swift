@@ -90,6 +90,11 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             navigationController?.popViewController(animated: true)
         }
 
+        self.fetchData(group: self.group, completion: {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+        })
+
         // Set up group switch button in nav bar, and group brightness slider
         self.navigationSwitch?.setOn(self.ifAnyLightsAreOnInGroup(), animated: true)
         self.setupGroupBrightnessSlider()
@@ -123,7 +128,10 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
             // Once the data source has updated, update tableview
-            self.fetchData(group: nil, completion: nil)
+            self.fetchData(group: self.group, completion: {
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            })
         }
     }
 
@@ -378,7 +386,10 @@ extension LightTableViewController: GroupAddDelegate {
         navigationItem.title = name
         swiftyHue.bridgeSendAPI.updateGroupWithId(
             group.identifier, newName: name, newLightIdentifiers: lights, completionHandler: { _ in
-                self.fetchData(group: self.group, completion: nil)
+                self.fetchData(group: self.group, completion: {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                })
         })
     }
 }

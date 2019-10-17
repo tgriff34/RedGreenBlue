@@ -10,7 +10,7 @@ import UIKit
 
 class CustomUISlider: UISlider {
     @IBInspectable open var trackWidth: CGFloat = 2 {
-        didSet {setNeedsDisplay()}
+        didSet { setNeedsDisplay() }
     }
     override open func trackRect(forBounds bounds: CGRect) -> CGRect {
         let defaultBounds = super.trackRect(forBounds: bounds)

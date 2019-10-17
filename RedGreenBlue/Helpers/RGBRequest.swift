@@ -150,7 +150,7 @@ class RGBRequest {
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
     }
 
-    // Sets connection observers so I know whether user is connected to the bridge or not
+    // Sets connection observers so to know whether user is connected to the bridge or not
     private var isConnected: Bool = false
     func setUpConnectionListeners() {
         isConnected = false
