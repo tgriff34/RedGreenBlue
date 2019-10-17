@@ -89,7 +89,11 @@ class DynamicScenesAddViewController: UITableViewController {
             minBrightness: minBrightness, maxBrightness: maxBrightness)
 
         scene.xys = self.colors
-        addSceneDelegate?.dynamicSceneEdited(self, scene)
+        if self.scene != nil {
+            addSceneDelegate?.dynamicSceneEdited(self, scene)
+        } else {
+            addSceneDelegate?.dynamicSceneAdded(self, scene)
+        }
     }
 
     @objc func cancel() {
