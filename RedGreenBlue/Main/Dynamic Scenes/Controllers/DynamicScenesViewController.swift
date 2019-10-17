@@ -213,7 +213,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
         let genericErrorAdding = RGBSwiftMessages.createAlertInView(type: .error,
                                                                     fromNib: .cardView,
                                                                     content: ("Error editing scene", ""))
-        let genericConfig = RGBSwiftMessages.createMessageConfig()
+        let genericConfig = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
         guard let indexPath = tableView.indexPathForSelectedRow else {
             SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
             logger.error("Error receiving indexpath for selected row")
@@ -231,7 +231,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             let sameNameErrorMessage = RGBSwiftMessages
                 .createAlertInView(type: .warning, fromNib: .cardView,
                                    content: ("", "A scene by that name already exists"))
-            let sameNameErrorConfig = RGBSwiftMessages.createMessageConfig()
+            let sameNameErrorConfig = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // If the user edited the name or not, delete old scene and create a new scene in DB
             RGBDatabaseManager.write(to: realm, closure: { // Deleting old scene
@@ -255,8 +255,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             let sameNameErrorMessage = RGBSwiftMessages
                 .createAlertInView(type: .warning, fromNib: .cardView,
                                    content: ("", "A scene by that name already exists"))
-            var sameNameErrorConfig = RGBSwiftMessages.createMessageConfig()
-            sameNameErrorConfig.presentationContext = .window(windowLevel: .normal)
+            let sameNameErrorConfig = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // Add to DB and insert row
             sender.dismiss(animated: true, completion: nil)
