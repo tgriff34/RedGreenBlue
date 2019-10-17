@@ -15,6 +15,7 @@ class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var slider: CustomUISlider!
     @IBOutlet weak var subView: UIView!
+    @IBOutlet weak var sliderView: UIView!
     @IBOutlet weak var lightImage: UIView!
 
     weak var delegate: LightsCellDelegate?
@@ -26,13 +27,15 @@ class LightsCustomCell: UITableViewCell {
             self.switch.setOn(light.state.on!, animated: true)
 
             if light.state.on! {
-                slider.setValue(Float(light.state.brightness!) / 2.54, animated: true)
+                slider.setValue((Float(light.state.brightness!) / 2.54), animated: true)
+                sliderView.isHidden = false
 
                 subView.backgroundColor = HueUtilities.colorFromXY(
                     CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
                     forModel: "LCT016")
             } else {
                 slider.setValue(1, animated: true)
+                sliderView.isHidden = true
                 subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
             }
 

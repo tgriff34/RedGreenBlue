@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 import SwiftyHue
 
-class DynamicScenesColorsCollectionViewController: UICollectionViewController {
+class DynamicScenesColorsViewController: UICollectionViewController {
     var colors = List<XYColor>()
     var selectedIndexPath: IndexPath?
     weak var addColorsDelegate: DynamicSceneAddAllColorsDelegate?
@@ -86,7 +86,7 @@ class DynamicScenesColorsCollectionViewController: UICollectionViewController {
 }
 
 // MARK: - CollectionView
-extension DynamicScenesColorsCollectionViewController: UICollectionViewDelegateFlowLayout {
+extension DynamicScenesColorsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width / 3.0 - 8
@@ -128,7 +128,7 @@ extension DynamicScenesColorsCollectionViewController: UICollectionViewDelegateF
 }
 
 // MARK: - Navigation
-extension DynamicScenesColorsCollectionViewController {
+extension DynamicScenesColorsViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "addColorSegue":
@@ -150,7 +150,7 @@ extension DynamicScenesColorsCollectionViewController {
 }
 
 // MARK: - Delegate
-extension DynamicScenesColorsCollectionViewController: DynamicSceneAddColorDelegate {
+extension DynamicScenesColorsViewController: DynamicSceneAddColorDelegate {
     func dynamicSceneColorAdded(_ color: XYColor) {
         if let selectedIndexPath = selectedIndexPath {
             colors[selectedIndexPath.row] = color

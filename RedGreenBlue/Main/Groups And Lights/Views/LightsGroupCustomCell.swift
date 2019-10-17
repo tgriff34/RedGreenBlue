@@ -14,6 +14,7 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var slider: CustomUISlider!
+    @IBOutlet weak var sliderView: UIView!
     @IBOutlet weak var subView: GradientLayerView!
 
     weak var delegate: LightsGroupsCellDelegate?
@@ -30,48 +31,62 @@ class LightsGroupCustomCell: UITableViewCell {
             numberOfLightsOn > 0 ? self.switch.setOn(true, animated: true) : self.switch.setOn(false, animated: true)
 
             if numberOfLightsOn > 0 {
-                self.slider.setValue(Float(avgBrightness / numberOfLightsOn) / 2.54, animated: true)
-
-                // For every light that is on get the color of the light
-                var colorsOfLightsOn = [UIColor]()
-                for light in group.lights where light.state.on! {
-                    let color = HueUtilities.colorFromXY(
-                        CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
-                        forModel: "LCT016")
-                    if !colorsOfLightsOn.contains(color) {
-                        colorsOfLightsOn.append(color)
-                    }
-                }
-
-                // Sort colors based on hue and set them to gradient colors
-                colorsOfLightsOn.sort(by: { $0.hue < $1.hue })
-                if colorsOfLightsOn.count > 1 {
-                    subView.backgroundColor = nil
-                    subView.layer.colors = colorsOfLightsOn.map({ return $0.cgColor })
-                } else {
-                    subView.layer.colors = nil
-                    subView.backgroundColor = colorsOfLightsOn[0]
-                }
-
-                // Set colors for text labels
-                let textColor = RGBColorUtilities.colorForLabel(from: colorsOfLightsOn)
-                self.label.textColor = textColor
-                self.numberOfLightsLabel.textColor = textColor
+                self.slider.setValue((Float(avgBrightness / numberOfLightsOn) / 2.54), animated: true)
+                self.sliderView.isHidden = false
+                setBackgroundAndLabelColors(lightsAreOn: true)
             } else {
                 self.slider.setValue(1, animated: true)
-
-                // Set colors for layer and labels
-                subView.layer.colors = nil
-                subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
-                if #available(iOS 13.0, *) {
-                    self.label.textColor = UIColor.label
-                    self.numberOfLightsLabel.textColor = UIColor.label
-                } else {
-                    self.label.textColor = UIColor.black
-                    self.numberOfLightsLabel.textColor = UIColor.black
-                }
+                self.sliderView.isHidden = true
+                setBackgroundAndLabelColors(lightsAreOn: false)
             }
         }
+    }
+
+    private func setBackgroundAndLabelColors(lightsAreOn: Bool) {
+        if lightsAreOn {
+            // Get colors of lights on
+            let colorsOfLightsOn = getColorsOfLightsOn()
+            if colorsOfLightsOn.count > 1 { // If there are more than 1 color set the gradient
+                subView.backgroundColor = nil
+                subView.layer.colors = colorsOfLightsOn.map({ return $0.cgColor })
+            } else { // else set the background to the single color
+                subView.layer.colors = nil
+                subView.backgroundColor = colorsOfLightsOn[0]
+            }
+            // Set text label colors to something that will show up on background color
+            let textColor = RGBColorUtilities.colorForLabel(from: colorsOfLightsOn)
+            self.label.textColor = textColor
+            self.numberOfLightsLabel.textColor = textColor
+        } else {
+            // set gradient to nothing and background to correct cell color based on dark/light theme
+            subView.layer.colors = nil
+            subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
+
+            // set label colors to white or black if on ios13 based on dark/light theme
+            // or black on previous ios versions since they have no access to dark theme
+            if #available(iOS 13.0, *) {
+                self.label.textColor = UIColor.label
+                self.numberOfLightsLabel.textColor = UIColor.label
+            } else {
+                self.label.textColor = UIColor.black
+                self.numberOfLightsLabel.textColor = UIColor.black
+            }
+        }
+    }
+
+    private func getColorsOfLightsOn() -> [UIColor] {
+        // For every light that is on get the color of the light
+        var colorsOfLightsOn = [UIColor]()
+        for light in group.lights where light.state.on! {
+            let color = HueUtilities.colorFromXY(
+                CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
+                forModel: "LCT016")
+            if !colorsOfLightsOn.contains(color) {
+                colorsOfLightsOn.append(color)
+            }
+        }
+        colorsOfLightsOn.sort(by: { $0.hue < $1.hue })
+        return colorsOfLightsOn
     }
 
     private func parseNumberOfLightsOn(for group: RGBGroup, _ number: Int) -> String {
@@ -97,7 +112,7 @@ class LightsGroupCustomCell: UITableViewCell {
 
         subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
         subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        
+
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
     }

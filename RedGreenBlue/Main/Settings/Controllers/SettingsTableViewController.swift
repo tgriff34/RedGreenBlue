@@ -31,10 +31,6 @@ class SettingsTableViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    /*
-       TODO: Potentially useful for more DRY approach
-             Might be difficult since others would have unique handlers for actions.
-    */
     private func createActionSheetForOption(title: String?, message: String?, style: UIAlertController.Style,
                                             options: [String], forKey: String) {
         let indexPath = self.tableView.indexPathForSelectedRow!

@@ -11,7 +11,6 @@ import FlexColorPicker
 import SwiftyHue
 
 class ColorPickerViewController: DefaultColorPickerViewController {
-
     var swiftyHue: SwiftyHue!
     var lights = [Light]()
 
@@ -37,13 +36,13 @@ class ColorPickerViewController: DefaultColorPickerViewController {
     }
 
     // Setting light colors
-    func setLightColor(color: UIColor) {
+    private func setLightColor(color: UIColor) {
         var turnOnLights: Bool = false
         if RGBGroupsAndLightsHelper.shared.getNumberOfLightsOnInGroup(lights) == 0 {
             turnOnLights = true
         }
 
-        for light in lights {
+        for light in lights where light.state.on! {
             let xyPoint: CGPoint = HueUtilities.calculateXY(selectedColor, forModel: light.modelId)
             var lightState = LightState()
             if turnOnLights { lightState.on = true }

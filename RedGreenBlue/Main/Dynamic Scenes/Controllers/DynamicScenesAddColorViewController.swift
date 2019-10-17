@@ -30,10 +30,10 @@ class DynamicScenesAddColorViewController: UIViewController {
         return viewController!
     }()
 
-    private lazy var defaultColorPickerViewController: DynamicScenesColorsCollectionPickerViewController = {
+    private lazy var defaultColorPickerViewController: DynamicScenesColorsPickerViewController = {
         let storyboard = UIStoryboard(name: "DynamicScenes", bundle: Bundle.main)
         var viewController = storyboard.instantiateViewController(
-            withIdentifier: "DefaultColorPickerStoryboard") as? DynamicScenesColorsCollectionPickerViewController
+            withIdentifier: "DefaultColorPickerStoryboard") as? DynamicScenesColorsPickerViewController
         viewController?.delegate = self
         self.add(asChildViewController: viewController!)
         return viewController!
