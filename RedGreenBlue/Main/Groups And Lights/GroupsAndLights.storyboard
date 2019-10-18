@@ -140,26 +140,10 @@
                                                                 <constraint firstItem="OGx-0I-fwH" firstAttribute="top" secondItem="cG3-6N-Jey" secondAttribute="top" constant="12" id="toB-ER-qOg"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CCO-EE-oa2">
-                                                            <rect key="frame" x="0.0" y="55" width="382" height="48"/>
-                                                            <subviews>
-                                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Dlb-3O-zOW" customClass="CustomUISlider" customModule="RedGreenBlue" customModuleProvider="target">
-                                                                    <rect key="frame" x="-2" y="0.0" width="386" height="49"/>
-                                                                    <color key="tintColor" white="0.66666666669999997" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="trackWidth">
-                                                                            <real key="value" value="28"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                </slider>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstItem="Dlb-3O-zOW" firstAttribute="top" secondItem="CCO-EE-oa2" secondAttribute="top" id="Nl6-2a-QeY"/>
-                                                                <constraint firstAttribute="bottom" secondItem="Dlb-3O-zOW" secondAttribute="bottom" id="Q3X-Is-CxW"/>
-                                                                <constraint firstItem="Dlb-3O-zOW" firstAttribute="leading" secondItem="CCO-EE-oa2" secondAttribute="leading" id="Ycb-s3-SJa"/>
-                                                                <constraint firstAttribute="trailing" secondItem="Dlb-3O-zOW" secondAttribute="trailing" id="gvG-Zu-emh"/>
-                                                            </constraints>
-                                                        </view>
+                                                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Dlb-3O-zOW">
+                                                            <rect key="frame" x="-2" y="55" width="386" height="49"/>
+                                                            <color key="tintColor" white="0.66666666669999997" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </slider>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
@@ -187,7 +171,6 @@
                                     <outlet property="label" destination="5xu-U6-Vom" id="Eqw-hO-46G"/>
                                     <outlet property="numberOfLightsLabel" destination="El7-K9-Fwn" id="kfQ-1u-Yij"/>
                                     <outlet property="slider" destination="Dlb-3O-zOW" id="hVu-nV-cLg"/>
-                                    <outlet property="sliderView" destination="CCO-EE-oa2" id="G7J-Zu-Odn"/>
                                     <outlet property="subView" destination="JYQ-i2-VPP" id="udc-SB-wlm"/>
                                     <outlet property="switch" destination="OGx-0I-fwH" id="y0u-Bh-DdV"/>
                                     <segue destination="Mzb-3l-kLH" kind="show" identifier="SelectedLightGroupSegue" id="LI0-lK-jBW"/>
@@ -294,26 +277,15 @@
                                                                         <constraint firstItem="Q0X-z6-44w" firstAttribute="centerY" secondItem="VVP-AV-dne" secondAttribute="centerY" id="hGC-zM-rbr"/>
                                                                     </constraints>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i7F-Ra-KAH">
-                                                                    <rect key="frame" x="0.0" y="55" width="382" height="48"/>
-                                                                    <subviews>
-                                                                        <slider opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="66q-3I-dhD" customClass="CustomUISlider" customModule="RedGreenBlue" customModuleProvider="target">
-                                                                            <rect key="frame" x="-2" y="0.0" width="386" height="49"/>
-                                                                            <color key="tintColor" white="0.66666666669999997" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                            <userDefinedRuntimeAttributes>
-                                                                                <userDefinedRuntimeAttribute type="number" keyPath="trackWidth">
-                                                                                    <real key="value" value="28"/>
-                                                                                </userDefinedRuntimeAttribute>
-                                                                            </userDefinedRuntimeAttributes>
-                                                                        </slider>
-                                                                    </subviews>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="trailing" secondItem="66q-3I-dhD" secondAttribute="trailing" id="E6L-vv-H3X"/>
-                                                                        <constraint firstItem="66q-3I-dhD" firstAttribute="top" secondItem="i7F-Ra-KAH" secondAttribute="top" id="UbU-tj-gBe"/>
-                                                                        <constraint firstItem="66q-3I-dhD" firstAttribute="leading" secondItem="i7F-Ra-KAH" secondAttribute="leading" id="cb6-1G-rW0"/>
-                                                                        <constraint firstAttribute="bottom" secondItem="66q-3I-dhD" secondAttribute="bottom" id="r5y-ZQ-qzc"/>
-                                                                    </constraints>
-                                                                </view>
+                                                                <slider opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="66q-3I-dhD">
+                                                                    <rect key="frame" x="-2" y="55" width="386" height="49"/>
+                                                                    <color key="tintColor" white="0.66666666669999997" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="number" keyPath="trackWidth">
+                                                                            <real key="value" value="28"/>
+                                                                        </userDefinedRuntimeAttribute>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                </slider>
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
@@ -340,7 +312,6 @@
                                             <outlet property="label" destination="Q0X-z6-44w" id="1RY-7M-1LD"/>
                                             <outlet property="lightImage" destination="wBN-gC-vtO" id="JUz-AY-vCn"/>
                                             <outlet property="slider" destination="66q-3I-dhD" id="s5t-7b-8zq"/>
-                                            <outlet property="sliderView" destination="i7F-Ra-KAH" id="HEa-gy-bqg"/>
                                             <outlet property="subView" destination="vEQ-SG-Ue0" id="WHh-6Y-z2C"/>
                                             <outlet property="switch" destination="VVP-AV-dne" id="ltq-C8-sGx"/>
                                             <segue destination="ola-6L-n2P" kind="show" identifier="SingleLightColorPickerSegue" id="YcE-EC-4rq"/>
@@ -348,7 +319,7 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="5ML-DR-Cyn" customClass="CustomUISlider" customModule="RedGreenBlue" customModuleProvider="target">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="5ML-DR-Cyn">
                                 <rect key="frame" x="0.0" y="88" width="414" height="31"/>
                                 <color key="tintColor" white="0.66666666669999997" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -460,7 +431,7 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="mOU-3U-XbY"/>
+        <segue reference="nEU-ED-2IC"/>
         <segue reference="1iW-a8-yX1"/>
     </inferredMetricsTieBreakers>
 </document>

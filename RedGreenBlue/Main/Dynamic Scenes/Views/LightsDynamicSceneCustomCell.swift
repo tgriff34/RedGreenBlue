@@ -35,7 +35,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
                 subView.backgroundColor = uiColors[0]
                 subView.layer.colors = nil
             }
-            label.textColor = RGBColorUtilities.colorForLabel(from: uiColors)
+            label.textColor = RGBCellUtilities.colorForLabel(from: uiColors)
         }
     }
 

@@ -13,8 +13,7 @@ class LightsGroupCustomCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var numberOfLightsLabel: UILabel!
     @IBOutlet weak var `switch`: UISwitch!
-    @IBOutlet weak var slider: CustomUISlider!
-    @IBOutlet weak var sliderView: UIView!
+    @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var subView: GradientLayerView!
 
     weak var delegate: LightsGroupsCellDelegate?
@@ -31,12 +30,12 @@ class LightsGroupCustomCell: UITableViewCell {
             numberOfLightsOn > 0 ? self.switch.setOn(true, animated: true) : self.switch.setOn(false, animated: true)
 
             if numberOfLightsOn > 0 {
+                self.slider.isHidden = false
                 self.slider.setValue((Float(avgBrightness / numberOfLightsOn) / 2.54), animated: true)
-                self.sliderView.isHidden = false
                 setBackgroundAndLabelColors(lightsAreOn: true)
             } else {
+                self.slider.isHidden = true
                 self.slider.setValue(1, animated: true)
-                self.sliderView.isHidden = true
                 setBackgroundAndLabelColors(lightsAreOn: false)
             }
         }
@@ -54,7 +53,7 @@ class LightsGroupCustomCell: UITableViewCell {
                 subView.backgroundColor = colorsOfLightsOn[0]
             }
             // Set text label colors to something that will show up on background color
-            let textColor = RGBColorUtilities.colorForLabel(from: colorsOfLightsOn)
+            let textColor = RGBCellUtilities.colorForLabel(from: colorsOfLightsOn)
             self.label.textColor = textColor
             self.numberOfLightsLabel.textColor = textColor
         } else {
@@ -112,6 +111,8 @@ class LightsGroupCustomCell: UITableViewCell {
 
         subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
         subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
+        RGBCellUtilities.setImagesForSlider(slider)
 
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)

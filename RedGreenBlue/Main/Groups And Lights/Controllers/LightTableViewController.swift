@@ -16,7 +16,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var tableView: UITableView!
     var navigationSwitch: UISwitch?
     var optionsButton: UIBarButtonItem?
-    @IBOutlet weak var groupBrightnessSlider: CustomUISlider!
+    @IBOutlet weak var groupBrightnessSlider: UISlider!
 
     @IBOutlet weak var customScenesButton: UIButton!
     @IBOutlet weak var scenesButton: UIButton!
@@ -69,6 +69,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         tableView.rowHeight = UITableView.automaticDimension
 
         setupNavigationSwitch()
+        RGBCellUtilities.setImagesForSlider(groupBrightnessSlider)
         groupBrightnessSlider.addTarget(self, action: #selector(groupSliderChanged(_:_:)), for: .valueChanged)
 
         if group.type != .Room {

@@ -13,9 +13,8 @@ import SwiftSVG
 class LightsCustomCell: UITableViewCell {
     @IBOutlet weak var `switch`: UISwitch!
     @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var slider: CustomUISlider!
+    @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var subView: UIView!
-    @IBOutlet weak var sliderView: UIView!
     @IBOutlet weak var lightImage: UIView!
 
     weak var delegate: LightsCellDelegate?
@@ -28,20 +27,18 @@ class LightsCustomCell: UITableViewCell {
 
             if light.state.on! {
                 slider.setValue((Float(light.state.brightness!) / 2.54), animated: true)
-                sliderView.isHidden = false
 
                 subView.backgroundColor = HueUtilities.colorFromXY(
                     CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
                     forModel: "LCT016")
             } else {
                 slider.setValue(1, animated: true)
-                sliderView.isHidden = true
                 subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
             }
 
             var colorForLabels: UIColor?
             if let backgroundColor = subView.backgroundColor, light.state.on! {
-                colorForLabels = RGBColorUtilities.colorForLabel(from: [backgroundColor])
+                colorForLabels = RGBCellUtilities.colorForLabel(from: [backgroundColor])
                 label.textColor = colorForLabels!
             } else if #available(iOS 13, *) {
                 label.textColor = UIColor.label
@@ -74,6 +71,9 @@ class LightsCustomCell: UITableViewCell {
         subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         subView.layer.shadowOpacity = 0.34
         subView.layer.shadowRadius = 4.3
+
+        RGBCellUtilities.setImagesForSlider(slider)
+
         self.switch.addTarget(self, action: #selector(lightSwitchTapped(_:)), for: .valueChanged)
         self.slider.addTarget(self, action: #selector(lightSliderMoved(_:_:)), for: .valueChanged)
     }
