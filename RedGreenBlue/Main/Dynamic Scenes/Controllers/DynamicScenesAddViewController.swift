@@ -28,8 +28,6 @@ class DynamicScenesAddViewController: UITableViewController {
     var minBrightness: Int = 25
     var maxBrightness: Int = 75
 
-    var tapRecognizer: UITapGestureRecognizer?
-
     weak var addSceneDelegate: DynamicSceneAddDelegate?
 
     override func viewDidLoad() {
@@ -42,10 +40,6 @@ class DynamicScenesAddViewController: UITableViewController {
                                                             target: self, action: #selector(save))
         // Set controller to textfield delegate
         textField.delegate = self
-
-        // Tap recognizer to know when user taps to dismiss keyboard
-        tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer?.addTarget(self, action: #selector(viewTapped))
 
         // Option switch actions
         lightsChangeColorSwitch.addTarget(
@@ -80,6 +74,7 @@ class DynamicScenesAddViewController: UITableViewController {
     }
 
     @objc func save() {
+        // Create new scene to populate DB with
         let scene = RGBDynamicScene(
             name: self.name, timer: Double(time), isDefault: false,
             lightsChangeColor: lightsChangeColorSwitch.isOn,
@@ -89,6 +84,8 @@ class DynamicScenesAddViewController: UITableViewController {
             minBrightness: minBrightness, maxBrightness: maxBrightness)
 
         scene.xys = self.colors
+        // If the self.scene isn't nil then the user was editing a previous scene
+        // and we should let the delegate know, otherwise the scene is new
         if self.scene != nil {
             addSceneDelegate?.dynamicSceneEdited(self, scene)
         } else {
@@ -279,12 +276,8 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        name = textField.text ?? ""
-        self.view.removeGestureRecognizer(tapRecognizer!)
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        self.name = textField.text ?? ""
         enableOrDisableSaveButton()
-    }
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.view.addGestureRecognizer(tapRecognizer!)
     }
 }
