@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RGBColorUtilities {
+class RGBCellUtilities {
     static func colorForLabel(from colors: [UIColor]) -> UIColor {
         let firstColor = colors[0].cgColor
         var brightness = (firstColor.components![0] * 299)
@@ -21,6 +21,14 @@ class RGBColorUtilities {
         } else {
             return UIColor.white
         }
+    }
+    static func setImagesForSlider(_ slider: UISlider) {
+        let minTrack = UIImage(named: "minTrack")?.resizableImage(withCapInsets:
+            UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12))
+        let maxTrack = UIImage(named: "maxTrack")?.resizableImage(withCapInsets:
+            UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12))
+        slider.setMinimumTrackImage(minTrack, for: .normal)
+        slider.setMaximumTrackImage(maxTrack, for: .normal)
     }
 }
 
