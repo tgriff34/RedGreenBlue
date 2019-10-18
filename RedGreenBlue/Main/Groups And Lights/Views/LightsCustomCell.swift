@@ -26,18 +26,25 @@ class LightsCustomCell: UITableViewCell {
             self.switch.setOn(light.state.on!, animated: true)
 
             if light.state.on! {
+                // Set slider value and make it appear
                 slider.isHidden = false
                 slider.setValue((Float(light.state.brightness!) / 2.54), animated: true)
 
+                // Set the background color of the cell to the lights current color
                 subView.backgroundColor = HueUtilities.colorFromXY(
                     CGPoint(x: light.state.xy![0], y: light.state.xy![1]),
                     forModel: "LCT016")
             } else {
+                // Set slider value to 1 and hide slider
                 slider.isHidden = true
                 slider.setValue(1, animated: true)
+
+                // Set the background color to the default cell color according to application theme (light / dark)
                 subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
             }
 
+            // Change the color of the text labels based on the background color of the cell if the light is on,
+            // or depending on which application theme is selected (light / dark) if the light is off.
             var colorForLabels: UIColor?
             if let backgroundColor = subView.backgroundColor, light.state.on! {
                 colorForLabels = RGBCellUtilities.colorForLabel(from: [backgroundColor])
@@ -48,6 +55,8 @@ class LightsCustomCell: UITableViewCell {
                 label.textColor = UIColor.black
             }
 
+            // Get image of type of light, change the color according to cell background color if the light is on,
+            // or whether on light / dark theme if the light is off. Then adjust the image's center and add it to view.
             let svgName = RGBGroupsAndLightsHelper.shared.getLightImageName(modelId: light.modelId)
             let image = UIView(SVGNamed: svgName) { (svgLayer) in
                 if self.light.state.on! {
