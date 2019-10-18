@@ -18,8 +18,6 @@ class LightGroupsAddEditViewController: UITableViewController {
     var selectedLights = [String]()
     var name: String = ""
 
-    var tapRecognizer: UITapGestureRecognizer?
-
     weak var addGroupDelegate: GroupAddDelegate?
 
     override func viewDidLoad() {
@@ -37,9 +35,6 @@ class LightGroupsAddEditViewController: UITableViewController {
             navigationItem.title = "Edit Group"
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
-
-        tapRecognizer = UITapGestureRecognizer()
-        tapRecognizer?.addTarget(self, action: #selector(viewTapped))
 
         fetchData()
     }
@@ -137,12 +132,8 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
         name = textField.text ?? ""
-        self.view.removeGestureRecognizer(tapRecognizer!)
         enableOrDisableSaveButton()
-    }
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.view.addGestureRecognizer(tapRecognizer!)
     }
 }
