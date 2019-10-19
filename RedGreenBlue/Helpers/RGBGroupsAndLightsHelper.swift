@@ -9,7 +9,6 @@
 import Foundation
 import SwiftyHue
 import AVFoundation
-import MediaPlayer
 
 class RGBGroupsAndLightsHelper {
     static let shared = RGBGroupsAndLightsHelper()
