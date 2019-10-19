@@ -41,6 +41,7 @@ class LightsGroupCustomCell: UITableViewCell {
         }
     }
 
+    // Sets the background gradient for the cell and sets the color that the labels should display.
     private func setBackgroundAndLabelColors(lightsAreOn: Bool) {
         if lightsAreOn {
             // Get colors of lights on
@@ -73,6 +74,9 @@ class LightsGroupCustomCell: UITableViewCell {
         }
     }
 
+    // Returns the array of colors that the gradient background layer should contain if the light is on
+    // It returns non-repeated colors. So if you have 2 lights that have the same color, that color
+    // will only be counted once.
     private func getColorsOfLightsOn() -> [UIColor] {
         // For every light that is on get the color of the light
         var colorsOfLightsOn = [UIColor]()

@@ -6,6 +6,11 @@
 //  Copyright © 2019 Dana Griffin. All rights reserved.
 //
 
+// Custom button that is used within light groups for the Scene, Dynamic Scene, Color Wheel buttons.
+// It applies a shadow similar to the cells of each tableview.  It also makes sure that images inside
+// are the correct color depending on application theme (light / dark).  It makes sure to not color
+// the color wheel image since it is already colored.
+
 import UIKit
 
 class CustomButton: UIButton {
