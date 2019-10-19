@@ -118,7 +118,7 @@ class RGBGroupsAndLightsHelper {
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 AVAudioSession.Category.playback,
-                mode: .default, options: [])
+                mode: .default, options: .mixWithOthers)
         } catch {
             logger.error("Failed to set audio session category. Error: \(error)")
         }
