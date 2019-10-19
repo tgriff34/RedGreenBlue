@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyHue
 import AVFoundation
+import MediaPlayer
 
 class RGBGroupsAndLightsHelper {
     static let shared = RGBGroupsAndLightsHelper()
@@ -135,6 +136,7 @@ class RGBGroupsAndLightsHelper {
             try AVAudioSession.sharedInstance().setCategory(
                 AVAudioSession.Category.playback,
                 mode: .default, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true, options: [])
         } catch {
             logger.error("Failed to set audio session category. Error: \(error)")
         }
@@ -279,7 +281,7 @@ extension RGBGroupsAndLightsHelper {
         }
         switch type {
         case .began:
-            stopDynamicScene()
+            player?.pause()
         case .ended:
             if let optionInt = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionInt)
