@@ -40,6 +40,7 @@ class DynamicScenesAddViewController: UITableViewController {
                                                             target: self, action: #selector(save))
         // Set controller to textfield delegate
         textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
 
         // Option switch actions
         lightsChangeColorSwitch.addTarget(
@@ -308,7 +309,7 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    func textFieldDidChangeSelection(_ textField: UITextField) {
+    @objc func textFieldDidChange(_ textField: UITextField) {
         self.name = textField.text ?? ""
         enableOrDisableSaveButton()
     }

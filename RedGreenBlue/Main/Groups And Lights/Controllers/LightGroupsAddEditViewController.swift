@@ -89,6 +89,7 @@ extension LightGroupsAddEditViewController {
             //swiftlint:disable:next force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: "textFieldCell") as! LightsGroupAddNameCell
             cell.textField.delegate = self
+            cell.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
             cell.textField.text = name
             return cell
         case 1:
@@ -132,7 +133,7 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    func textFieldDidChangeSelection(_ textField: UITextField) {
+    @objc func textFieldDidChange(_ textField: UITextField) {
         name = textField.text ?? ""
         enableOrDisableSaveButton()
     }
