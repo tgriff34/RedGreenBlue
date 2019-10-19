@@ -20,14 +20,5 @@ class CustomButton: UIButton {
         self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         self.layer.shadowOpacity = 0.34
         self.layer.shadowRadius = 4.3
-
-        let image = self.image(for: .normal)!.withRenderingMode(.alwaysTemplate)
-        let colorWheelImage = UIImage(named: "colorWheel")!
-        let data: Data = image.pngData()!
-        let data2: Data = colorWheelImage.pngData()!
-        if data != data2 {
-            self.setImage(image, for: .normal)
-            self.tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
-        }
     }
 }
