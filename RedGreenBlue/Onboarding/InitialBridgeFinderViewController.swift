@@ -77,6 +77,8 @@ extension InitialBridgeFinderViewController {
                 scene.xys.append(XYColor([Double(0.4944), Double(0.474)]))
                 realm!.add(scene, update: .all)
             })
+            let swiftyHue = RGBRequest.shared.getSwiftyHue()
+            swiftyHue.startHeartbeat()
         default:
             logger.error("starting main application with segue: ", String(describing: segue.identifier))
         }
