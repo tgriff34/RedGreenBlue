@@ -12,7 +12,7 @@
             <objects>
                 <tabBarController id="49e-Tb-3d3" customClass="TabBarViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="tWb-eC-o33"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
+                    <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     </tabBar>

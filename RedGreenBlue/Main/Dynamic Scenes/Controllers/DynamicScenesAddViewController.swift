@@ -260,11 +260,13 @@ extension DynamicScenesAddViewController {
         case "TimeBetweenChangingColorSegue":
             let viewController = segue.destination as? DynamicScenesAddTimeViewController
             viewController?.addTimeDelegate = self
+            viewController?.title = "Color Timer"
             viewController?.type = .color
             viewController?.selectedTime = time
         case "TimeBetweenChangingBrightnessSegue":
             let viewController = segue.destination as? DynamicScenesAddTimeViewController
             viewController?.addTimeDelegate = self
+            viewController?.title = "Brightness Timer"
             viewController?.type = .brightness
             viewController?.selectedTime = brightnessTime
         case "SoundFileSegue":

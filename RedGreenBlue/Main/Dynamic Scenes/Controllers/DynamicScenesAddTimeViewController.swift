@@ -15,7 +15,7 @@ class DynamicScenesAddTimeViewController: UITableViewController {
     var type: TimeType?
     var selectedTime: Int?
 
-    var timeArray: [Int: Int] = [1: 0, 3: 1, 5: 2, 10: 3]
+    var timeArray: [Int: Int] = [1: 0, 3: 1, 5: 2, 10: 3, 15: 4, 30: 5]
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
