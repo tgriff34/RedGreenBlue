@@ -100,13 +100,11 @@ class RGBGroupsAndLightsHelper {
     private var timeObserver: NSObjectProtocol?
     private var observer: NSObjectProtocol?
     private func makePlayer(file: String) -> AVQueuePlayer {
-        var url: URL?
-        if file == "Default" {
-            url = Bundle.main.url(forResource: "default", withExtension: "mp3")
-        } else {
-            url = Bundle.main.url(forResource: file, withExtension: "mp3")
+        guard let url: URL = Bundle.main.url(forResource: file, withExtension: "mp3") else {
+            logger.error("Error getting song file \(file).")
+            fatalError("Error getting song file \(file).")
         }
-        let player = AVQueuePlayer(url: url!)
+        let player = AVQueuePlayer(url: url)
         // Observer when the song ends, the looper automatically handles replaying the song
         // this make sures that all the lights for the scenes get removed.
         if let observer = observer { NotificationCenter.default.removeObserver(observer) }
