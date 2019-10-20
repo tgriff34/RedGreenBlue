@@ -143,7 +143,14 @@ class RGBGroupsAndLightsHelper {
         // Determine which timer is shorter (brightness or color timer).  That time will
         // then be used in the periodic time observer so that the scene can change according
         // to the option.
-        let timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer
+        var timer: Double = 30
+        if scene.lightsChangeColor && scene.isBrightnessEnabled {
+            timer = scene.timer < scene.brightnessTimer ? scene.timer: scene.brightnessTimer
+        } else if scene.lightsChangeColor && !scene.isBrightnessEnabled {
+            timer = scene.timer
+        } else if !scene.lightsChangeColor && scene.isBrightnessEnabled {
+            timer = scene.brightnessTimer
+        }
 
         lightsForScene.removeAll()
         // If the user doesn't have the colors of the lights changing, run it through the
