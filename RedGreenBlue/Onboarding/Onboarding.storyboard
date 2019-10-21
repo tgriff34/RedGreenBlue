@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ebR-CY-AZm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ebR-CY-AZm">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -177,7 +177,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cK5-Oe-FW2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="yuB-hG-z6H">
                     <connections>
-                        <segue destination="OQo-4r-Fnx" kind="show" identifier="StartBridgeFinderSegue" id="MzQ-dE-1Ny"/>
+                        <segue destination="OQo-4r-Fnx" kind="presentation" identifier="StartBridgeFinderSegue" modalPresentationStyle="fullScreen" id="MzQ-dE-1Ny"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -188,11 +188,11 @@
             <objects>
                 <viewController id="OQo-4r-Fnx" customClass="InitialBridgeFinderViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hbY-0S-8aE">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7g-LV-m84" customClass="CSAnimationView">
-                                <rect key="frame" x="20" y="708" width="374" height="50"/>
+                                <rect key="frame" x="20" y="762" width="374" height="50"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MOo-2A-IUj" customClass="TORoundedButton">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -221,7 +221,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4aB-g6-XMC" customClass="CSAnimationView">
-                                <rect key="frame" x="20" y="100" width="374" height="24"/>
+                                <rect key="frame" x="20" y="144" width="374" height="24"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Finding bridges near your location..." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="thT-Tx-NLy">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="24"/>

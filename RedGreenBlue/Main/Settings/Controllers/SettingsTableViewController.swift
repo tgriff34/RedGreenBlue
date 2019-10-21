@@ -24,8 +24,9 @@ class SettingsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         RGBRequest.shared.getGroups(with: swiftyHue, completion: { (groups, _) in
             if let groups = groups {
-                self.allGroupNames = groups.flatMap({ $0 }).map({ $0.name })
-                self.roomGroupNames = groups.flatMap({ $0 }).filter({ $0.type == GroupType.Room }).map({ $0.name })
+                self.allGroupNames = ["Default"] + groups.flatMap({ $0 }).map({ $0.name })
+                self.roomGroupNames = ["Default"] + groups.flatMap({ $0 })
+                    .filter({ $0.type == GroupType.Room }).map({ $0.name })
             }
         })
         tableView.reloadData()
@@ -33,21 +34,21 @@ class SettingsTableViewController: UITableViewController {
 
     private func createActionSheetForOption(title: String?, message: String?, style: UIAlertController.Style,
                                             options: [String], forKey: String) {
+        var checkedIndex: Int = 0
         let indexPath = self.tableView.indexPathForSelectedRow!
-        let actionSheet = UIAlertController(title: title,
-                                            message: message,
-                                            preferredStyle: style)
-        let defaultAction = UIAlertAction(title: "Default", style: .default, handler: { _ in
-            UserDefaults.standard.set("Default", forKey: forKey)
-            self.tableView.reloadRows(at: [indexPath], with: .none)
-        })
-        actionSheet.addAction(defaultAction)
+        let actionSheet = UIAlertController(title: title, message: message, preferredStyle: style)
 
-        for option in options {
+        for (index, option) in options.enumerated() {
             let newAction = UIAlertAction(title: option, style: .default, handler: { _ in
                 UserDefaults.standard.set(option, forKey: forKey)
                 self.tableView.reloadRows(at: [indexPath], with: .none)
+                actionSheet.actions[index].setValue(true, forKey: "checked")
+                actionSheet.actions[checkedIndex].setValue(false, forKey: "checked")
             })
+            if let key = UserDefaults.standard.object(forKey: forKey) as? String, key == option {
+                newAction.setValue(true, forKey: "checked")
+                checkedIndex = index
+            }
             actionSheet.addAction(newAction)
         }
 
@@ -103,7 +104,7 @@ extension SettingsTableViewController {
                 createActionSheetForOption(title: nil,
                                            message: nil,
                                            style: .actionSheet,
-                                           options: ["Muted"], forKey: "SoundSetting")
+                                           options: ["Unmuted", "Muted"], forKey: "SoundSetting")
             }
         default:
             break
