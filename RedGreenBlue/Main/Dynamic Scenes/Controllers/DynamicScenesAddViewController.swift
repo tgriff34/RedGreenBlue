@@ -13,20 +13,24 @@ import MARKRangeSlider
 class DynamicScenesAddViewController: UITableViewController {
 
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var lightsChangeColorSwitch: UISwitch!
-    @IBOutlet weak var sequentialLightChangeSwitch: UISwitch!
-    @IBOutlet weak var randomColorsSwitch: UISwitch!
     @IBOutlet weak var fluctuatingBrightnessSwitch: UISwitch!
     @IBOutlet weak var brightnessSlider: MARKRangeSlider!
 
     var scene: RGBDynamicScene?
-    var colors = List<XYColor>()
-    var time: Int = 1
     var name: String = ""
-    var soundFileName: String = "Default"
+    var colors = List<XYColor>()
+    // Light Color Options
+    var lightsChangeColor: Bool = true
+    var time: Int = 1
+    var multiColors: Bool = true
+    var randomColors: Bool = true
+    var shiftRight: Bool = true
+    // Light Brightness Options
     var brightnessTime: Int = 1
     var minBrightness: Int = 25
     var maxBrightness: Int = 75
+    // Sound File
+    var soundFileName: String = "Default"
 
     weak var addSceneDelegate: DynamicSceneAddDelegate?
 
@@ -43,8 +47,6 @@ class DynamicScenesAddViewController: UITableViewController {
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
 
         // Option switch actions
-        lightsChangeColorSwitch.addTarget(
-            self, action: #selector(lightsChangeColorTapped(_:)), for: .valueChanged)
         fluctuatingBrightnessSwitch.addTarget(
             self, action: #selector(fluctuatingBrightnessTapped(_:)), for: .valueChanged)
 
@@ -78,9 +80,10 @@ class DynamicScenesAddViewController: UITableViewController {
         // Create new scene to populate DB with
         let scene = RGBDynamicScene(
             name: self.name, timer: Double(time), isDefault: false,
-            lightsChangeColor: lightsChangeColorSwitch.isOn,
-            sequentialLightChange: sequentialLightChangeSwitch.isOn,
-            randomColors: randomColorsSwitch.isOn, soundFile: soundFileName,
+            lightsChangeColor: lightsChangeColor,
+            displayMultipleColors: multiColors,
+            sequentialLightChange: shiftRight,
+            randomColors: randomColors, soundFile: soundFileName,
             isBrightnessEnabled: fluctuatingBrightnessSwitch.isOn, brightnessTimer: Double(brightnessTime),
             minBrightness: minBrightness, maxBrightness: maxBrightness)
 
@@ -99,22 +102,14 @@ class DynamicScenesAddViewController: UITableViewController {
     }
 
     @objc func fluctuatingBrightnessTapped(_ sender: UISwitch) {
-        tableView.reloadSections(IndexSet(arrayLiteral: 4), with: .automatic)
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .automatic)
-        self.tableView.beginUpdates()
-        self.tableView.endUpdates()
-    }
-
-    @objc func lightsChangeColorTapped(_ sender: UISwitch) {
-        tableView.reloadSections(IndexSet(arrayLiteral: 2), with: .automatic)
-        self.tableView.beginUpdates()
-        self.tableView.endUpdates()
+        tableView.reloadSections([3], with: .automatic)
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
     }
 
     @objc func brightSliderValueChanged(_ sender: MARKRangeSlider) {
         minBrightness = Int(sender.leftValue)
         maxBrightness = Int(sender.rightValue)
-        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 3))
+        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 2))
         cell?.detailTextLabel?.text = "\(minBrightness)% - \(maxBrightness)%"
     }
 
@@ -125,9 +120,10 @@ class DynamicScenesAddViewController: UITableViewController {
             }
             time = Int(scene.timer)
             name = String(scene.name)
-            lightsChangeColorSwitch.isOn = scene.lightsChangeColor
-            sequentialLightChangeSwitch.isOn = scene.sequentialLightChange
-            randomColorsSwitch.isOn = scene.randomColors
+            lightsChangeColor = scene.lightsChangeColor
+            shiftRight = scene.sequentialLightChange
+            multiColors = scene.displayMultipleColors
+            randomColors = scene.randomColors
             soundFileName = scene.soundFile
             fluctuatingBrightnessSwitch.isOn = scene.isBrightnessEnabled
             brightnessTime = Int(scene.brightnessTimer)
@@ -135,7 +131,7 @@ class DynamicScenesAddViewController: UITableViewController {
             maxBrightness = scene.maxBrightness
             brightnessSlider.setLeftValue(CGFloat(scene.minBrightness), rightValue: CGFloat(scene.maxBrightness))
             tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1),
-                                      IndexPath(row: 0, section: 3), IndexPath(row: 0, section: 5)],
+                                      IndexPath(row: 0, section: 2), IndexPath(row: 0, section: 4)],
                                  with: .none)
         }
     }
@@ -153,11 +149,7 @@ class DynamicScenesAddViewController: UITableViewController {
 extension DynamicScenesAddViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 2:
-            if !lightsChangeColorSwitch.isOn {
-                return 0.1
-            }
-        case 4:
+        case 3:
             if !fluctuatingBrightnessSwitch.isOn {
                 return 0.1
             }
@@ -168,28 +160,24 @@ extension DynamicScenesAddViewController {
     }
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch section {
-        case 2:
-            return 25
-        case 4:
-            return 25
+        case 3:
+            if !fluctuatingBrightnessSwitch.isOn {
+                return 0.1
+            }
         default:
             return super.tableView(tableView, heightForFooterInSection: section)
         }
+        return super.tableView(tableView, heightForFooterInSection: section)
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         if scene == nil {
-            return 6
+            return 5
         }
-        return 7
+        return 6
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 2:
-            if lightsChangeColorSwitch.isOn {
-                return 3
-            }
-            return 0
-        case 4:
+        case 3:
             if fluctuatingBrightnessSwitch.isOn {
                 return 2
             }
@@ -198,7 +186,6 @@ extension DynamicScenesAddViewController {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
     }
-    // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         switch indexPath.section {
@@ -208,22 +195,20 @@ extension DynamicScenesAddViewController {
         case 1:
             if indexPath.row == 0 {
                 cell.detailTextLabel?.text = colors.count > 1 ? "\(colors.count) colors" : "\(colors.count) color"
+            } else if indexPath.row == 1 {
+                cell.detailTextLabel?.text = lightsChangeColor ? "On" : "Off"
             }
         case 2:
-            if indexPath.row == 0 {
-                cell.detailTextLabel?.text = time > 1 ? "\(time) seconds" : "\(time) second"
-            }
-        case 3:
             if indexPath.row == 0 {
                 cell.detailTextLabel?.text = fluctuatingBrightnessSwitch.isOn ?
                     "\(minBrightness)% - \(maxBrightness)%" : ""
             }
-        case 4:
+        case 3:
             if indexPath.row == 0 {
                 cell.detailTextLabel?.text = brightnessTime > 1 ?
                     "\(brightnessTime) seconds" : "\(brightnessTime) second"
             }
-        case 5:
+        case 4:
             cell.detailTextLabel?.text = soundFileName
         default:
             logger.info("No action for \(indexPath.section)")
@@ -232,7 +217,7 @@ extension DynamicScenesAddViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 6 {
+        if indexPath.section == 5 {
             let actionSheet = UIAlertController(
                 title: "Delete Scene", message: "Are you sure you want to delete this scene?",
                 preferredStyle: .alert)
@@ -257,12 +242,14 @@ extension DynamicScenesAddViewController {
             let viewController = segue.destination as? DynamicScenesColorsViewController
             viewController?.colors = colors
             viewController?.addColorsDelegate = self
-        case "TimeBetweenChangingColorSegue":
-            let viewController = segue.destination as? DynamicScenesAddTimeViewController
-            viewController?.addTimeDelegate = self
-            viewController?.title = "Color Timer"
-            viewController?.type = .color
-            viewController?.selectedTime = time
+        case "ChangingLightColorsSegue":
+            let viewController = segue.destination as? DynamicScenesColorOptionsViewController
+            viewController?.colorOptionsDelegate = self
+            viewController?.lightsChangeColor =  lightsChangeColor
+            viewController?.displayMultiColors = multiColors
+            viewController?.randomColors = randomColors
+            viewController?.shiftRight = shiftRight
+            viewController?.time = time
         case "TimeBetweenChangingBrightnessSegue":
             let viewController = segue.destination as? DynamicScenesAddTimeViewController
             viewController?.addTimeDelegate = self
@@ -281,10 +268,31 @@ extension DynamicScenesAddViewController {
 
 // MARK: - Add Color / Time Delegate
 extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddTimeDelegate,
-DynamicSceneAddSoundFileDelegate {
+DynamicSceneAddSoundFileDelegate, DynamicSceneColorOptionsDelegate {
+    func lightsChangeColor(_ value: Bool) {
+        self.lightsChangeColor = value
+        tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .none)
+    }
+
+    func timeBetweenCycle(_ time: Int) {
+        self.time = time
+    }
+
+    func lightsMultiColor(_ value: Bool) {
+        self.multiColors = value
+    }
+
+    func lightsRandomColor(_ value: Bool) {
+        self.randomColors = value
+    }
+
+    func lightsShiftRight(_ value: Bool) {
+        self.shiftRight = value
+    }
+
     func dynamicSceneSoundFileAdded(_ name: String) {
         self.soundFileName = name
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 5)], with: .none)
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 4)], with: .none)
     }
 
     func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
@@ -294,14 +302,8 @@ DynamicSceneAddSoundFileDelegate {
     }
 
     func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int) {
-        switch type {
-        case .color:
-            self.time = time
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
-        case .brightness:
-            self.brightnessTime = time
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 4)], with: .none)
-        }
+        self.brightnessTime = time
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
     }
 }
 

@@ -155,6 +155,7 @@ class RGBGroupsAndLightsHelper {
         // setLightsForScene() once to get the colors associated with the scene.
         if !scene.lightsChangeColor {
             self.setLightsForScene(group: group, numberOfColors: scene.xys.count,
+                                   multiColors: scene.displayMultipleColors,
                                    isSequential: scene.sequentialLightChange,
                                    randomColors: scene.randomColors)
         }
@@ -205,8 +206,8 @@ class RGBGroupsAndLightsHelper {
         // The colors need to change
         if remainderForColor == 0 && scene.lightsChangeColor && (lightsForScene.isEmpty || time != 0)
             && durationTime != time {
-
             setLightsForScene(group: group, numberOfColors: scene.xys.count,
+                              multiColors: scene.displayMultipleColors,
                               isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
 
@@ -216,7 +217,12 @@ class RGBGroupsAndLightsHelper {
             lightState.on = true
 
             // Get which color index this light should be
-            let lightIndex = lightsForScene[index]
+            var lightIndex = lightsForScene[0]
+            if scene.displayMultipleColors {
+                lightIndex = lightsForScene[index]
+            }
+
+            console.debug("LightsForScene: \(lightsForScene)")
 
             // Set the color of the light based on the previous index
             lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
@@ -233,13 +239,14 @@ class RGBGroupsAndLightsHelper {
     }
 
     // Determines which color the lights should be
-    private func setLightsForScene(group: RGBGroup, numberOfColors: Int, isSequential: Bool, randomColors: Bool) {
+    private func setLightsForScene(group: RGBGroup, numberOfColors: Int, multiColors: Bool,
+                                   isSequential: Bool, randomColors: Bool) {
         // Set lights array whether lights should be in order of them picked or randomized
         let groupLights = group.lights
-        if numberOfColors > groupLights.count && lightsForScene.isEmpty {
+        if (numberOfColors > groupLights.count || !multiColors) && lightsForScene.isEmpty {
             lightsForScene = Array(0..<numberOfColors)
-        } else {
-            for _ in groupLights where lightsForScene.count < groupLights.count {
+        } else if lightsForScene.isEmpty {
+            for _ in groupLights {
                 if randomColors {
                     lightsForScene.append(genRandomNum(numberOfColors: numberOfColors))
                 } else {
@@ -250,7 +257,7 @@ class RGBGroupsAndLightsHelper {
             }
         }
 
-        if isSequential { // If it's sequential just shift to right
+        if isSequential || !multiColors { // If it's sequential just shift to right
             lightsForScene = lightsForScene.shiftRight()
         } else { // Otherwise randomly shuffle
             lightsForScene.shuffle()
