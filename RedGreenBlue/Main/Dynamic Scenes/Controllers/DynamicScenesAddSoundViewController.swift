@@ -21,7 +21,7 @@ class DynamicScenesAddSoundViewController: UITableViewController {
         if selectedSoundFile == "Default" {
             indexPath = IndexPath(row: 0, section: 0)
         } else {
-            indexPath = IndexPath(row: soundFiles.index(of: selectedSoundFile!) ?? 0, section: 1)
+            indexPath = IndexPath(row: soundFiles.firstIndex(of: selectedSoundFile!) ?? 0, section: 1)
         }
         self.tableView.selectRow(at: indexPath!, animated: true, scrollPosition: .none)
         self.tableView(self.tableView, didSelectRowAt: indexPath!)

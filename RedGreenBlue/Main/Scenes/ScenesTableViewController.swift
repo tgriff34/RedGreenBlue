@@ -69,7 +69,7 @@ class ScenesTableViewController: UITableViewController {
     private func setUpDropdown() {
         if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
             defaultGroup != "Default", shouldFetchDefault {
-            selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!
+            selectedGroupIndex = self.navigationItems.firstIndex(of: defaultGroup)!
         } else if shouldFetchDefault {
             selectedGroupIndex = 0
         }

@@ -50,7 +50,7 @@ class LightGroupsTableViewController: UITableViewController {
                 for (section, groupsByType) in groups.enumerated() {
                     for (row, group) in groupsByType.enumerated()
                         where group.lightIdentifiers.contains(light.identifier) {
-                        if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
+                        if let lightIndex = group.lights.firstIndex(where: { $0.identifier == light.identifier }) {
                             self.groups[section][row].lights[lightIndex] = light
                         }
                     }

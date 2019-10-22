@@ -581,6 +581,7 @@
 				TargetAttributes = {
 					6FA9CDE523062EF20011A2F8 = {
 						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1110;
 					};
 					6FA9CDFB23062EF40011A2F8 = {
 						CreatedOnToolsVersion = 10.3;
@@ -995,7 +996,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1014,7 +1015,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
