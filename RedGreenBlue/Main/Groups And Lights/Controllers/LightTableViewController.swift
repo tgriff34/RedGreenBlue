@@ -215,11 +215,14 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             switch touchEvent.phase {
             case .began:
                 swiftyHue.stopHeartbeat()
+                self.title = "\(Int(sender.value))%"
             case .moved:
+                self.title = "\(Int(sender.value))%"
                 RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
                     self.setBrightnessForGroup(group: self.group, value: sender.value)
                 })
             case .ended:
+                self.title = group.name
                 setBrightnessForGroup(group: group, value: sender.value)
                 self.fetchData(group: group, completion: {
                     self.swiftyHue.startHeartbeat()
