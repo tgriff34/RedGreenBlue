@@ -16,6 +16,8 @@ class DynamicScenesAddViewController: UITableViewController {
     @IBOutlet weak var fluctuatingBrightnessSwitch: UISwitch!
     @IBOutlet weak var brightnessSlider: MARKRangeSlider!
 
+    var dismissKeyboardGesture: UITapGestureRecognizer?
+
     var scene: RGBDynamicScene?
     var name: String = ""
     var colors = List<XYColor>()
@@ -45,6 +47,7 @@ class DynamicScenesAddViewController: UITableViewController {
         // Set controller to textfield delegate
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        dismissKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
 
         // Option switch actions
         fluctuatingBrightnessSwitch.addTarget(
@@ -313,8 +316,17 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        view.removeGestureRecognizer(dismissKeyboardGesture!)
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        view.addGestureRecognizer(dismissKeyboardGesture!)
+    }
     @objc func textFieldDidChange(_ textField: UITextField) {
         self.name = textField.text ?? ""
         enableOrDisableSaveButton()
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

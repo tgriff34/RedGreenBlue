@@ -564,11 +564,11 @@
                                             <segue destination="1fz-4I-qAj" kind="show" identifier="ColorsSegue" id="Iq5-qc-Dvy"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="3RV-s3-XGR" detailTextLabel="rLb-Vd-ELK" rowHeight="43" style="IBUITableViewCellStyleValue1" id="eta-ez-f2G">
-                                        <rect key="frame" x="0.0" y="161" width="414" height="43"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="3RV-s3-XGR" detailTextLabel="rLb-Vd-ELK" style="IBUITableViewCellStyleValue1" id="eta-ez-f2G">
+                                        <rect key="frame" x="0.0" y="161" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eta-ez-f2G" id="uQq-WU-BdW">
-                                            <rect key="frame" x="0.0" y="0.0" width="383" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Changing Light Colors" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3RV-s3-XGR">
@@ -596,7 +596,7 @@
                             <tableViewSection headerTitle="Brightness" footerTitle="When enabled, allows the brightness of the lights to change randomly between two values, on a separate timer from the colors." id="CLF-Ab-2l9">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="brW-DU-RZ7" detailTextLabel="hEI-vR-l4t" style="IBUITableViewCellStyleValue1" id="dXD-9k-25T">
-                                        <rect key="frame" x="0.0" y="267.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="268.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dXD-9k-25T" id="pqL-o1-UNB">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -631,7 +631,7 @@
                             <tableViewSection id="uhD-zN-qEL">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="45X-SY-NpL" detailTextLabel="eVB-kS-70s" style="IBUITableViewCellStyleValue1" id="z66-sd-WXG">
-                                        <rect key="frame" x="0.0" y="391.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="392.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="z66-sd-WXG" id="XLc-RF-6tI">
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
@@ -658,7 +658,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="44" id="lnE-aN-h1F">
-                                        <rect key="frame" x="0.0" y="435" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="436" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lnE-aN-h1F" id="WcA-e3-Ra6">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -682,7 +682,7 @@
                             <tableViewSection headerTitle="Sound" footerTitle="Determines which audio file gets played when scene is on.  Sound settings can be adjusted in Settings tab." id="Tma-SZ-HpN">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="BwA-A6-x0x" detailTextLabel="aZB-DV-KBm" style="IBUITableViewCellStyleValue1" id="2ha-Bn-ezB">
-                                        <rect key="frame" x="0.0" y="542.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="543.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2ha-Bn-ezB" id="XBg-Ui-uMn">
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
@@ -713,7 +713,7 @@
                             <tableViewSection id="kv7-ac-X4o">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="pjt-H8-fMF">
-                                        <rect key="frame" x="0.0" y="650" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="651" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pjt-H8-fMF" id="RrT-ov-2wc">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -901,7 +901,7 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JiX-WT-gjM"/>
+        <segue reference="Pzg-jB-Sqt"/>
         <segue reference="wDs-Ad-SIh"/>
         <segue reference="gcI-gz-Z4N"/>
     </inferredMetricsTieBreakers>

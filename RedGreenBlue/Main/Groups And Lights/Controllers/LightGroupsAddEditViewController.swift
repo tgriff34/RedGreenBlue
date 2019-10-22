@@ -18,6 +18,8 @@ class LightGroupsAddEditViewController: UITableViewController {
     var selectedLights = [String]()
     var name: String = ""
 
+    var dismissKeyboardGesture: UITapGestureRecognizer?
+
     weak var addGroupDelegate: GroupAddDelegate?
 
     override func viewDidLoad() {
@@ -27,6 +29,8 @@ class LightGroupsAddEditViewController: UITableViewController {
                                                            target: self, action: #selector(cancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
                                                             target: self, action: #selector(add))
+
+        dismissKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
 
         if selectedLights.isEmpty {
             navigationItem.title = "Add Group"
@@ -133,8 +137,17 @@ extension LightGroupsAddEditViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        view.removeGestureRecognizer(dismissKeyboardGesture!)
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        view.addGestureRecognizer(dismissKeyboardGesture!)
+    }
     @objc func textFieldDidChange(_ textField: UITextField) {
         name = textField.text ?? ""
         enableOrDisableSaveButton()
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
