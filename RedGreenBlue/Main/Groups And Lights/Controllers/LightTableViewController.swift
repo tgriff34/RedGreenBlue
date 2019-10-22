@@ -26,7 +26,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             sender.transform = CGAffineTransform.init(scaleX: 0.85, y: 0.865)
         })
     }
-
     // When buttons released have then transform back to normal size
     // and navigate to appropriate tab.
     @IBAction func groupsColorButton(_ sender: UIButton) {
@@ -44,7 +43,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
             let viewController = destination?.viewControllers.first as? ScenesTableViewController
-            if let index = viewController?.groups.index(of: self.group) { viewController?.selectedGroupIndex = index }
+            if let index = viewController?.groups.firstIndex(of: self.group) {
+                viewController?.selectedGroupIndex = index
+            }
         })
     }
     @IBAction func customScenesButton(_ sender: UIButton) {
@@ -55,7 +56,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
             let viewController = destination?.viewControllers.first as? DynamicScenesViewController
-            if let index = viewController?.groups.index(of: self.group) {
+            if let index = viewController?.groups.firstIndex(of: self.group) {
                 viewController?.selectedGroupIndex = index
             }
         })
@@ -124,7 +125,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         // If the lights have change outside of the app, update the current datasource
         if let cache = swiftyHue.resourceCache {
             for light in Array(cache.lights.values) {
-                if let lightIndex = group.lights.index(where: { $0.identifier == light.identifier }) {
+                if let lightIndex = group.lights.firstIndex(where: { $0.identifier == light.identifier }) {
                     self.group.lights[lightIndex] = light
                 }
             }
@@ -290,13 +291,11 @@ extension LightTableViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return group.lightIdentifiers.count
     }
-
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.contentView.layer.masksToBounds = true
         let radius = cell.contentView.layer.cornerRadius
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
     }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "LightsCellIdentifier") as! LightsCustomCell
@@ -319,19 +318,16 @@ extension LightTableViewController: LightsCellDelegate {
             })
         })
     }
-
     // Start sliding the brightness slider
     func lightsTableViewCell(_ lightsTabelViewCell: LightsCustomCell, lightSliderStartedFor light: Light) {
         swiftyHue.stopHeartbeat()
     }
-
     // When the brightness slider is moving
     func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSliderMovedFor light: Light) {
         RGBGroupsAndLightsHelper.shared.sendTimeSensistiveAPIRequest(withTimeInterval: 0.25, completion: {
             self.setBrightnessForLight(light: light, value: lightsTableViewCell.slider.value)
         })
     }
-
     // Stopped sliding the brightness slider
     func lightsTableViewCell(_ lightsTableViewCell: LightsCustomCell, lightSliderEndedFor light: Light) {
         self.setBrightnessForLight(light: light, value: lightsTableViewCell.slider.value)
@@ -356,7 +352,6 @@ extension LightTableViewController {
                     " from tableview.indexPathForSelectedRow?.row")
                 return
             }
-
             let light = group.lights[index]
             colorPickerViewController.title = light.name
             colorPickerViewController.swiftyHue = swiftyHue
@@ -366,7 +361,6 @@ extension LightTableViewController {
                 logger.error("could not cast \(segue.destination) as LightTableViewController")
                 return
             }
-
             colorPickerViewController.title = group.name
             colorPickerViewController.swiftyHue = swiftyHue
             colorPickerViewController.lights = group.lights

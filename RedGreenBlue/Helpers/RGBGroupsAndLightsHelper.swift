@@ -300,6 +300,8 @@ extension RGBGroupsAndLightsHelper {
                     player?.play()
                 }
             }
+        @unknown default:
+            logger.error("Unknown case for \(type)")
         }
     }
 }

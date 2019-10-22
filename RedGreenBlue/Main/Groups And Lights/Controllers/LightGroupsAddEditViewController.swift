@@ -125,7 +125,7 @@ extension LightGroupsAddEditViewController {
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if indexPath.section == 1, let cell = tableView.cellForRow(at: indexPath) {
             cell.accessoryType = .none
-            selectedLights.remove(at: selectedLights.index(of: lights[indexPath.row].identifier)!)
+            selectedLights.remove(at: selectedLights.firstIndex(of: lights[indexPath.row].identifier)!)
             enableOrDisableSaveButton()
         }
     }

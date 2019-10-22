@@ -82,7 +82,7 @@ class DynamicScenesViewController: UITableViewController {
 
             if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String,
                 defaultGroup != "Default", self.shouldFetchDefault {
-                self.selectedGroupIndex = self.navigationItems.index(of: defaultGroup)!
+                self.selectedGroupIndex = self.navigationItems.firstIndex(of: defaultGroup)!
             } else if self.shouldFetchDefault {
                 self.selectedGroupIndex = 0
             }
