@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		22312DAF47E6FE51235D1AC8 /* Pods_RedGreenBlue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D37A15058741D24ED3DD3B /* Pods_RedGreenBlue.framework */; };
 		45B6C0AFDACD263DB6F68320 /* Pods_RedGreenBlueUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5600EDE58F75123E0B152B0 /* Pods_RedGreenBlueUITests.framework */; };
+		4606B6B4235E381600060605 /* DynamicScenesColorOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4606B6B3235E381600060605 /* DynamicScenesColorOptionsViewController.swift */; };
 		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
 		461F2E2C235121640029D3DC /* test.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 461F2E2B235121640029D3DC /* test.mp3 */; };
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
@@ -97,6 +98,7 @@
 
 /* Begin PBXFileReference section */
 		128E4C0BD168185191980114 /* Pods-RedGreenBlueTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RedGreenBlueTests.release.xcconfig"; path = "Target Support Files/Pods-RedGreenBlueTests/Pods-RedGreenBlueTests.release.xcconfig"; sourceTree = "<group>"; };
+		4606B6B3235E381600060605 /* DynamicScenesColorOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesColorOptionsViewController.swift; sourceTree = "<group>"; };
 		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
 		461F2E2B235121640029D3DC /* test.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = test.mp3; sourceTree = "<group>"; };
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				4673654E233BD85300DA33AA /* DynamicScenesColorsViewController.swift */,
 				46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */,
 				466BF092234940DE005FEA1B /* DynamicScenesColorsPickerViewController.swift */,
+				4606B6B3235E381600060605 /* DynamicScenesColorOptionsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -774,6 +777,7 @@
 				4669EBB423439F440097432B /* SettingsTableViewController.swift in Sources */,
 				46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */,
 				466BF093234940DE005FEA1B /* DynamicScenesColorsPickerViewController.swift in Sources */,
+				4606B6B4235E381600060605 /* DynamicScenesColorOptionsViewController.swift in Sources */,
 				46974DDF2323F87E000AF31A /* ScenesTableViewController.swift in Sources */,
 				46637A4E234E86D40000E8CB /* GradientLayerView.swift in Sources */,
 				462A5E4F234839010088296B /* DynamicScenesAddSoundViewController.swift in Sources */,

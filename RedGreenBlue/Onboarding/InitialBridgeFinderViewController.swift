@@ -67,8 +67,9 @@ extension InitialBridgeFinderViewController {
             RGBDatabaseManager.write(to: realm!, closure: {
                 let scene = RGBDynamicScene(name: "Christmas", timer: 10,
                                             isDefault: true, lightsChangeColor: true,
-                                            sequentialLightChange: false,
-                                            randomColors: true, soundFile: "Default",
+                                            displayMultipleColors: true,
+                                            sequentialLightChange: true,
+                                            randomColors: false, soundFile: "Default",
                                             isBrightnessEnabled: false, brightnessTimer: 1,
                                             minBrightness: 1, maxBrightness: 100)
                 scene.xys.append(XYColor([Double(0.1356), Double(0.0412)]))

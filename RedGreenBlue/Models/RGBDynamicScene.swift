@@ -15,6 +15,7 @@ class RGBDynamicScene: Object {
     @objc dynamic var timer: Double = 0
     @objc dynamic var isDefault: Bool = false
     @objc dynamic var lightsChangeColor: Bool = false
+    @objc dynamic var displayMultipleColors: Bool = false
     @objc dynamic var sequentialLightChange: Bool = false
     @objc dynamic var randomColors: Bool = false
     @objc dynamic var soundFile: String = ""
@@ -25,7 +26,8 @@ class RGBDynamicScene: Object {
     var xys = List<XYColor>()
 
     convenience init(name: String, timer: Double, isDefault: Bool,
-                     lightsChangeColor: Bool, sequentialLightChange: Bool, randomColors: Bool,
+                     lightsChangeColor: Bool, displayMultipleColors: Bool,
+                     sequentialLightChange: Bool, randomColors: Bool,
                      soundFile: String, isBrightnessEnabled: Bool, brightnessTimer: Double,
                      minBrightness: Int, maxBrightness: Int) {
         self.init()
@@ -33,6 +35,7 @@ class RGBDynamicScene: Object {
         self.timer = timer
         self.isDefault = isDefault
         self.lightsChangeColor = lightsChangeColor
+        self.displayMultipleColors = displayMultipleColors
         self.sequentialLightChange = sequentialLightChange
         self.randomColors = randomColors
         self.soundFile = soundFile

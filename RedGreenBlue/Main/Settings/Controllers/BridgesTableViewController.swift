@@ -87,7 +87,6 @@ extension BridgesTableViewController {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "Authorized Bridges"
@@ -96,14 +95,12 @@ extension BridgesTableViewController {
         }
         return ""
     }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return authorizedBridges.count
         }
         return bridges.count
     }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
@@ -125,7 +122,6 @@ extension BridgesTableViewController {
             return tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier")!
         }
     }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
@@ -157,21 +153,25 @@ extension BridgesTableViewController {
             break
         }
     }
-
     func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 0, indexPath == selectedBridgeIndex {
             return nil
         }
         return indexPath
     }
-
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
             return true
         }
         return false
     }
-
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
+        -> UITableViewCell.EditingStyle {
+        if tableView.isEditing {
+            return .delete
+        }
+        return .none
+    }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -240,7 +240,6 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         bridges = bridges.filter { $0.ipAddress != selectedBridge.ipAddress }
         tableView.reloadData()
     }
-
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
         SwiftMessages.hideAll()
         let linkTimeoutError = RGBSwiftMessages
@@ -249,11 +248,9 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         let linkTimeoutErrorConfig = RGBSwiftMessages.createMessageConfig(dimInteractive: true)
         SwiftMessages.show(config: linkTimeoutErrorConfig, view: linkTimeoutError)
     }
-
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
         // seconds left until it stops waiting for button press
     }
-
     func bridgeAuthenticatorDidTimeout(_ authenticator: BridgeAuthenticator) {
         SwiftMessages.hideAll()
         let linkTimeoutError = RGBSwiftMessages
