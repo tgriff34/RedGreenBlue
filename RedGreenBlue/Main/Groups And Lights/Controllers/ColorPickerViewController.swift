@@ -21,9 +21,12 @@ class ColorPickerViewController: DefaultColorPickerViewController {
         colorPreview.displayHex = false
         colorPreview.cornerRadius = 20
 
-        colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lights[0].state.xy![0],
-                                                                     y: lights[0].state.xy![1]),
-                                                             forModel: lights[0].modelId)
+        for light in lights where light.state.on! {
+            colorPicker.selectedColor = HueUtilities.colorFromXY(CGPoint(x: light.state.xy![0],
+                                                                         y: light.state.xy![1]),
+                                                                 forModel: light.modelId)
+            break
+        }
 
         colorPicker.radialHsbPalette?.addTarget(self, action: #selector(touchUpInside(_:)), for: .valueChanged)
     }
@@ -42,7 +45,7 @@ class ColorPickerViewController: DefaultColorPickerViewController {
             turnOnLights = true
         }
 
-        for light in lights where light.state.on! {
+        for light in lights where light.state.on! || turnOnLights {
             let xyPoint: CGPoint = HueUtilities.calculateXY(selectedColor, forModel: light.modelId)
             var lightState = LightState()
             if turnOnLights { lightState.on = true }
