@@ -25,10 +25,16 @@ protocol DynamicSceneAddDelegate: AnyObject {
 
 protocol DynamicSceneColorOptionsDelegate: AnyObject {
     func lightsChangeColor(_ value: Bool)
-    func timeBetweenCycle(_ time: Int)
+    func timeBetweenCycle(_ type: TimeType, _ time: Int)
     func lightsMultiColor(_ value: Bool)
     func lightsRandomColor(_ value: Bool)
     func lightsShiftRight(_ value: Bool)
+}
+
+protocol DynamicSceneBrightnessOptionsDelegate: AnyObject {
+    func minMaxBrightnessValues(_ min: Int, _ max: Int)
+    func timeBetweenCycle(_ type: TimeType, _ time: Int)
+    func fluctuatingBrightnessEnabled(_ value: Bool)
 }
 
 protocol DynamicSceneAddTimeDelegate: AnyObject {
