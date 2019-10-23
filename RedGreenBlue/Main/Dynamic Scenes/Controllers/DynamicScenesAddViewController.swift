@@ -13,8 +13,6 @@ import MARKRangeSlider
 class DynamicScenesAddViewController: UITableViewController {
 
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var fluctuatingBrightnessSwitch: UISwitch!
-    @IBOutlet weak var brightnessSlider: MARKRangeSlider!
 
     var dismissKeyboardGesture: UITapGestureRecognizer?
 
@@ -28,6 +26,7 @@ class DynamicScenesAddViewController: UITableViewController {
     var randomColors: Bool = true
     var shiftRight: Bool = true
     // Light Brightness Options
+    var fluctuatingBrightness: Bool = true
     var brightnessTime: Int = 1
     var minBrightness: Int = 25
     var maxBrightness: Int = 75
@@ -49,28 +48,6 @@ class DynamicScenesAddViewController: UITableViewController {
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         dismissKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
 
-        // Option switch actions
-        fluctuatingBrightnessSwitch.addTarget(
-            self, action: #selector(fluctuatingBrightnessTapped(_:)), for: .valueChanged)
-
-        // Fluctuating brightness slider default values/init
-        brightnessSlider.setMinValue(1, maxValue: 100)
-        brightnessSlider.setLeftValue(25, rightValue: 75)
-        brightnessSlider.minimumDistance = 1
-        brightnessSlider.backgroundColor = tableView.cellForRow(at: IndexPath(row: 1, section: 4))?.backgroundColor
-
-        // Set the track image on the fluctuating brightness color to blue
-        guard let arrayOfImages = brightnessSlider.subviews as? [UIImageView],
-            arrayOfImages.indices.contains(1) else { return }
-
-        let trackImage = arrayOfImages[1]
-        trackImage.image = trackImage.image?.withRenderingMode(.alwaysTemplate)
-        trackImage.tintColor = view.tintColor
-
-        // Set fluctating brightness slider action
-        brightnessSlider.addTarget(
-            self, action: #selector(brightSliderValueChanged(_:)), for: .valueChanged)
-
         // If the user is editing a scene, set the variables to scene values
         setSceneIfEditing()
     }
@@ -87,7 +64,7 @@ class DynamicScenesAddViewController: UITableViewController {
             displayMultipleColors: multiColors,
             sequentialLightChange: shiftRight,
             randomColors: randomColors, soundFile: soundFileName,
-            isBrightnessEnabled: fluctuatingBrightnessSwitch.isOn, brightnessTimer: Double(brightnessTime),
+            isBrightnessEnabled: fluctuatingBrightness, brightnessTimer: Double(brightnessTime),
             minBrightness: minBrightness, maxBrightness: maxBrightness)
 
         scene.xys = self.colors
@@ -128,13 +105,12 @@ class DynamicScenesAddViewController: UITableViewController {
             multiColors = scene.displayMultipleColors
             randomColors = scene.randomColors
             soundFileName = scene.soundFile
-            fluctuatingBrightnessSwitch.isOn = scene.isBrightnessEnabled
+            fluctuatingBrightness = scene.isBrightnessEnabled
             brightnessTime = Int(scene.brightnessTimer)
             minBrightness = scene.minBrightness
             maxBrightness = scene.maxBrightness
-            brightnessSlider.setLeftValue(CGFloat(scene.minBrightness), rightValue: CGFloat(scene.maxBrightness))
             tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1),
-                                      IndexPath(row: 0, section: 2), IndexPath(row: 0, section: 4)],
+                                      IndexPath(row: 0, section: 2), IndexPath(row: 0, section: 3)],
                                  with: .none)
         }
     }
@@ -150,44 +126,11 @@ class DynamicScenesAddViewController: UITableViewController {
 
 // MARK: - TableView
 extension DynamicScenesAddViewController {
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case 3:
-            if !fluctuatingBrightnessSwitch.isOn {
-                return 0.1
-            }
-        default:
-            return super.tableView(tableView, heightForHeaderInSection: section)
-        }
-        return super.tableView(tableView, heightForHeaderInSection: section)
-    }
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        switch section {
-        case 3:
-            if !fluctuatingBrightnessSwitch.isOn {
-                return 0.1
-            }
-        default:
-            return super.tableView(tableView, heightForFooterInSection: section)
-        }
-        return super.tableView(tableView, heightForFooterInSection: section)
-    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         if scene == nil {
-            return 5
+            return 4
         }
-        return 6
-    }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 3:
-            if fluctuatingBrightnessSwitch.isOn {
-                return 2
-            }
-            return 0
-        default:
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
+        return 5
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
@@ -203,15 +146,9 @@ extension DynamicScenesAddViewController {
             }
         case 2:
             if indexPath.row == 0 {
-                cell.detailTextLabel?.text = fluctuatingBrightnessSwitch.isOn ?
-                    "\(minBrightness)% - \(maxBrightness)%" : ""
+                cell.detailTextLabel?.text = fluctuatingBrightness ? "On" : "Off"
             }
         case 3:
-            if indexPath.row == 0 {
-                cell.detailTextLabel?.text = brightnessTime > 1 ?
-                    "\(brightnessTime) seconds" : "\(brightnessTime) second"
-            }
-        case 4:
             cell.detailTextLabel?.text = soundFileName
         default:
             logger.info("No action for \(indexPath.section)")
@@ -220,7 +157,7 @@ extension DynamicScenesAddViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 5 {
+        if indexPath.section == 4 {
             let actionSheet = UIAlertController(
                 title: "Delete Scene", message: "Are you sure you want to delete this scene?",
                 preferredStyle: .alert)
@@ -253,12 +190,13 @@ extension DynamicScenesAddViewController {
             viewController?.randomColors = randomColors
             viewController?.shiftRight = shiftRight
             viewController?.time = time
-        case "TimeBetweenChangingBrightnessSegue":
-            let viewController = segue.destination as? DynamicScenesAddTimeViewController
-            viewController?.addTimeDelegate = self
-            viewController?.title = "Brightness Timer"
-            viewController?.type = .brightness
-            viewController?.selectedTime = brightnessTime
+        case "ShowBrightnessOptionsSegue":
+            let viewController = segue.destination as?  DynamicScenesBrightnessOptionsViewController
+            viewController?.brightnessOptionsDelegate = self
+            viewController?.fluctuatingBrightness = fluctuatingBrightness
+            viewController?.minBrightness = minBrightness
+            viewController?.maxBrightness = maxBrightness
+            viewController?.brightnessTime = brightnessTime
         case "SoundFileSegue":
             let viewController = segue.destination as? DynamicScenesAddSoundViewController
             viewController?.addSoundFileDelegate = self
@@ -270,15 +208,30 @@ extension DynamicScenesAddViewController {
 }
 
 // MARK: - Add Color / Time Delegate
-extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddTimeDelegate,
-DynamicSceneAddSoundFileDelegate, DynamicSceneColorOptionsDelegate {
+extension DynamicScenesAddViewController: DynamicSceneAddAllColorsDelegate, DynamicSceneAddSoundFileDelegate,
+DynamicSceneColorOptionsDelegate, DynamicSceneBrightnessOptionsDelegate {
+    func minMaxBrightnessValues(_ min: Int, _ max: Int) {
+        self.minBrightness = min
+        self.maxBrightness = max
+    }
+
+    func fluctuatingBrightnessEnabled(_ value: Bool) {
+        self.fluctuatingBrightness = value
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
+    }
+
     func lightsChangeColor(_ value: Bool) {
         self.lightsChangeColor = value
         tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .none)
     }
 
-    func timeBetweenCycle(_ time: Int) {
-        self.time = time
+    func timeBetweenCycle(_ type: TimeType, _ time: Int) {
+        switch type {
+        case .brightness:
+            self.brightnessTime = time
+        case .color:
+            self.time = time
+        }
     }
 
     func lightsMultiColor(_ value: Bool) {
@@ -302,11 +255,6 @@ DynamicSceneAddSoundFileDelegate, DynamicSceneColorOptionsDelegate {
         self.colors = colors
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
         enableOrDisableSaveButton()
-    }
-
-    func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int) {
-        self.brightnessTime = time
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
     }
 }
 

@@ -17,8 +17,9 @@ class DynamicScenesColorsPickerViewController: UICollectionViewController {
             for color in colors where
                 color.xvalue == newColor?.xvalue &&
                 color.yvalue == newColor?.yvalue {
-                collectionView.selectItem(at: IndexPath(row: colors.firstIndex(of: color)!,
-                                                        section: 0), animated: true, scrollPosition: [])
+                    collectionView.selectItem(at: IndexPath(row: colors.firstIndex(of: color)!, section: 0),
+                                              animated: true,
+                                              scrollPosition: [])
             }
         }
     }

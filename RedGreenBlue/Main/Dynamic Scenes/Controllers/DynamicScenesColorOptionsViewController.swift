@@ -66,7 +66,7 @@ extension DynamicScenesColorOptionsViewController {
         case 1:
             if changingLightColorsSwitch.isOn {
                 return String(format: "%@%@%@",
-                              "When enabled, lights will display different colors from each other.",
+                              "When enabled, lights will display different colors from each other. ",
                               "Otherwise, the lights will all display the same color and cycle through ",
                               "the list of colors.")
             }
@@ -76,48 +76,33 @@ extension DynamicScenesColorOptionsViewController {
         return nil
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 1:
-            if changingLightColorsSwitch.isOn {
-                return 2
-            }
+        if section == 1 && changingLightColorsSwitch.isOn {
+            return 2
+        } else if section == 1 {
             return 0
-        case 2:
-            if changingLightColorsSwitch.isOn && displayMultiColorsSwitch.isOn {
-                return 2
-            }
-            return 0
-        default:
-            return super.tableView(tableView, numberOfRowsInSection: section)
         }
+        if section == 2 && changingLightColorsSwitch.isOn && displayMultiColorsSwitch.isOn {
+            return 2
+        } else if section == 2 {
+            return 0
+        }
+        return super.tableView(tableView, numberOfRowsInSection: section)
     }
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        switch section {
-        case 1:
-            if !changingLightColorsSwitch.isOn {
-                return 0.1
-            }
-        case 2:
-            if !changingLightColorsSwitch.isOn && !displayMultiColorsSwitch.isOn {
-                return 0.1
-            }
-        default:
-            return super.tableView(tableView, heightForFooterInSection: section)
+        if section == 1 && !changingLightColorsSwitch.isOn {
+            return 0.1
+        }
+        if section == 2 && !changingLightColorsSwitch.isOn && !displayMultiColorsSwitch.isOn {
+            return 0.1
         }
         return super.tableView(tableView, heightForFooterInSection: section)
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case 1:
-            if !changingLightColorsSwitch.isOn {
-                return 0.1
-            }
-        case 2:
-            if !changingLightColorsSwitch.isOn && !displayMultiColorsSwitch.isOn {
-                return 0.1
-            }
-        default:
-            return super.tableView(tableView, heightForHeaderInSection: section)
+        if section == 1 && !changingLightColorsSwitch.isOn {
+            return 0.1
+        }
+        if section == 2 && !changingLightColorsSwitch.isOn && !displayMultiColorsSwitch.isOn {
+            return 0.1
         }
         return super.tableView(tableView, heightForHeaderInSection: section)
     }
@@ -153,7 +138,7 @@ extension DynamicScenesColorOptionsViewController {
 extension DynamicScenesColorOptionsViewController: DynamicSceneAddTimeDelegate {
     func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int) {
         self.time = time
-        colorOptionsDelegate?.timeBetweenCycle(self.time)
+        colorOptionsDelegate?.timeBetweenCycle(.color, self.time)
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
     }
 }
