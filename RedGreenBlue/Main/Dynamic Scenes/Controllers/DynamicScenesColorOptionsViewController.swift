@@ -27,6 +27,7 @@ class DynamicScenesColorOptionsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Set switches to bools
         changingLightColorsSwitch.isOn = lightsChangeColor
         displayMultiColorsSwitch.isOn = displayMultiColors
         randomColorSwitch.isOn = randomColors
@@ -34,26 +35,23 @@ class DynamicScenesColorOptionsViewController: UITableViewController {
 
         changingLightColorsSwitch.addTarget(self, action: #selector(changingLightsDidChange(_:)), for: .valueChanged)
         displayMultiColorsSwitch.addTarget(self, action: #selector(displayMultiColorDidChange(_:)), for: .valueChanged)
-        randomColorSwitch.addTarget(self, action: #selector(randomColorDidChange(_:)), for: .valueChanged)
-        shiftRightSwitch.addTarget(self, action: #selector(shiftRightDidChange(_:)), for: .valueChanged)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        colorOptionsDelegate?.lightsChangeColor(changingLightColorsSwitch.isOn)
+        colorOptionsDelegate?.lightsMultiColor(displayMultiColorsSwitch.isOn)
+        colorOptionsDelegate?.lightsRandomColor(randomColorSwitch.isOn)
+        colorOptionsDelegate?.lightsShiftRight(shiftRightSwitch.isOn)
+        colorOptionsDelegate?.timeBetweenCycle(.color, self.time)
     }
 
     @objc func changingLightsDidChange(_ sender: UISwitch) {
-        colorOptionsDelegate?.lightsChangeColor(sender.isOn)
         tableView.reloadSections([1, 2], with: .automatic)
     }
 
     @objc func displayMultiColorDidChange(_ sender: UISwitch) {
-        colorOptionsDelegate?.lightsMultiColor(sender.isOn)
         tableView.reloadSections([2], with: .automatic)
-    }
-
-    @objc func randomColorDidChange(_ sender: UISwitch) {
-        colorOptionsDelegate?.lightsRandomColor(sender.isOn)
-    }
-
-    @objc func shiftRightDidChange(_ sender: UISwitch) {
-        colorOptionsDelegate?.lightsShiftRight(sender.isOn)
     }
 }
 
@@ -138,7 +136,6 @@ extension DynamicScenesColorOptionsViewController {
 extension DynamicScenesColorOptionsViewController: DynamicSceneAddTimeDelegate {
     func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int) {
         self.time = time
-        colorOptionsDelegate?.timeBetweenCycle(.color, self.time)
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
     }
 }
