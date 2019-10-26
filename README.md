@@ -1,4 +1,4 @@
 # RedGreenBlue
-> Welcome to my sepository
+> Welcome to my Repository
 
 ![alt text](https://i.imgur.com/wOEDnAj.png)
