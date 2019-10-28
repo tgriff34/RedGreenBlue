@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyHue
+import MessageUI
 
 class SettingsTableViewController: UITableViewController {
 
@@ -56,15 +57,37 @@ class SettingsTableViewController: UITableViewController {
         actionSheet.addAction(cancelAction)
         self.present(actionSheet, animated: true, completion: nil)
     }
+
+    private func composeEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            console.debug("can send")
+            let mailComposer = MFMailComposeViewController()
+            mailComposer.setSubject("Crash Logs")
+            mailComposer.setMessageBody("Here are my crash logs!", isHTML: false)
+            // TODO: Change Recipient
+            mailComposer.setToRecipients(["tjg22596@gmail.com"])
+            mailComposer.mailComposeDelegate = self
+            guard let filePath = UserDefaults.standard.url(forKey: "LogFile") else {
+                return
+            }
+            do {
+                let attachmentData = try Data(contentsOf: filePath)
+                mailComposer.addAttachmentData(attachmentData, mimeType: "application/log", fileName: "swiftybeaver")
+                self.present(mailComposer, animated: true, completion: nil)
+            } catch {
+                console.debug("Encountered Error")
+            }
+        }
+    }
 }
 
 // MARK: - TableView
 extension SettingsTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         if #available(iOS 13, *) {
-            return 2
+            return 3
         }
-        return 1
+        return 2
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
@@ -106,9 +129,41 @@ extension SettingsTableViewController {
                                            style: .actionSheet,
                                            options: ["Unmuted", "Muted"], forKey: "SoundSetting")
             }
+        case 1:
+            composeEmail()
         default:
             break
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - Mail Delegate
+extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        switch result {
+        case .sent:
+            controller.dismiss(animated: true, completion: {
+                let alert = UIAlertController(
+                    title: "Sent",
+                    message: String(format: "%@%@", "Thank you for sending your crash",
+                                    " logs and making RedGreenBlue a better app!"),
+                    preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        case .failed:
+            controller.dismiss(animated: true, completion: {
+                let alert = UIAlertController(
+                    title: "Error",
+                    message: "An error occured while trying to send the log files.",
+                    preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        default:
+            controller.dismiss(animated: true, completion: nil)
+        }
     }
 }

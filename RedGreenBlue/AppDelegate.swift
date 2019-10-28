@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let logFile = FileDestination()
         let consoleLog = ConsoleDestination()
+        UserDefaults.standard.set(logFile.logFileURL, forKey: "LogFile")
         print("LOG FILE CAN BE FOUND AT: ", logFile.logFileURL ?? "")
         logger.addDestination(logFile)
         console.addDestination(consoleLog)
