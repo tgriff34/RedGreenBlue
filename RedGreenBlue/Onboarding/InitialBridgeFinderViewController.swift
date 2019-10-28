@@ -66,7 +66,7 @@ extension InitialBridgeFinderViewController {
             UserDefaults.standard.set("Unmuted", forKey: "SoundSetting")
             RGBDatabaseManager.write(to: realm!, closure: {
                 let scene = RGBDynamicScene(name: "Christmas", timer: 10,
-                                            isDefault: true, lightsChangeColor: true,
+                                            category: .default, lightsChangeColor: true,
                                             displayMultipleColors: true,
                                             sequentialLightChange: true,
                                             randomColors: false, soundFile: "Default",

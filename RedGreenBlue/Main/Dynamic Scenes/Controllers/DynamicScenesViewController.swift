@@ -26,8 +26,22 @@ class DynamicScenesViewController: UITableViewController {
 
     let realm = RGBDatabaseManager.realm()!
 
+    let resultSearchController = UISearchController(searchResultsController: nil)
+    var searchedScenes: [RGBDynamicScene] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Setup search controller
+        resultSearchController.searchResultsUpdater = self
+        resultSearchController.obscuresBackgroundDuringPresentation = false
+        resultSearchController.searchBar.placeholder = "Search dynamic scenes"
+        resultSearchController.searchBar.scopeButtonTitles = RGBDynamicScene.Category.allCases.map { $0.stringValue }
+        resultSearchController.searchBar.delegate = self
+        navigationItem.searchController = resultSearchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        definesPresentationContext = true
+
         fetchData()
     }
 
@@ -50,7 +64,7 @@ class DynamicScenesViewController: UITableViewController {
 
     // MARK: - Private Functions
     func fetchData() {
-        guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self).filter("isDefault = true") else {
+        guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self).filter("category = 1") else {
             logger.error("could not retrieve results of RGBDynamicScenes from DB")
             return
         }
@@ -58,7 +72,7 @@ class DynamicScenesViewController: UITableViewController {
 
         if let userResults = RGBDatabaseManager.realm()?
             .objects(RGBDynamicScene.self)
-            .filter("isDefault = false")
+            .filter("category = 2")
             .sorted(by: { $0.name > $1.name }) {
             dynamicScenes.append(Array(userResults))
         } else {
@@ -117,37 +131,56 @@ class DynamicScenesViewController: UITableViewController {
             }
         })
     }
+
+    private func isSearching() -> Bool {
+        let searchBarScopeIsFiltering = resultSearchController.searchBar.selectedScopeButtonIndex != 0
+        return resultSearchController.isActive && (!resultSearchController.searchBar.text!.isEmpty ||
+            searchBarScopeIsFiltering)
+    }
 }
 
 // MARK: - TableView
 extension DynamicScenesViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
+        if isSearching() {
+            return 1
+        }
         return 2
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
+        if isSearching() && section == 0 && searchedScenes.count > 0 {
+            return "Search results"
+        } else if !isSearching() && section == 0 {
             return "Default dynamic scenes"
-        } else if section == 1 && dynamicScenes[1].count > 0 {
+        } else if !isSearching() && section == 1 && dynamicScenes[1].count > 0 {
             return "Your dynamic scenes"
         }
-        return ""
+        return nil
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isSearching() {
+            return searchedScenes.count
+        }
         return dynamicScenes[section].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicScenesCellIdentifier")
             as! LightsDynamicSceneCustomCell // swiftlint:disable:this force_cast
-        cell.dynamicScene = dynamicScenes[indexPath.section][indexPath.row]
-        cell.delegate = self
+        if isSearching() {
+            cell.dynamicScene = searchedScenes[indexPath.row]
+            cell.delegate = self
+        } else {
+            cell.dynamicScene = dynamicScenes[indexPath.section][indexPath.row]
+            cell.delegate = self
+        }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 0 {
+        if indexPath.section == 0 || isSearching() {
             return nil
         }
         return indexPath
@@ -155,7 +188,6 @@ extension DynamicScenesViewController {
 }
 
 // MARK: - Cell Delegate
-
 extension DynamicScenesViewController: DynamicSceneCellDelegate {
     func dynamicSceneTableView(_ dynamicTableViewCell: LightsDynamicSceneCustomCell,
                                sceneSwitchTappedFor scene: RGBDynamicScene) {
@@ -226,8 +258,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             return
         }
         // If the name is the same of another scene except the edited scene display error
-        if dynamicScenes[1].contains(where: { $0.name == scene.name }) &&
-            oldScene.name != scene.name {
+        if dynamicScenes[1].contains(where: { $0.name == scene.name }) && oldScene.name != scene.name {
             let sameNameErrorMessage = RGBSwiftMessages
                 .createAlertInView(type: .warning, fromNib: .cardView,
                                    content: ("", "A scene by that name already exists"))
@@ -295,5 +326,57 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
         tableView.endUpdates()
+    }
+}
+
+// MARK: - Search delegate
+extension DynamicScenesViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    func filterContentForSearchText(_ searchText: String, category: RGBDynamicScene.Category? = nil) {
+        if category == .all || category == .default {
+            searchedScenes += dynamicScenes[0].filter { (dynamicScene: RGBDynamicScene) -> Bool in
+                if searchText == "" { return true } else {
+                    return dynamicScene.name.lowercased().contains(searchText.lowercased())
+                }
+            }
+        }
+        if category == .all || category == .custom {
+            searchedScenes += dynamicScenes[1].filter { (dynamicScene: RGBDynamicScene) -> Bool in
+                if searchText == "" { return true } else {
+                    return dynamicScene.name.lowercased().contains(searchText.lowercased())
+                }
+            }
+        }
+        tableView.reloadData()
+        if let indexPath = selectedRowIndex,
+            let row = searchedScenes.firstIndex(of: dynamicScenes[indexPath.section][indexPath.row]) {
+            tableView.selectRow(at: IndexPath(row: row, section: 0),
+                                animated: true, scrollPosition: .none)
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        guard let searchBarText = searchBar.text else { return }
+        let category = RGBDynamicScene.Category(rawValue: selectedScope)
+        filterContentForSearchText(searchBarText, category: category)
+    }
+
+    func updateSearchResults(for searchController: UISearchController) {
+        self.searchedScenes = []
+        if isSearching() {
+            guard let searchBarText = searchController.searchBar.text else { return }
+            let category = RGBDynamicScene.Category(rawValue: searchController.searchBar.selectedScopeButtonIndex)
+            filterContentForSearchText(searchBarText, category: category)
+        } else {
+            tableView.reloadData()
+            if let playingScene = RGBGroupsAndLightsHelper.shared.getPlayingScene() {
+                if let row = dynamicScenes[0].firstIndex(of: playingScene) {
+                    tableView.selectRow(at: IndexPath(row: row, section: 0),
+                                        animated: true, scrollPosition: .none)
+                } else if let row = dynamicScenes[1].firstIndex(of: playingScene) {
+                    tableView.selectRow(at: IndexPath(row: row, section: 1),
+                                        animated: true, scrollPosition: .none)
+                }
+            }
+        }
     }
 }

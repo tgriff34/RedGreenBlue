@@ -59,7 +59,7 @@ class DynamicScenesAddViewController: UITableViewController {
     @objc func save() {
         // Create new scene to populate DB with
         let scene = RGBDynamicScene(
-            name: self.name, timer: Double(time), isDefault: false,
+            name: self.name, timer: Double(time), category: .custom,
             lightsChangeColor: lightsChangeColor,
             displayMultipleColors: multiColors,
             sequentialLightChange: shiftRight,

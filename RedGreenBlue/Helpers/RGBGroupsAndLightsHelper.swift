@@ -99,6 +99,7 @@ class RGBGroupsAndLightsHelper {
     private var looper: AVPlayerLooper?
     private var timeObserver: NSObjectProtocol?
     private var observer: NSObjectProtocol?
+    private var playingScene: RGBDynamicScene?
     private func makePlayer(file: String) -> AVQueuePlayer {
         guard let url: URL = Bundle.main.url(forResource: file, withExtension: "mp3") else {
             logger.error("Error getting song file \(file).")
@@ -124,7 +125,7 @@ class RGBGroupsAndLightsHelper {
     func playDynamicScene(scene: RGBDynamicScene, for group: RGBGroup, with swiftyHue: SwiftyHue) {
         // Make sure that there was no scene playing before, if so stop it.
         stopDynamicScene()
-
+        playingScene = scene
         // Instantiate a new audio player with the sound file associated with the scene
         // Also sets up the looper.
         player = self.makePlayer(file: scene.soundFile)
@@ -183,8 +184,13 @@ class RGBGroupsAndLightsHelper {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                   object: nil)
         player?.removeTimeObserver(timeObserver as Any)
+        playingScene = nil
         looper = nil
         player = nil
+    }
+
+    func getPlayingScene() -> RGBDynamicScene? {
+        return playingScene
     }
 
     private var lightsForScene = [Int]()
