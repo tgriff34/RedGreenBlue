@@ -13,7 +13,7 @@ class RGBDynamicScene: Object {
 
     @objc dynamic var name: String = ""
     @objc dynamic var timer: Double = 0
-    @objc dynamic var isDefault: Bool = false
+    @objc dynamic var category: Category = .default
     @objc dynamic var lightsChangeColor: Bool = false
     @objc dynamic var displayMultipleColors: Bool = false
     @objc dynamic var sequentialLightChange: Bool = false
@@ -25,7 +25,7 @@ class RGBDynamicScene: Object {
     @objc dynamic var maxBrightness: Int = 100
     var xys = List<XYColor>()
 
-    convenience init(name: String, timer: Double, isDefault: Bool,
+    convenience init(name: String, timer: Double, category: Category,
                      lightsChangeColor: Bool, displayMultipleColors: Bool,
                      sequentialLightChange: Bool, randomColors: Bool,
                      soundFile: String, isBrightnessEnabled: Bool, brightnessTimer: Double,
@@ -33,7 +33,7 @@ class RGBDynamicScene: Object {
         self.init()
         self.name = name
         self.timer = timer
-        self.isDefault = isDefault
+        self.category = category
         self.lightsChangeColor = lightsChangeColor
         self.displayMultipleColors = displayMultipleColors
         self.sequentialLightChange = sequentialLightChange
@@ -47,6 +47,20 @@ class RGBDynamicScene: Object {
 
     override static func primaryKey() -> String? {
         return "name"
+    }
+
+    @objc enum Category: Int, RawRepresentable, CaseIterable {
+        case all = 0
+        case `default` = 1
+        case custom = 2
+
+        var stringValue: String {
+            switch self {
+            case .all: return "All"
+            case .default: return "Default"
+            case .custom: return "Custom"
+            }
+        }
     }
 }
 
