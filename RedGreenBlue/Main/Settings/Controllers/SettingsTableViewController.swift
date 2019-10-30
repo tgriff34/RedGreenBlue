@@ -77,6 +77,13 @@ class SettingsTableViewController: UITableViewController {
             } catch {
                 console.debug("Encountered Error")
             }
+        } else {
+            let alert = UIAlertController(
+                title: "Cannot send email",
+                message: "This device is not able to send email.",
+                preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

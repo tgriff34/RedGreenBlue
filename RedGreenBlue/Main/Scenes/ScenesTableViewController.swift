@@ -75,7 +75,10 @@ class ScenesTableViewController: UITableViewController {
         }
         shouldFetchDefault = false
 
-        let menuView = BTNavigationDropdownMenu(title: BTTitle.index(selectedGroupIndex), items: navigationItems)
+        let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
+                                                containerView: self.navigationController!.view,
+                                                title: BTTitle.index(selectedGroupIndex), items: navigationItems)
+
         self.navigationItem.titleView = menuView
         self.tableView.reloadData()
 
