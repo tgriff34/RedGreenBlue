@@ -102,7 +102,9 @@ class DynamicScenesViewController: UITableViewController {
             }
             self.shouldFetchDefault = false
 
-            let menuView = BTNavigationDropdownMenu(title: BTTitle.index(self.selectedGroupIndex),
+            let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
+                                                    containerView: self.navigationController!.view,
+                                                    title: BTTitle.index(self.selectedGroupIndex),
                                                     items: self.navigationItems)
 
             self.navigationItem.titleView = menuView
@@ -332,6 +334,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
 // MARK: - Search delegate
 extension DynamicScenesViewController: UISearchResultsUpdating, UISearchBarDelegate {
     func filterContentForSearchText(_ searchText: String, category: RGBDynamicScene.Category? = nil) {
+        self.searchedScenes = []
         if category == .all || category == .default {
             searchedScenes += dynamicScenes[0].filter { (dynamicScene: RGBDynamicScene) -> Bool in
                 if searchText == "" { return true } else {
@@ -361,7 +364,6 @@ extension DynamicScenesViewController: UISearchResultsUpdating, UISearchBarDeleg
     }
 
     func updateSearchResults(for searchController: UISearchController) {
-        self.searchedScenes = []
         if isSearching() {
             guard let searchBarText = searchController.searchBar.text else { return }
             let category = RGBDynamicScene.Category(rawValue: searchController.searchBar.selectedScopeButtonIndex)
