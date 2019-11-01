@@ -207,6 +207,9 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         actionSheet.addAction(editAction)
         actionSheet.addAction(deleteAction)
         actionSheet.addAction(cancelAction)
+        if let popoverController = actionSheet.popoverPresentationController {
+            popoverController.barButtonItem = sender
+        }
         self.present(actionSheet, animated: true, completion: nil)
     }
 
