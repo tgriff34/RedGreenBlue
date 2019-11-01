@@ -248,7 +248,7 @@ DynamicSceneColorOptionsDelegate, DynamicSceneBrightnessOptionsDelegate {
 
     func dynamicSceneSoundFileAdded(_ name: String) {
         self.soundFileName = name
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 4)], with: .none)
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
     }
 
     func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
