@@ -12,6 +12,16 @@ import RealmSwift
 class DynamicScenesColorsPickerViewController: UICollectionViewController {
     var colors = [XYColor]()
 
+    var selectedColors: List<XYColor>? {
+        willSet(newColors) {
+            for color in colors where newColors!.contains(where: {
+                $0.xvalue == color.xvalue && $0.yvalue == color.yvalue }) {
+                collectionView.selectItem(at: IndexPath(row: colors.firstIndex(of: color)!, section: 0),
+                                          animated: true, scrollPosition: [])
+            }
+        }
+    }
+
     var selectedColor: XYColor? {
         willSet(newColor) {
             for color in colors where
@@ -24,10 +34,11 @@ class DynamicScenesColorsPickerViewController: UICollectionViewController {
         }
     }
 
-    weak var delegate: DynamicSceneAddColorDelegate?
+    weak var delegate: DynamicSceneCustomColorDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         colors.append(XYColor([0.7, 0.3]))
         colors.append(XYColor([0.6, 0.37]))
         colors.append(XYColor([0.5, 0.5]))
@@ -51,7 +62,6 @@ extension DynamicScenesColorsPickerViewController: UICollectionViewDelegateFlowL
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return colors.count
     }
-
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath)
@@ -59,8 +69,19 @@ extension DynamicScenesColorsPickerViewController: UICollectionViewDelegateFlowL
         cell.color = colors[indexPath.row]
         return cell
     }
-
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.dynamicSceneColorAdded(colors[indexPath.row])
+        if selectedColor != nil {
+            delegate?.dynamicSceneColorEdited(colors[indexPath.row])
+        } else {
+            selectedColors?.append(colors[indexPath.row])
+            delegate?.dynamicSceneColorAdded(selectedColors!)
+        }
+    }
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if selectedColor == nil {
+            let index = selectedColors?.index(of: colors[indexPath.row])
+            selectedColors?.remove(at: index!)
+            delegate?.dynamicSceneColorAdded(selectedColors!)
+        }
     }
 }

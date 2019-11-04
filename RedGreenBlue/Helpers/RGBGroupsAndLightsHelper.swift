@@ -90,7 +90,7 @@ class RGBGroupsAndLightsHelper {
             return "heroesLightstrip"
         default:
             logger.error("Error getting image from modelId", modelId)
-            return ""
+            return "bulbsSultan"
         }
     }
 

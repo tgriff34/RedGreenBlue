@@ -9,8 +9,14 @@
 import Foundation
 import RealmSwift
 
-protocol DynamicSceneAddColorDelegate: AnyObject {
+protocol DynamicSceneColorDelegate: AnyObject {
     func dynamicSceneColorAdded(_ color: XYColor)
+    func dynamicSceneColorEdited(_ color: XYColor)
+}
+
+protocol DynamicSceneCustomColorDelegate: AnyObject {
+    func dynamicSceneColorAdded(_ colors: List<XYColor>)
+    func dynamicSceneColorEdited(_ color: XYColor)
 }
 
 protocol DynamicSceneAddAllColorsDelegate: AnyObject {

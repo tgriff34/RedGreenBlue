@@ -9,14 +9,21 @@
 import UIKit
 import FlexColorPicker
 import SwiftyHue
+import RealmSwift
+import SwiftMessages
 
 class DynamicScenesAddColorViewController: UIViewController {
     var swiftyHue: SwiftyHue?
+    var colorToEdit: XYColor?
     var color: XYColor?
+    var colors = List<XYColor>()
 
     @IBOutlet weak var containerView: UIView!
 
-    weak var addColorDelegate: DynamicSceneAddColorDelegate?
+    weak var addColorDelegate: DynamicSceneColorDelegate?
+    weak var customColorDelegate: DynamicSceneCustomColorDelegate?
+
+    var segmentedControl: UISegmentedControl?
 
     private lazy var customColorPickerViewController: DefaultColorPickerViewController = {
         let storyboard = UIStoryboard(name: "DynamicScenes", bundle: Bundle.main)
@@ -44,16 +51,21 @@ class DynamicScenesAddColorViewController: UIViewController {
 
         swiftyHue = RGBRequest.shared.getSwiftyHue()
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
-                                                            target: self, action: #selector(save))
+        if colorToEdit != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
+                                                                target: self, action: #selector(save))
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain,
+                                                                target: self, action: #selector(save))
+        }
 
         let items = ["Custom", "Picker"]
-        let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.addTarget(self, action: #selector(segmentedControlChanged(_:)), for: .valueChanged)
+        segmentedControl = UISegmentedControl(items: items)
+        segmentedControl?.addTarget(self, action: #selector(segmentedControlChanged(_:)), for: .valueChanged)
         self.navigationItem.titleView = segmentedControl
 
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.sendActions(for: .valueChanged)
+        segmentedControl?.selectedSegmentIndex = 0
+        segmentedControl?.sendActions(for: .valueChanged)
     }
 
     private func add(asChildViewController viewController: UIViewController) {
@@ -74,25 +86,44 @@ class DynamicScenesAddColorViewController: UIViewController {
         if sender.selectedSegmentIndex == 0 {
             remove(asChildViewController: defaultColorPickerViewController)
             add(asChildViewController: customColorPickerViewController)
-            if let color = color {
+            if let color = colorToEdit {
                 customColorPickerViewController.colorPicker.selectedColor = HueUtilities.colorFromXY(
                     CGPoint(x: color.xvalue, y: color.yvalue), forModel: "LCT016")
             }
         } else {
             remove(asChildViewController: customColorPickerViewController)
             add(asChildViewController: defaultColorPickerViewController)
-            if let color = color {
+            if let color = colorToEdit {
                 defaultColorPickerViewController.selectedColor = color
+                defaultColorPickerViewController.collectionView.allowsMultipleSelection = false
+            } else {
+                defaultColorPickerViewController.selectedColors = colors
+                defaultColorPickerViewController.collectionView.allowsMultipleSelection = true
             }
         }
     }
 
     @objc func save() {
-        navigationController?.popViewController(animated: true)
-        if let color = color {
-            addColorDelegate?.dynamicSceneColorAdded(color)
+        if let colorToEdit = colorToEdit {
+            navigationController?.popViewController(animated: true)
+            addColorDelegate?.dynamicSceneColorEdited(colorToEdit)
         } else {
-            addColorDelegate?.dynamicSceneColorAdded(convertColorFromPicker())
+            if segmentedControl?.selectedSegmentIndex == 0 {
+                if let color = color {
+                    addColorDelegate?.dynamicSceneColorAdded(color)
+                } else {
+                    addColorDelegate?.dynamicSceneColorAdded(convertColorFromPicker())
+                }
+            } else {
+                customColorDelegate?.dynamicSceneColorAdded(colors)
+                for indexPath in defaultColorPickerViewController.collectionView.indexPathsForSelectedItems! {
+                    defaultColorPickerViewController.collectionView.deselectItem(at: indexPath, animated: true)
+                }
+            }
+            let messageView = RGBSwiftMessages.createAlertInView(type: .success, fromNib: .cardView,
+                                                                 content: ("Colors added!", ""))
+            let config = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
+            SwiftMessages.show(config: config, view: messageView)
         }
     }
 
@@ -103,12 +134,19 @@ class DynamicScenesAddColorViewController: UIViewController {
     }
 }
 
-extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneAddColorDelegate {
-    func dynamicSceneColorAdded(_ color: XYColor) {
-        self.color = color
+extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneCustomColorDelegate {
+    func dynamicSceneColorEdited(_ color: XYColor) {
+        self.colorToEdit = color
+    }
+    func dynamicSceneColorAdded(_ colors: List<XYColor>) {
+        self.colors = colors
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
-        color = convertColorFromPicker()
+        if colorToEdit != nil {
+            colorToEdit = convertColorFromPicker()
+        } else {
+            color = convertColorFromPicker()
+        }
     }
     func colorPicker(_ colorPicker: ColorPickerController, confirmedColor: UIColor, usingControl: ColorControl) {
     }
