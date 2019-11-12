@@ -66,6 +66,8 @@ class DynamicScenesAddColorViewController: UIViewController {
 
         segmentedControl?.selectedSegmentIndex = 0
         segmentedControl?.sendActions(for: .valueChanged)
+
+        disableOrEnableAddButton()
     }
 
     private func add(asChildViewController viewController: UIViewController) {
@@ -101,6 +103,7 @@ class DynamicScenesAddColorViewController: UIViewController {
                 defaultColorPickerViewController.collectionView.allowsMultipleSelection = true
             }
         }
+        disableOrEnableAddButton()
     }
 
     @objc func save() {
@@ -119,10 +122,12 @@ class DynamicScenesAddColorViewController: UIViewController {
                 for indexPath in defaultColorPickerViewController.collectionView.indexPathsForSelectedItems! {
                     defaultColorPickerViewController.collectionView.deselectItem(at: indexPath, animated: true)
                 }
+                colors.removeAll()
+                disableOrEnableAddButton()
             }
             let messageView = RGBSwiftMessages.createAlertInView(type: .success, fromNib: .cardView,
                                                                  content: ("Colors added!", ""))
-            let config = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
+            let config = RGBSwiftMessages.createMessageConfig(presentStyle: .bottom, windowLevel: .alert)
             SwiftMessages.show(config: config, view: messageView)
         }
     }
@@ -132,14 +137,22 @@ class DynamicScenesAddColorViewController: UIViewController {
             customColorPickerViewController.colorPicker.selectedColor, forModel: "LCT016")
         return XYColor([Double(xyPoint.x), Double(xyPoint.y)])
     }
+
+    private func disableOrEnableAddButton() {
+        navigationItem.rightBarButtonItem?.isEnabled = !(colorToEdit == nil &&
+            ((segmentedControl?.selectedSegmentIndex == 0 && color == nil) ||
+            (segmentedControl?.selectedSegmentIndex == 1 && colors.isEmpty)))
+    }
 }
 
 extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneCustomColorDelegate {
     func dynamicSceneColorEdited(_ color: XYColor) {
         self.colorToEdit = color
+        disableOrEnableAddButton()
     }
     func dynamicSceneColorAdded(_ colors: List<XYColor>) {
         self.colors = colors
+        disableOrEnableAddButton()
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
         if colorToEdit != nil {
@@ -147,6 +160,7 @@ extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicScene
         } else {
             color = convertColorFromPicker()
         }
+        disableOrEnableAddButton()
     }
     func colorPicker(_ colorPicker: ColorPickerController, confirmedColor: UIColor, usingControl: ColorControl) {
     }
