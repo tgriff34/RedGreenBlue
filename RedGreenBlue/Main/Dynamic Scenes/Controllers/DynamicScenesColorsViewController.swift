@@ -133,11 +133,12 @@ extension DynamicScenesColorsViewController {
         switch segue.identifier {
         case "addColorSegue":
             let viewController = segue.destination as? DynamicScenesAddColorViewController
-            viewController?.color = nil
+            viewController?.colorToEdit = nil
             viewController?.addColorDelegate = self
+            viewController?.customColorDelegate = self
         case "EditingColorSegue":
             let viewController = segue.destination as? DynamicScenesAddColorViewController
-            viewController?.color = colors[selectedIndexPath!.row]
+            viewController?.colorToEdit = colors[selectedIndexPath!.row]
             viewController?.addColorDelegate = self
         default:
             logger.error("No such segue identifier: \(String(describing: segue.identifier))")
@@ -150,15 +151,24 @@ extension DynamicScenesColorsViewController {
 }
 
 // MARK: - Delegate
-extension DynamicScenesColorsViewController: DynamicSceneAddColorDelegate {
+extension DynamicScenesColorsViewController: DynamicSceneColorDelegate, DynamicSceneCustomColorDelegate {
+    func dynamicSceneColorAdded(_ colors: List<XYColor>) {
+        self.colors.append(objectsIn: colors)
+        addColorsDelegate?.dynamicSceneColorsAdded(self.colors)
+        collectionView.reloadData()
+    }
+
     func dynamicSceneColorAdded(_ color: XYColor) {
+        self.colors.append(color)
+        addColorsDelegate?.dynamicSceneColorsAdded(self.colors)
+        collectionView.reloadData()
+    }
+
+    func dynamicSceneColorEdited(_ color: XYColor) {
         if let selectedIndexPath = selectedIndexPath {
             colors[selectedIndexPath.row] = color
             collectionView.reloadItems(at: [selectedIndexPath])
             self.selectedIndexPath = nil
-        } else {
-            colors.append(color)
-            collectionView.insertItems(at: [IndexPath(row: colors.count - 1, section: 0)])
         }
         addColorsDelegate?.dynamicSceneColorsAdded(colors)
     }
