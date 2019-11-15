@@ -31,6 +31,14 @@ class ScenesTableViewController: UITableViewController {
         fetchData()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let selectedRow = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedRow, animated: true)
+            self.tableView(self.tableView, didDeselectRowAt: selectedRow)
+        }
+    }
+
     func fetchData() {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
             guard error == nil else {
@@ -50,9 +58,8 @@ class ScenesTableViewController: UITableViewController {
 
     private func fetchGroupData(_ group: RGBGroup) {
         RGBRequest.shared.getGroup(with: group.identifier, using: swiftyHue, completion: { (group) in
-            //swiftlint:disable:next force_cast
-            let cell = self.tableView.cellForRow(at: self.tableView.indexPathForSelectedRow!) as! LightSceneCustomCell
-            cell.group = group
+            let cell = self.tableView.cellForRow(at: self.tableView.indexPathForSelectedRow!) as? LightSceneCustomCell
+            cell?.group = group
         })
     }
 
@@ -139,8 +146,7 @@ extension ScenesTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        //swiftlint:disable:next force_cast
-        let cell = tableView.cellForRow(at: indexPath) as! LightSceneCustomCell
-        cell.group = groups[selectedGroupIndex]
+        let cell = tableView.cellForRow(at: indexPath) as? LightSceneCustomCell
+        cell?.group = groups[selectedGroupIndex]
     }
 }

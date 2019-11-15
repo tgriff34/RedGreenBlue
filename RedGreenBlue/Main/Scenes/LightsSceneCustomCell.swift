@@ -26,9 +26,23 @@ class LightSceneCustomCell: UITableViewCell {
         subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)
     }
 
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if selected {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.subView.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.965)
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.subView.transform = CGAffineTransform.identity
+                })
+            })
+        }
+    }
+
     private func setBackground() {
         if self.isSelected {
             let colors = getColorsOfLightsOn()
+            let colorForLabel = RGBCellUtilities.colorForLabel(from: colors)
             if colors.count > 1 {
                 subView.layer.colors = colors.map({ return $0.cgColor })
                 subView.backgroundColor = nil
@@ -36,9 +50,15 @@ class LightSceneCustomCell: UITableViewCell {
                 subView.layer.colors = nil
                 subView.backgroundColor = colors[0]
             }
+            label.textColor = colorForLabel
         } else {
             subView.layer.colors = nil
             subView.backgroundColor = UIColor(named: "cellColor", in: nil, compatibleWith: traitCollection)
+            if #available(iOS 13, *) {
+                label.textColor = UIColor.label
+            } else {
+                label.textColor = UIColor.black
+            }
         }
     }
 
