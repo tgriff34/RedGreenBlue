@@ -48,6 +48,14 @@ class ScenesTableViewController: UITableViewController {
         })
     }
 
+    private func fetchGroupData(_ group: RGBGroup) {
+        RGBRequest.shared.getGroup(with: group.identifier, using: swiftyHue, completion: { (group) in
+            //swiftlint:disable:next force_cast
+            let cell = self.tableView.cellForRow(at: self.tableView.indexPathForSelectedRow!) as! LightSceneCustomCell
+            cell.group = group
+        })
+    }
+
     private func retrieveScenesFor(groups: [RGBGroup]) {
         RGBRequest.shared.getScenes(with: self.swiftyHue, completion: { (scenes, error) in
             guard error == nil, let scenes = scenes else {
@@ -113,6 +121,7 @@ extension ScenesTableViewController {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
         cell.label.text = allScenes[selectedGroupIndex][indexPath.row].name
+        cell.group = groups[selectedGroupIndex]
         return cell
     }
 
@@ -125,6 +134,13 @@ extension ScenesTableViewController {
                                    String(describing: error?.description))
                     return
                 }
+                self.fetchGroupData(self.groups[self.selectedGroupIndex])
         })
+    }
+
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        //swiftlint:disable:next force_cast
+        let cell = tableView.cellForRow(at: indexPath) as! LightSceneCustomCell
+        cell.group = groups[selectedGroupIndex]
     }
 }

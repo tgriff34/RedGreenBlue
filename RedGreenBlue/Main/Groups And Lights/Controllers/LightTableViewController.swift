@@ -29,16 +29,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     // When buttons released have then transform back to normal size
     // and navigate to appropriate tab.
     @IBAction func groupsColorButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.performSegue(withIdentifier: "GroupColorPickerSegue", sender: self)
         })
     }
     @IBAction func scenesButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![1]
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
@@ -49,9 +45,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
     @IBAction func customScenesButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![2]
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
