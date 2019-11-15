@@ -60,6 +60,7 @@ class ScenesTableViewController: UITableViewController {
         RGBRequest.shared.getGroup(with: group.identifier, using: swiftyHue, completion: { (group) in
             let cell = self.tableView.cellForRow(at: self.tableView.indexPathForSelectedRow!) as? LightSceneCustomCell
             cell?.group = group
+            self.groups[self.selectedGroupIndex] = group
         })
     }
 
@@ -127,8 +128,13 @@ extension ScenesTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
+        if tableView.indexPathForSelectedRow == indexPath {
+            cell.isSelected = true
+        }
+
         cell.label.text = allScenes[selectedGroupIndex][indexPath.row].name
         cell.group = groups[selectedGroupIndex]
+
         return cell
     }
 
