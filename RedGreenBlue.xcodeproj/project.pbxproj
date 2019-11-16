@@ -991,14 +991,14 @@
 			baseConfigurationReference = 68B1AC65FE92B8C07F009E19 /* Pods-RedGreenBlue.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7Y3STU6UA7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1010,14 +1010,14 @@
 			baseConfigurationReference = FF6A693417FD821C9FDA979A /* Pods-RedGreenBlue.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7Y3STU6UA7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RedGreenBlue/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

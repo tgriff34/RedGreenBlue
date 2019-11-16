@@ -41,7 +41,7 @@ class LightSceneCustomCell: UITableViewCell {
 
     private func setBackground() {
         if self.isSelected {
-            let colors = getColorsOfLightsOn()
+            let colors = getColorsOfLights()
             let colorForLabel = RGBCellUtilities.colorForLabel(from: colors)
             if colors.count > 1 {
                 subView.layer.colors = colors.map({ return $0.cgColor })
@@ -62,7 +62,7 @@ class LightSceneCustomCell: UITableViewCell {
         }
     }
 
-    private func getColorsOfLightsOn() -> [UIColor] {
+    private func getColorsOfLights() -> [UIColor] {
         // For every light that is on get the color of the light
         var colorsOfLightsOn = [UIColor]()
         for light in group.lights {

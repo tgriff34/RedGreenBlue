@@ -41,13 +41,13 @@ class ScenesTableViewController: UITableViewController {
 
     func fetchData() {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
-            guard error == nil else {
+            guard error == nil, let groups = groups else {
                 logger.error(String(describing: error.debugDescription))
                 return
             }
             self.navigationItems.removeAll()
             self.groups.removeAll()
-            for group in groups![0] {
+            for group in groups[0] {
                 self.groups.append(group)
                 self.navigationItems.append(group.name)
             }
