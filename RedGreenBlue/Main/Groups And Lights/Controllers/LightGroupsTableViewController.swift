@@ -64,9 +64,7 @@ class LightGroupsTableViewController: UITableViewController {
     }
 
     func setUpInitialView() {
-//        // Checks if current bridge has changed ie it just restarts HB
-//        // ip, bridge, sh are passed by reference so objects in this class are mutated
-//        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        // Initial app startup
         if groups.isEmpty {
             swiftyHue = RGBRequest.shared.getSwiftyHue()
             fetchData(completion: {
@@ -143,8 +141,11 @@ extension LightGroupsTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return "Rooms"
+        } else if section == 1 && !groups[1].isEmpty {
+            return "Groups"
+        } else {
+            return ""
         }
-        return "Groups"
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
