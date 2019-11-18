@@ -81,10 +81,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             object: nil)
 
         // If the bridge change and they were in this view, pop to group view controller
-        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
-        if swiftyHueDidChange.didIpChange {
-            navigationController?.popViewController(animated: true)
-        }
 
         self.fetchData(group: self.group, completion: {
             self.tableView.beginUpdates()
@@ -187,14 +183,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
             self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.group.identifier, completionHandler: { _ in
                 self.navigationController?.popViewController(animated: true)
-
-                // If you deleted a group that was a default selected scene for either
-                // scenes or custom scenes tab, reset the default to 'Default'
-                if self.group.name == UserDefaults.standard.object(forKey: "DefaultScene") as? String {
-                    UserDefaults.standard.set("Default", forKey: "DefaultScene")
-                } else if self.group.name == UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String {
-                    UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
-                }
             })
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

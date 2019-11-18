@@ -28,6 +28,7 @@ class ScenesTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        swiftyHue = RGBRequest.shared.getSwiftyHue()
         fetchData()
     }
 
@@ -83,13 +84,9 @@ class ScenesTableViewController: UITableViewController {
     }
 
     private func setUpDropdown() {
-        if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
-            defaultGroup != "Default", shouldFetchDefault {
-            selectedGroupIndex = self.navigationItems.firstIndex(of: defaultGroup)!
-        } else if shouldFetchDefault {
+        if shouldFetchDefault {
             selectedGroupIndex = 0
         }
-        shouldFetchDefault = false
 
         let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
                                                 containerView: self.navigationController!.view,

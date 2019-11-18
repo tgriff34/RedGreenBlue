@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import SwiftyHue
 import SwiftMessages
 import RealmSwift
@@ -116,17 +117,16 @@ class RGBRequest {
     private var rgbHueBridge: RGBHueBridge?
     private var ipAddress: String?
 
+    func setSwiftyHue(ipAddress: String) -> SwiftyHue {
+        UserDefaults.standard.set(ipAddress, forKey: "DefaultBridge")
+        RGBGroupsAndLightsHelper.shared.stopDynamicScene()
+        return RGBRequest.shared.getSwiftyHue()
+    }
+
     func getSwiftyHue() -> SwiftyHue {
         _ = setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbHueBridge, swiftyHue: &swiftyHue)
 
         return swiftyHue
-    }
-
-    func getSwiftyHueWithBool() -> (swiftyHue: SwiftyHue, didIpChange: Bool) {
-        let didIpChange = setCurrentlySelectedBridge(ipAddress: &ipAddress, rgbHueBridge: &rgbHueBridge,
-                                                     swiftyHue: &swiftyHue)
-
-        return (swiftyHue, didIpChange)
     }
 
     // Sets current bridge selected.  If the ip in UserDefaults changed it will reconfigure settings to new bridge

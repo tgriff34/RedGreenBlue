@@ -12,25 +12,15 @@ import MessageUI
 
 class SettingsTableViewController: UITableViewController {
 
-    var allGroupNames = [String]()
-    var roomGroupNames = [String]()
     var swiftyHue: SwiftyHue!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        swiftyHue = RGBRequest.shared.getSwiftyHue()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        RGBRequest.shared.getGroups(with: swiftyHue, completion: { (groups, _) in
-            if let groups = groups {
-                self.allGroupNames = ["Default"] + groups.flatMap({ $0 }).map({ $0.name })
-                self.roomGroupNames = ["Default"] + groups.flatMap({ $0 })
-                    .filter({ $0.type == GroupType.Room }).map({ $0.name })
-            }
-        })
-        tableView.reloadData()
+        swiftyHue = RGBRequest.shared.getSwiftyHue()
     }
 
     private func createActionSheetForOption(title: String?, message: String?, style: UIAlertController.Style,
@@ -101,10 +91,6 @@ extension SettingsTableViewController {
         switch indexPath.section {
         case 0:
             if indexPath.row == 1 {
-                cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "DefaultScene") as? String
-            } else if indexPath.row == 2 {
-                cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String
-            } else if indexPath.row == 3 {
                 cell.detailTextLabel?.text = UserDefaults.standard.object(forKey: "SoundSetting") as? String
             }
         default:
@@ -117,20 +103,6 @@ extension SettingsTableViewController {
         switch indexPath.section {
         case 0:
             if indexPath.row == 1 {
-                let message = String(format: "%@%@", "This is the group that will be automatically",
-                                     " selected when changing to the scenes tab.")
-                createActionSheetForOption(title: "Change default group",
-                                           message: message,
-                                           style: .actionSheet,
-                                           options: roomGroupNames, forKey: "DefaultScene")
-            } else if indexPath.row == 2 {
-                let message = String(format: "%@%@", "This is the group that will be automatically",
-                                     " selected when changing to the custom scenes tab.")
-                createActionSheetForOption(title: "Change default group",
-                                           message: message,
-                                           style: .actionSheet,
-                                           options: allGroupNames, forKey: "DefaultCustomScene")
-            } else if indexPath.row == 3 {
                 createActionSheetForOption(title: nil,
                                            message: nil,
                                            style: .actionSheet,

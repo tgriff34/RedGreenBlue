@@ -63,13 +63,12 @@ class LightGroupsTableViewController: UITableViewController {
         }
     }
 
-    private func setUpInitialView() {
-        // Checks if current bridge has changed if true
-        // it starts HB and reloads data otherwise it just restarts HB
-        // ip, bridge, sh are passed by reference so objects in this class are mutated
-        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
-        if swiftyHueDidChange.didIpChange || groups.isEmpty {
-            swiftyHue = swiftyHueDidChange.swiftyHue
+    func setUpInitialView() {
+//        // Checks if current bridge has changed ie it just restarts HB
+//        // ip, bridge, sh are passed by reference so objects in this class are mutated
+//        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
+        if groups.isEmpty {
+            swiftyHue = RGBRequest.shared.getSwiftyHue()
             fetchData(completion: {
                 self.tableView.reloadData()
             })
