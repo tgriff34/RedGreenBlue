@@ -81,8 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If the application was previously in the background, optionally refresh the user interface.
         RGBRequest.shared.setUpConnectionListeners()
         RGBRequest.shared.setApplicationTheme()
-        let swiftyHue = RGBRequest.shared.getSwiftyHue()
-        swiftyHue.startHeartbeat()
+        _ = RGBRequest.shared.getSwiftyHue()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

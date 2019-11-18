@@ -65,6 +65,7 @@ class ScenesTableViewController: UITableViewController {
     }
 
     private func retrieveScenesFor(groups: [RGBGroup]) {
+        allScenes.removeAll()
         RGBRequest.shared.getScenes(with: self.swiftyHue, completion: { (scenes, error) in
             guard error == nil, let scenes = scenes else {
                 return
