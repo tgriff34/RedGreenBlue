@@ -80,6 +80,33 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
         startBridgeFinderButton.isEnabled = false
         activityIndicatorView?.startAnimating()
     }
+
+    private func refreshTabViewsOnBridgeChange(_ swiftyHue: SwiftyHue) {
+        let viewControllers = tabBarController?.viewControllers
+        for (index, viewController) in viewControllers!.enumerated() {
+            if let viewController = viewController as? UINavigationController {
+                switch index {
+                case 0:
+                    let groupsViewController = viewController.viewControllers.first! as? LightGroupsTableViewController
+                    groupsViewController?.swiftyHue = swiftyHue
+                    groupsViewController?.setUpInitialView()
+                    viewController.popToRootViewController(animated: true)
+                case 1:
+                    let scenesViewController = viewController.viewControllers.first! as? ScenesTableViewController
+                    scenesViewController?.swiftyHue = swiftyHue
+                    scenesViewController?.selectedGroupIndex = 0
+                    scenesViewController?.fetchData()
+                case 2:
+                    let dynamicViewController = viewController.viewControllers.first! as? DynamicScenesViewController
+                    dynamicViewController?.swiftyHue = swiftyHue
+                    dynamicViewController?.selectedGroupIndex = 0
+                    dynamicViewController?.fetchData()
+                default:
+                    break
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Table view data source
@@ -125,7 +152,11 @@ extension BridgesTableViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            UserDefaults.standard.set(authorizedBridges[indexPath.row].ipAddress, forKey: "DefaultBridge")
+            let selectedBridge = authorizedBridges[indexPath.row]
+
+            let newSwiftyHue = RGBRequest.shared.setSwiftyHue(ipAddress: selectedBridge.ipAddress)
+            refreshTabViewsOnBridgeChange(newSwiftyHue)
+
             tableView.deselectRow(at: selectedBridgeIndex!, animated: true)
             selectedBridgeIndex = indexPath
         case 1:

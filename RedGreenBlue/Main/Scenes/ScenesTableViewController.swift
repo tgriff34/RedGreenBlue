@@ -18,7 +18,6 @@ class ScenesTableViewController: UITableViewController {
     var allScenes = [[PartialScene]]()
 
     var selectedGroupIndex = 0
-    var shouldFetchDefault: Bool = true
 
     var navigationItems = [String]()
 
@@ -28,23 +27,40 @@ class ScenesTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        swiftyHue = RGBRequest.shared.getSwiftyHue()
         fetchData()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let selectedRow = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedRow, animated: true)
+            self.tableView(self.tableView, didDeselectRowAt: selectedRow)
+        }
     }
 
     func fetchData() {
         RGBRequest.shared.getGroups(with: self.swiftyHue, completion: { (groups, error) in
-            guard error == nil else {
+            guard error == nil, let groups = groups else {
                 logger.error(String(describing: error.debugDescription))
                 return
             }
             self.navigationItems.removeAll()
             self.groups.removeAll()
-            for group in groups![0] {
+            for group in groups[0] {
                 self.groups.append(group)
                 self.navigationItems.append(group.name)
             }
 
             self.retrieveScenesFor(groups: self.groups)
+        })
+    }
+
+    private func fetchGroupData(_ group: RGBGroup) {
+        RGBRequest.shared.getGroup(with: group.identifier, using: swiftyHue, completion: { (group) in
+            let cell = self.tableView.cellForRow(at: self.tableView.indexPathForSelectedRow!) as? LightSceneCustomCell
+            cell?.group = group
+            self.groups[self.selectedGroupIndex] = group
         })
     }
 
@@ -67,14 +83,6 @@ class ScenesTableViewController: UITableViewController {
     }
 
     private func setUpDropdown() {
-        if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultScene") as? String,
-            defaultGroup != "Default", shouldFetchDefault {
-            selectedGroupIndex = self.navigationItems.firstIndex(of: defaultGroup)!
-        } else if shouldFetchDefault {
-            selectedGroupIndex = 0
-        }
-        shouldFetchDefault = false
-
         let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
                                                 containerView: self.navigationController!.view,
                                                 title: BTTitle.index(selectedGroupIndex), items: navigationItems)
@@ -112,7 +120,13 @@ extension ScenesTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScenesCellIdentifier") as! LightSceneCustomCell
+        if tableView.indexPathForSelectedRow == indexPath {
+            cell.isSelected = true
+        }
+
         cell.label.text = allScenes[selectedGroupIndex][indexPath.row].name
+        cell.group = groups[selectedGroupIndex]
+
         return cell
     }
 
@@ -125,6 +139,12 @@ extension ScenesTableViewController {
                                    String(describing: error?.description))
                     return
                 }
+                self.fetchGroupData(self.groups[self.selectedGroupIndex])
         })
+    }
+
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as? LightSceneCustomCell
+        cell?.group = groups[selectedGroupIndex]
     }
 }

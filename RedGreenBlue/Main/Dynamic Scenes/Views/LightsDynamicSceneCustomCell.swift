@@ -46,11 +46,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        subView.layer.cornerRadius = 20.0
-        subView.layer.shadowColor = UIColor.black.cgColor
-        subView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-        subView.layer.shadowOpacity = 0.34
-        subView.layer.shadowRadius = 4.3
+        RGBCellUtilities.setCellLayerStyleAttributes(subView)
 
         subView.layer.startPoint = CGPoint(x: 0.0, y: 0.5)
         subView.layer.endPoint = CGPoint(x: 1.0, y: 0.5)

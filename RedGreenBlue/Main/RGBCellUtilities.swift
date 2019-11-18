@@ -30,6 +30,20 @@ class RGBCellUtilities {
         slider.setMinimumTrackImage(minTrack, for: .normal)
         slider.setMaximumTrackImage(maxTrack, for: .normal)
     }
+    static func buttonPressReleased(_ sender: UIButton, completion: @escaping () -> Void) {
+        UIButton.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform.identity
+        }, completion: { _ in
+            completion()
+        })
+    }
+    static func setCellLayerStyleAttributes(_ view: UIView) {
+        view.layer.cornerRadius = 20.0
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        view.layer.shadowOpacity = 0.34
+        view.layer.shadowRadius = 4.3
+    }
 }
 
 extension UIColor {

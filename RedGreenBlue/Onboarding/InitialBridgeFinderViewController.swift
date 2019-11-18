@@ -60,8 +60,6 @@ extension InitialBridgeFinderViewController {
         switch segue.identifier {
         case "StartApplicationSegue":
             UserDefaults.standard.set(true, forKey: "isOnboard")
-            UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
-            UserDefaults.standard.set("Default", forKey: "DefaultScene")
             UserDefaults.standard.set("system", forKey: "AppTheme")
             UserDefaults.standard.set("Unmuted", forKey: "SoundSetting")
             RGBDatabaseManager.write(to: realm!, closure: {

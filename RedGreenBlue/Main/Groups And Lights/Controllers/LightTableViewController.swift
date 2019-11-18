@@ -29,16 +29,12 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
     // When buttons released have then transform back to normal size
     // and navigate to appropriate tab.
     @IBAction func groupsColorButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.performSegue(withIdentifier: "GroupColorPickerSegue", sender: self)
         })
     }
     @IBAction func scenesButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![1]
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
@@ -49,9 +45,7 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         })
     }
     @IBAction func customScenesButton(_ sender: UIButton) {
-        UIButton.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform.identity
-        }, completion: { _ in
+        RGBCellUtilities.buttonPressReleased(sender, completion: {
             self.tabBarController?.selectedViewController = self.tabBarController?.viewControllers![2]
                 as? UINavigationController
             let destination = self.tabBarController?.selectedViewController as? UINavigationController
@@ -87,10 +81,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
             object: nil)
 
         // If the bridge change and they were in this view, pop to group view controller
-        let swiftyHueDidChange = RGBRequest.shared.getSwiftyHueWithBool()
-        if swiftyHueDidChange.didIpChange {
-            navigationController?.popViewController(animated: true)
-        }
 
         self.fetchData(group: self.group, completion: {
             self.tableView.beginUpdates()
@@ -193,14 +183,6 @@ class LightTableViewController: UIViewController, UITableViewDataSource, UITable
         let deleteAction = UIAlertAction(title: "Delete Group", style: .destructive, handler: { _ in
             self.swiftyHue.bridgeSendAPI.removeGroupWithId(self.group.identifier, completionHandler: { _ in
                 self.navigationController?.popViewController(animated: true)
-
-                // If you deleted a group that was a default selected scene for either
-                // scenes or custom scenes tab, reset the default to 'Default'
-                if self.group.name == UserDefaults.standard.object(forKey: "DefaultScene") as? String {
-                    UserDefaults.standard.set("Default", forKey: "DefaultScene")
-                } else if self.group.name == UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String {
-                    UserDefaults.standard.set("Default", forKey: "DefaultCustomScene")
-                }
             })
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

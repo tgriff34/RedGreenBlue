@@ -21,7 +21,6 @@ class DynamicScenesViewController: UITableViewController {
     var navigationItems = [String]()
 
     var selectedGroupIndex = 0
-    var shouldFetchDefault: Bool = true
     var selectedRowIndex: IndexPath?
 
     let realm = RGBDatabaseManager.realm()!
@@ -47,8 +46,11 @@ class DynamicScenesViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        swiftyHue = RGBRequest.shared.getSwiftyHue()
         setupDropdownNavigationBar()
-        tableView.selectRow(at: selectedRowIndex, animated: true, scrollPosition: .none)
+        if RGBGroupsAndLightsHelper.shared.getPlayingScene() != nil {
+            tableView.selectRow(at: selectedRowIndex, animated: true, scrollPosition: .none)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -93,14 +95,6 @@ class DynamicScenesViewController: UITableViewController {
             for group in self.groups {
                 self.navigationItems.append(group.name)
             }
-
-            if let defaultGroup = UserDefaults.standard.object(forKey: "DefaultCustomScene") as? String,
-                defaultGroup != "Default", self.shouldFetchDefault {
-                self.selectedGroupIndex = self.navigationItems.firstIndex(of: defaultGroup)!
-            } else if self.shouldFetchDefault {
-                self.selectedGroupIndex = 0
-            }
-            self.shouldFetchDefault = false
 
             let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
                                                     containerView: self.navigationController!.view,
