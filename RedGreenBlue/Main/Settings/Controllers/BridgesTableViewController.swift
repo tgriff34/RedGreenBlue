@@ -94,13 +94,13 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
                 case 1:
                     let scenesViewController = viewController.viewControllers.first! as? ScenesTableViewController
                     scenesViewController?.swiftyHue = swiftyHue
-                    scenesViewController?.selectedGroupIndex = 0
                     scenesViewController?.fetchData()
+                    scenesViewController?.selectedGroupIndex = 0
                 case 2:
                     let dynamicViewController = viewController.viewControllers.first! as? DynamicScenesViewController
                     dynamicViewController?.swiftyHue = swiftyHue
-                    dynamicViewController?.selectedGroupIndex = 0
                     dynamicViewController?.fetchData()
+                    dynamicViewController?.selectedGroupIndex = 0
                 default:
                     break
                 }

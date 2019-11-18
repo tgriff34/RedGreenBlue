@@ -120,7 +120,7 @@ class RGBRequest {
     func setSwiftyHue(ipAddress: String) -> SwiftyHue {
         UserDefaults.standard.set(ipAddress, forKey: "DefaultBridge")
         RGBGroupsAndLightsHelper.shared.stopDynamicScene()
-        return RGBRequest.shared.getSwiftyHue()
+        return getSwiftyHue()
     }
 
     func getSwiftyHue() -> SwiftyHue {
@@ -135,8 +135,9 @@ class RGBRequest {
         if ipAddress != UserDefaults.standard.object(forKey: "DefaultBridge") as? String {
             ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
             rgbHueBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
+
             setBridgeConfiguration(for: rgbHueBridge!, with: swiftyHue)
-            swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
+
             return true
         }
         return false
@@ -147,7 +148,11 @@ class RGBRequest {
         let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
                                                     ipAddress: RGBHueBridge.ipAddress,
                                                     username: RGBHueBridge.username)
+        swiftyHue.stopHeartbeat()
+        swiftyHue.removeLocalHeartbeat(forResourceType: .lights)
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
+        swiftyHue.setLocalHeartbeatInterval(3, forResourceType: .lights)
+        swiftyHue.startHeartbeat()
     }
 
     // Sets connection observers so to know whether user is connected to the bridge or not
