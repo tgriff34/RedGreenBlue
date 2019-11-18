@@ -18,7 +18,6 @@ class ScenesTableViewController: UITableViewController {
     var allScenes = [[PartialScene]]()
 
     var selectedGroupIndex = 0
-    var shouldFetchDefault: Bool = true
 
     var navigationItems = [String]()
 
@@ -84,10 +83,6 @@ class ScenesTableViewController: UITableViewController {
     }
 
     private func setUpDropdown() {
-        if shouldFetchDefault {
-            selectedGroupIndex = 0
-        }
-
         let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
                                                 containerView: self.navigationController!.view,
                                                 title: BTTitle.index(selectedGroupIndex), items: navigationItems)
