@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -408,6 +408,35 @@
             </objects>
             <point key="canvasLocation" x="5916" y="623"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="v6a-m6-dgD">
+            <objects>
+                <viewController id="Xgv-wO-1wc" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ksz-bZ-dAW">
+                        <rect key="frame" x="0.0" y="0.0" width="125" height="50"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Required" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3T-z1-1ax">
+                                <rect key="frame" x="28" y="15" width="69" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="kYd-w3-Jl6"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="125" height="50"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="125" height="50"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SNq-GD-MUn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4649" y="25"/>
+        </scene>
         <!--Colors-->
         <scene sceneID="5oH-yU-r3b">
             <objects>
@@ -624,15 +653,15 @@
                         <sections>
                             <tableViewSection id="9aK-1Q-Eta">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="nameTextFieldCell" id="Xci-lE-9zG">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="nameTextFieldCell" id="Xci-lE-9zG">
                                         <rect key="frame" x="0.0" y="18" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xci-lE-9zG" id="y78-s8-YK0">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="370" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8Ab-kZ-cW0">
-                                                    <rect key="frame" x="20" y="11" width="374" height="22"/>
+                                                    <rect key="frame" x="20" y="11" width="330" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                 </textField>
@@ -643,16 +672,21 @@
                                                 <constraint firstItem="8Ab-kZ-cW0" firstAttribute="centerY" secondItem="y78-s8-YK0" secondAttribute="centerY" id="zDg-Mo-RAZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Xgv-wO-1wc" kind="popoverPresentation" identifier="popoverSegue" trigger="accessoryAction" popoverAnchorView="Xci-lE-9zG" id="e2a-eF-sxR">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Colors" id="SyN-zy-FSn">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="CqA-qw-Ufd" detailTextLabel="1Wl-l7-2dW" style="IBUITableViewCellStyleValue1" id="JP5-Gz-7yB">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" textLabel="CqA-qw-Ufd" detailTextLabel="1Wl-l7-2dW" style="IBUITableViewCellStyleValue1" id="JP5-Gz-7yB">
                                         <rect key="frame" x="0.0" y="117.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JP5-Gz-7yB" id="zPh-zm-9Ny">
-                                            <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="351" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Colors" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CqA-qw-Ufd">
@@ -663,7 +697,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="0 colors" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1Wl-l7-2dW">
-                                                    <rect key="frame" x="313.5" y="12" width="61.5" height="20.5"/>
+                                                    <rect key="frame" x="281.5" y="12" width="61.5" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -673,6 +707,9 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <segue destination="1fz-4I-qAj" kind="show" identifier="ColorsSegue" id="Iq5-qc-Dvy"/>
+                                            <segue destination="Xgv-wO-1wc" kind="popoverPresentation" identifier="popoverSegue" trigger="accessoryAction" popoverAnchorView="JP5-Gz-7yB" id="JJb-iE-NbZ">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="3RV-s3-XGR" detailTextLabel="rLb-Vd-ELK" style="IBUITableViewCellStyleValue1" id="eta-ez-f2G">
@@ -958,5 +995,6 @@
         <segue reference="JiX-WT-gjM"/>
         <segue reference="wDs-Ad-SIh"/>
         <segue reference="gcI-gz-Z4N"/>
+        <segue reference="e2a-eF-sxR"/>
     </inferredMetricsTieBreakers>
 </document>

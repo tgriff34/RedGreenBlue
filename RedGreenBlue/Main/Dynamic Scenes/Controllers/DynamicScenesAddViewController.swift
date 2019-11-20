@@ -81,18 +81,6 @@ class DynamicScenesAddViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
     }
 
-    @objc func fluctuatingBrightnessTapped(_ sender: UISwitch) {
-        tableView.reloadSections([3], with: .automatic)
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: .none)
-    }
-
-    @objc func brightSliderValueChanged(_ sender: MARKRangeSlider) {
-        minBrightness = Int(sender.leftValue)
-        maxBrightness = Int(sender.rightValue)
-        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 2))
-        cell?.detailTextLabel?.text = "\(minBrightness)% - \(maxBrightness)%"
-    }
-
     private func setSceneIfEditing() {
         if let scene = scene {
             for color in scene.xys { // needs to copy instead of assigning as reference
@@ -115,7 +103,31 @@ class DynamicScenesAddViewController: UITableViewController {
         }
     }
 
-    private func enableOrDisableSaveButton() {
+    private func enableOrDisableSaveButton(_ indexPath: IndexPath, _ cell: UITableViewCell? = nil) {
+        var useCell: UITableViewCell?
+        if cell != nil {
+            useCell = cell
+        } else {
+            useCell = tableView.cellForRow(at: indexPath)
+        }
+
+        switch indexPath.section {
+        case 0:
+            if textField.text?.isEmpty ?? false {
+                useCell?.accessoryType = .detailButton
+            } else {
+                useCell?.accessoryType = .none
+            }
+        case 1:
+            if colors.isEmpty {
+                useCell?.accessoryType = .detailDisclosureButton
+            } else {
+                useCell?.accessoryType = .disclosureIndicator
+            }
+        default:
+            return
+        }
+
         if colors.isEmpty || textField.text?.isEmpty ?? false {
             navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
@@ -132,15 +144,23 @@ extension DynamicScenesAddViewController {
         }
         return 5
     }
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 0 {
+            performSegue(withIdentifier: "popoverSegue", sender: tableView.cellForRow(at: indexPath)!.accessoryView)
+        } else if indexPath.section == 1 && indexPath.row == 0 {
+            performSegue(withIdentifier: "popoverSegue", sender: tableView.cellForRow(at: indexPath)!.accessoryView)
+        }
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         switch indexPath.section {
         case 0:
             textField.text = name
-            enableOrDisableSaveButton()
+            enableOrDisableSaveButton(indexPath, cell)
         case 1:
             if indexPath.row == 0 {
                 cell.detailTextLabel?.text = colors.count > 1 ? "\(colors.count) colors" : "\(colors.count) color"
+                enableOrDisableSaveButton(indexPath, cell)
             } else if indexPath.row == 1 {
                 cell.detailTextLabel?.text = lightsChangeColor ? "On" : "Off"
             }
@@ -201,9 +221,20 @@ extension DynamicScenesAddViewController {
             let viewController = segue.destination as? DynamicScenesAddSoundViewController
             viewController?.addSoundFileDelegate = self
             viewController?.selectedSoundFile = soundFileName
+        case "popoverSegue":
+            let popoverViewController = segue.destination
+            popoverViewController.modalPresentationStyle = .popover
+            popoverViewController.popoverPresentationController?.delegate = self
         default:
             logger.error("segue identifier does not exist: \(segue.identifier ?? "nil")")
         }
+    }
+}
+
+// MARK: - Popover delegate
+extension DynamicScenesAddViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
 }
 
@@ -254,7 +285,7 @@ DynamicSceneColorOptionsDelegate, DynamicSceneBrightnessOptionsDelegate {
     func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
         self.colors = colors
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
-        enableOrDisableSaveButton()
+        enableOrDisableSaveButton(IndexPath(row: 0, section: 1))
     }
 }
 
@@ -272,7 +303,7 @@ extension DynamicScenesAddViewController: UITextFieldDelegate {
     }
     @objc func textFieldDidChange(_ textField: UITextField) {
         self.name = textField.text ?? ""
-        enableOrDisableSaveButton()
+        enableOrDisableSaveButton(IndexPath(row: 0, section: 0))
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
