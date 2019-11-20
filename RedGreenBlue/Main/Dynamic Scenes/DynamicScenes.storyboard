@@ -130,7 +130,7 @@
         <!--Light Brightness Settings-->
         <scene sceneID="YO3-YJ-4pD">
             <objects>
-                <tableViewController id="eJt-rv-Hmi" customClass="DynamicScenesBrightnessOptionsViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="eJt-rv-Hmi" customClass="DynamicScenesBrightnessViewController" customModule="RedGreenBlue" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="6QE-Ya-G5B">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -967,7 +967,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4k-Ee-Pa4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6896" y="972"/>
+            <point key="canvasLocation" x="6896" y="961"/>
         </scene>
         <!--Default Color Picker View Controller-->
         <scene sceneID="Tjc-GW-Dyj">

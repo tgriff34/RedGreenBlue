@@ -365,12 +365,26 @@
                     <view key="view" contentMode="scaleToFill" id="ihQ-4S-kUN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7b-Iz-ZOc">
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                            </containerView>
+                        </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="h7b-Iz-ZOc" firstAttribute="top" secondItem="OOD-eP-1kZ" secondAttribute="top" id="8jF-sY-Mxn"/>
+                            <constraint firstItem="OOD-eP-1kZ" firstAttribute="bottom" secondItem="h7b-Iz-ZOc" secondAttribute="bottom" id="EWh-kD-cGF"/>
+                            <constraint firstItem="h7b-Iz-ZOc" firstAttribute="leading" secondItem="OOD-eP-1kZ" secondAttribute="leading" id="LdD-6I-8Pn"/>
+                            <constraint firstItem="OOD-eP-1kZ" firstAttribute="trailing" secondItem="h7b-Iz-ZOc" secondAttribute="trailing" id="aoV-hD-7XC"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="OOD-eP-1kZ"/>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="6qF-Rt-WBe"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="containerView" destination="h7b-Iz-ZOc" id="vPy-0n-GsL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ebY-1Y-gJn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
