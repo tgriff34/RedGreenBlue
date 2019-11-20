@@ -54,8 +54,7 @@ class SettingsTableViewController: UITableViewController {
             let mailComposer = MFMailComposeViewController()
             mailComposer.setSubject("Crash Logs")
             mailComposer.setMessageBody("Here are my crash logs!", isHTML: false)
-            // TODO: Change Recipient
-            mailComposer.setToRecipients(["tjg22596@gmail.com"])
+            mailComposer.setToRecipients(["RedGreenBlueApp@gmail.com"])
             mailComposer.mailComposeDelegate = self
             guard let filePath = UserDefaults.standard.url(forKey: "LogFile") else {
                 return

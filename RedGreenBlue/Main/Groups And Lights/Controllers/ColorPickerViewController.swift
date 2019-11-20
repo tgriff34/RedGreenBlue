@@ -14,7 +14,7 @@ import RealmSwift
 class ColorPickerViewController: UIViewController {
     var swiftyHue: SwiftyHue!
     var lights = [Light]()
-    
+
     @IBOutlet weak var containerView: UIView!
 
     weak var addColorDelegate: DynamicSceneColorDelegate?
@@ -65,7 +65,7 @@ class ColorPickerViewController: UIViewController {
 
         customColorPickerViewController.colorPicker.radialHsbPalette?.addTarget(
             self, action: #selector(colorPickerTouchUpInside(_:)), for: .valueChanged)
-        
+
         selectedColor = XYColor([lights[0].state.xy![0], lights[0].state.xy![1]])
     }
 

@@ -13,7 +13,7 @@
 		460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */; };
 		461F2E2C235121640029D3DC /* test.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 461F2E2B235121640029D3DC /* test.mp3 */; };
 		46272DD4231477C90056ED84 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46272DD3231477C90056ED84 /* Onboarding.storyboard */; };
-		462984A923609979009A43ED /* DynamicScenesBrightnessOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462984A823609979009A43ED /* DynamicScenesBrightnessOptionsViewController.swift */; };
+		462984A923609979009A43ED /* DynamicScenesBrightnessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462984A823609979009A43ED /* DynamicScenesBrightnessViewController.swift */; };
 		462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E3B2343CE960088296B /* ThemeTableViewController.swift */; };
 		462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */; };
 		462A5E4A23467D330088296B /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4923467D330088296B /* SSCheckMark.swift */; };
@@ -103,7 +103,7 @@
 		460F71FB230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroupsAndLightsHelper.swift; sourceTree = "<group>"; };
 		461F2E2B235121640029D3DC /* test.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = test.mp3; sourceTree = "<group>"; };
 		46272DD3231477C90056ED84 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
-		462984A823609979009A43ED /* DynamicScenesBrightnessOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesBrightnessOptionsViewController.swift; sourceTree = "<group>"; };
+		462984A823609979009A43ED /* DynamicScenesBrightnessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesBrightnessViewController.swift; sourceTree = "<group>"; };
 		462A5E3B2343CE960088296B /* ThemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewController.swift; sourceTree = "<group>"; };
 		462A5E4223462C1F0088296B /* ColorDynamicSceneCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDynamicSceneCustomCell.swift; sourceTree = "<group>"; };
 		462A5E4923467D330088296B /* SSCheckMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
@@ -350,7 +350,7 @@
 				46736546233A61C700DA33AA /* DynamicScenesAddColorViewController.swift */,
 				466BF092234940DE005FEA1B /* DynamicScenesColorsPickerViewController.swift */,
 				4606B6B3235E381600060605 /* DynamicScenesColorOptionsViewController.swift */,
-				462984A823609979009A43ED /* DynamicScenesBrightnessOptionsViewController.swift */,
+				462984A823609979009A43ED /* DynamicScenesBrightnessViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -797,7 +797,7 @@
 				462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */,
 				462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
-				462984A923609979009A43ED /* DynamicScenesBrightnessOptionsViewController.swift in Sources */,
+				462984A923609979009A43ED /* DynamicScenesBrightnessViewController.swift in Sources */,
 				46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */,
 				46EF2DAC230ED09C0021B28B /* LightsCustomCell.swift in Sources */,
 				464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */,

@@ -9,7 +9,7 @@
 import UIKit
 import MARKRangeSlider
 
-class DynamicScenesBrightnessOptionsViewController: UITableViewController {
+class DynamicScenesBrightnessViewController: UITableViewController {
     @IBOutlet weak var fluctuatingBrightnessSwitch: UISwitch!
     @IBOutlet weak var brightnessSlider: MARKRangeSlider!
 
@@ -68,7 +68,7 @@ class DynamicScenesBrightnessOptionsViewController: UITableViewController {
     }
 }
 
-extension DynamicScenesBrightnessOptionsViewController {
+extension DynamicScenesBrightnessViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && !fluctuatingBrightnessSwitch.isOn {
             return 0
@@ -107,7 +107,7 @@ extension DynamicScenesBrightnessOptionsViewController {
     }
 }
 
-extension DynamicScenesBrightnessOptionsViewController {
+extension DynamicScenesBrightnessViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "TimeBetweenChangingBrightnessSegue":
@@ -122,7 +122,7 @@ extension DynamicScenesBrightnessOptionsViewController {
     }
 }
 
-extension DynamicScenesBrightnessOptionsViewController: DynamicSceneAddTimeDelegate {
+extension DynamicScenesBrightnessViewController: DynamicSceneAddTimeDelegate {
     func dynamicSceneTimeAdded(_ type: TimeType, _ time: Int) {
         self.brightnessTime = time
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)

@@ -211,7 +211,7 @@ extension DynamicScenesAddViewController {
             viewController?.shiftRight = shiftRight
             viewController?.time = time
         case "ShowBrightnessOptionsSegue":
-            let viewController = segue.destination as?  DynamicScenesBrightnessOptionsViewController
+            let viewController = segue.destination as?  DynamicScenesBrightnessViewController
             viewController?.brightnessOptionsDelegate = self
             viewController?.fluctuatingBrightness = fluctuatingBrightness
             viewController?.minBrightness = minBrightness
