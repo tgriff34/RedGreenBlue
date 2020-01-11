@@ -7,33 +7,15 @@
 //
 
 import SwiftyHue
-import RealmSwift
+import CoreData
 
-class RGBHueBridge: Object {
-
-    @objc dynamic var username: String = ""
-    @objc dynamic var ipAddress: String = ""
-    @objc dynamic var deviceType: String = ""
-    @objc dynamic var friendlyName: String = ""
-    @objc dynamic var modelDescription: String = ""
-    @objc dynamic var modelName: String = ""
-    @objc dynamic var serialNumber: String = ""
-    @objc dynamic var UDN: String = ""
-    var icons: [HueBridgeIcon] = []
-
-    convenience init(hueBridge: HueBridge) {
-        self.init()
-        self.ipAddress = hueBridge.ip
-        self.deviceType = hueBridge.deviceType
-        self.friendlyName = hueBridge.friendlyName
-        self.modelDescription = hueBridge.modelDescription
-        self.modelName = hueBridge.modelName
-        self.serialNumber = hueBridge.serialNumber
-        self.UDN = hueBridge.UDN
-        self.icons = hueBridge.icons
-    }
-
-    override static func primaryKey() -> String? {
-        return "ipAddress"
-    }
-}
+//class RGBHueBridge: NSManagedObject {
+//    @NSManaged var deviceType: String?
+//    @NSManaged var friendlyName: String?
+//    @NSManaged var ipAddress: String?
+//    @NSManaged var modelDescription: String?
+//    @NSManaged var modelName: String?
+//    @NSManaged var serialNumber: String?
+//    @NSManaged var udn: String?
+//    @NSManaged var username: String?
+//}

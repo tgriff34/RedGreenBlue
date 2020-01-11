@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import SwiftyHue
 import RealmSwift
 import TORoundedButton
@@ -23,8 +24,6 @@ class InitialBridgeFinderViewController: UIViewController {
     var bridgeFinder = BridgeFinder()
     var bridgeAuthenticators: [BridgeAuthenticator]?
     var foundBridges: [HueBridge]?
-
-    var rgbBridge: RGBHueBridge?
 
     let realm: Realm? = RGBDatabaseManager.realm()
 
@@ -98,19 +97,14 @@ extension InitialBridgeFinderViewController: BridgeAuthenticatorDelegate {
             return
         }
 
-        rgbBridge = RGBHueBridge(hueBridge: bridge)
-        rgbBridge?.username = username
-
-        if let realm = realm {
-            RGBDatabaseManager.write(to: realm, closure: {
-                realm.add(rgbBridge!, update: .modified)
-            })
-        }
-
-        UserDefaults.standard.set(rgbBridge?.ipAddress, forKey: "DefaultBridge")
-
-        activityIndicatorView?.stopAnimating()
-        showStartButton()
+        RGBDatabaseManager.addBridge(bridge, username, completion: { (_, error) in
+            if error != nil {
+                return
+            }
+            UserDefaults.standard.set(bridge.ip, forKey: "DefaultBridge")
+            self.activityIndicatorView?.stopAnimating()
+            self.showStartButton()
+        })
     }
 
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {

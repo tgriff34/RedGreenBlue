@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import SwiftyHue
 import RealmSwift
 import SwiftMessages
@@ -16,11 +17,10 @@ import NVActivityIndicatorView
 class BridgesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var bridgeFinder: BridgeFinder?
-    var bridges = [RGBHueBridge]()
+    var bridges = [HueBridge]()
+    var selectedBridge: HueBridge?
     var authorizedBridges = [RGBHueBridge]()
-    var selectedBridge: RGBHueBridge?
     var bridgeAuthenticator: BridgeAuthenticator?
-    let realm: Realm? = RGBDatabaseManager.realm()
 
     var selectedBridgeIndex: IndexPath?
 
@@ -32,9 +32,6 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-
-        logger.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
-        console.info("REALM FILE PATH: \(String(describing: realm?.configuration.fileURL))")
 
         startBridgeFinderButton.addTarget(self, action: #selector(startBridgeFinder), for: .touchUpInside)
         activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: self.view.frame.width / 2 - 50,
@@ -48,12 +45,10 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let results = realm?.objects(RGBHueBridge.self) else {
-            logger.error("no bridges")
-            return
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "RGBHueBridge")
+        if let authorizedBridges = RGBDatabaseManager.fetch(fetchRequest: fetchRequest) as? [RGBHueBridge] {
+            self.authorizedBridges = authorizedBridges
         }
-        authorizedBridges = Array(results)
-
         tableView.reloadData()
     }
 
@@ -133,8 +128,8 @@ extension BridgesTableViewController {
         case 0:
             //swiftlint:disable:next force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: "BridgeCellIdentifier") as! BridgesTableViewCell
-            if let selectedBridge = UserDefaults.standard.object(forKey: "DefaultBridge"),
-                self.authorizedBridges[indexPath.row].ipAddress == selectedBridge as? String {
+            if let selectedBridge = UserDefaults.standard.object(forKey: "DefaultBridge") as? String,
+                self.authorizedBridges[indexPath.row].value(forKeyPath: "ipAddress") as? String == selectedBridge {
                 self.selectedBridgeIndex = indexPath
                 self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
@@ -154,7 +149,11 @@ extension BridgesTableViewController {
         case 0:
             let selectedBridge = authorizedBridges[indexPath.row]
 
-            let newSwiftyHue = RGBRequest.shared.setSwiftyHue(ipAddress: selectedBridge.ipAddress)
+            guard let ipAddress = selectedBridge.value(forKeyPath: "ipAddress") as? String else {
+                return
+            }
+
+            let newSwiftyHue = RGBRequest.shared.setSwiftyHue(ipAddress: ipAddress)
             refreshTabViewsOnBridgeChange(newSwiftyHue)
 
             tableView.deselectRow(at: selectedBridgeIndex!, animated: true)
@@ -171,7 +170,7 @@ extension BridgesTableViewController {
             SwiftMessages.show(config: warningAlertConfig, view: warningAlertView)
 
             bridgeAuthenticator = BridgeAuthenticator(
-                bridge: HueBridge(ip: bridge.ipAddress, deviceType: bridge.deviceType,
+                bridge: HueBridge(ip: bridge.ip, deviceType: bridge.deviceType,
                                   friendlyName: bridge.friendlyName, modelDescription: bridge.modelDescription,
                                   modelName: bridge.modelName, serialNumber: bridge.serialNumber,
                                   UDN: bridge.UDN, icons: bridge.icons),
@@ -179,7 +178,8 @@ extension BridgesTableViewController {
             selectedBridge = bridge
             bridgeAuthenticator?.delegate = self
             bridgeAuthenticator?.start()
-            tableView.deselectRow(at: indexPath, animated: false)
+            self.tableView.deselectRow(at: indexPath, animated: false)
+            self.tableView.allowsSelection = false
         default:
             break
         }
@@ -191,10 +191,7 @@ extension BridgesTableViewController {
         return indexPath
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 0 {
-            return true
-        }
-        return false
+        return indexPath.section == 0
     }
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
         -> UITableViewCell.EditingStyle {
@@ -213,13 +210,10 @@ extension BridgesTableViewController {
                 let cantDeleteRowConfig = RGBSwiftMessages.createMessageConfig()
                 SwiftMessages.show(config: cantDeleteRowConfig, view: cantDeleteRowMessage)
             } else {
-                RGBDatabaseManager.write(to: self.realm!, closure: {
-                    self.realm?.delete(self.authorizedBridges[indexPath.row])
-                    self.authorizedBridges.remove(at: indexPath.row)
-                    self.tableView.beginUpdates()
-                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                    self.tableView.endUpdates()
-                })
+                let bridge = authorizedBridges[indexPath.row]
+                RGBDatabaseManager.delete(bridge)
+                authorizedBridges.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
             }
         }
     }
@@ -229,22 +223,25 @@ extension BridgesTableViewController: BridgeFinderDelegate {
     func bridgeFinder(_ finder: BridgeFinder, didFinishWithResult bridges: [HueBridge]) {
         var foundNewUndiscoveredBridges: Bool = false
         for bridge in bridges {
-            let alreadyAuthorizedBridge = self.authorizedBridges.filter({ $0.ipAddress == bridge.ip })
-            let alreadyFoundBridge = self.bridges.filter({ $0.ipAddress == bridge.ip })
+            let alreadyAuthorizedBridge = self.authorizedBridges.filter({
+                //swiftlint:disable:next force_cast
+                $0.value(forKeyPath: "ipAddress") as! String == bridge.ip
+            })
+            let alreadyFoundBridge = self.bridges.filter({ $0.ip == bridge.ip })
             if alreadyAuthorizedBridge.isEmpty && alreadyFoundBridge.isEmpty {
-                self.bridges.append(RGBHueBridge(hueBridge: bridge))
+                self.bridges.append(bridge)
                 foundNewUndiscoveredBridges = true
             }
         }
 
         if !foundNewUndiscoveredBridges {
+            console.debug("Tristan: NO NEW BRIDGES")
             let noNewBridgesMessage = RGBSwiftMessages
                 .createAlertInView(type: .info, fromNib: .cardView,
                                    content: ("No new bridges found", ""),
                                    layoutMarginAdditions: UIEdgeInsets(top: 5, left: 20, bottom: 10, right: 20))
             let noNewBridgesConfig = RGBSwiftMessages.createMessageConfig()
             SwiftMessages.show(config: noNewBridgesConfig, view: noNewBridgesMessage)
-
         } else {
             tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
         }
@@ -261,14 +258,15 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
         guard let selectedBridge = selectedBridge else {
             return
         }
-        selectedBridge.username = username
-        if let realm = realm {
-            RGBDatabaseManager.write(to: realm, closure: {
-                realm.add(selectedBridge)
-            })
-        }
-        authorizedBridges.append(selectedBridge)
-        bridges = bridges.filter { $0.ipAddress != selectedBridge.ipAddress }
+
+        RGBDatabaseManager.addBridge(selectedBridge, username, completion: { (newBridge, error) in
+            if error != nil {
+                return
+            }
+            self.authorizedBridges.append(newBridge)
+            self.bridges = self.bridges.filter { $0.ip != selectedBridge.ip }
+        })
+        self.tableView.allowsSelection = true
         tableView.reloadData()
     }
     func bridgeAuthenticator(_ authenticator: BridgeAuthenticator, didFailWithError error: NSError) {
@@ -278,6 +276,7 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
                                content: ("", "Bridge link failed with error: \(error)"))
         let linkTimeoutErrorConfig = RGBSwiftMessages.createMessageConfig(dimInteractive: true)
         SwiftMessages.show(config: linkTimeoutErrorConfig, view: linkTimeoutError)
+        self.tableView.allowsSelection = true
     }
     func bridgeAuthenticatorRequiresLinkButtonPress(_ authenticator: BridgeAuthenticator, secondsLeft: TimeInterval) {
         // seconds left until it stops waiting for button press
@@ -290,5 +289,6 @@ extension BridgesTableViewController: BridgeAuthenticatorDelegate {
                                          "button within 30 seconds of selecting a bridge"))
         let linkTimeoutErrorConfig = RGBSwiftMessages.createMessageConfig(dimInteractive: true)
         SwiftMessages.show(config: linkTimeoutErrorConfig, view: linkTimeoutError)
+        self.tableView.allowsSelection = true
     }
 }

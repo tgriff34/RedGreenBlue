@@ -19,6 +19,7 @@
 		462A5E4A23467D330088296B /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4923467D330088296B /* SSCheckMark.swift */; };
 		462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 462A5E4C234794860088296B /* FeelinGood.mp3 */; };
 		462A5E4F234839010088296B /* DynamicScenesAddSoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4E234839010088296B /* DynamicScenesAddSoundViewController.swift */; };
+		4643456C23C1084300EC12AD /* RedGreenBlue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */; };
 		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
@@ -109,6 +110,7 @@
 		462A5E4923467D330088296B /* SSCheckMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
 		462A5E4C234794860088296B /* FeelinGood.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = FeelinGood.mp3; sourceTree = "<group>"; };
 		462A5E4E234839010088296B /* DynamicScenesAddSoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddSoundViewController.swift; sourceTree = "<group>"; };
+		4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RedGreenBlue.xcdatamodel; sourceTree = "<group>"; };
 		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 				462A5E4B2347946F0088296B /* Supporting Files */,
 				6FA9CDF223062EF30011A2F8 /* Assets.xcassets */,
 				6FA9CDF723062EF30011A2F8 /* Info.plist */,
+				4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */,
 			);
 			path = RedGreenBlue;
 			sourceTree = "<group>";
@@ -796,6 +799,7 @@
 				46D1544B23552093003196A5 /* RGBCellUtilities.swift in Sources */,
 				462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */,
 				462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */,
+				4643456C23C1084300EC12AD /* RedGreenBlue.xcdatamodeld in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
 				462984A923609979009A43ED /* DynamicScenesBrightnessViewController.swift in Sources */,
 				46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */,
@@ -998,7 +1002,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1017,7 +1021,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1150,6 +1154,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */,
+			);
+			currentVersion = 4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */;
+			path = RedGreenBlue.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6FA9CDDE23062EF20011A2F8 /* Project object */;
 }
