@@ -20,8 +20,6 @@ class LightGroupsTableViewController: UITableViewController {
 
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableView.automaticDimension
-
-        //console.debug(RGBDatabaseManager.realm()?.configuration.fileURL! as Any)
     }
 
     override func viewWillAppear(_ animated: Bool) {

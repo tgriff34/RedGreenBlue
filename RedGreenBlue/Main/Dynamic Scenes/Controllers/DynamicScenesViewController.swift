@@ -24,8 +24,6 @@ class DynamicScenesViewController: UITableViewController {
     var selectedGroupIndex = 0
     var selectedRowIndex: IndexPath?
 
-    //let realm = RGBDatabaseManager.realm()!
-
     let resultSearchController = UISearchController(searchResultsController: nil)
     var searchedScenes: [RGBDynamicScene] = []
 
@@ -245,7 +243,6 @@ extension DynamicScenesViewController {
 // MARK: - Dynamic Scene added delegate
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
     func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ updatedValues: [String: Any]) {
-        // Get the old realm object from row selected
         let genericErrorAdding = RGBSwiftMessages.createAlertInView(type: .error,
                                                                     fromNib: .cardView,
                                                                     content: ("Error editing scene", ""))
@@ -256,12 +253,13 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             return
         }
 
+        // Get the old scene from row selected
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_DYNAMIC_SCENE)
         fetchRequest.predicate = NSPredicate(format: "name == %@", dynamicScenes[1][indexPath.row].name)
 
         guard let oldScene = RGBDatabaseManager.fetch(fetchRequest: fetchRequest)[0] as? RGBDynamicScene else {
             SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
-            logger.error("Error receiving object at selected row from Realm")
+            logger.error("Error receiving object at selected row from CoreData")
             return
         }
 

@@ -234,7 +234,6 @@ extension BridgesTableViewController: BridgeFinderDelegate {
         }
 
         if !foundNewUndiscoveredBridges {
-            console.debug("Tristan: NO NEW BRIDGES")
             let noNewBridgesMessage = RGBSwiftMessages
                 .createAlertInView(type: .info, fromNib: .cardView,
                                    content: ("No new bridges found", ""),
