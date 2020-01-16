@@ -9,11 +9,6 @@ PODS:
   - NVActivityIndicatorView (4.8.0):
     - NVActivityIndicatorView/Presenter (= 4.8.0)
   - NVActivityIndicatorView/Presenter (4.8.0)
-  - Realm (3.19.0):
-    - Realm/Headers (= 3.19.0)
-  - Realm/Headers (3.19.0)
-  - RealmSwift (3.19.0):
-    - Realm (= 3.19.0)
   - SwiftLint (0.35.0)
   - SwiftMessages (7.0.1):
     - SwiftMessages/App (= 7.0.1)
@@ -38,7 +33,6 @@ DEPENDENCIES:
   - FlexColorPicker (from `https://github.com/RastislavMirek/FlexColorPicker.git`, branch `master`)
   - MARKRangeSlider
   - NVActivityIndicatorView
-  - RealmSwift (~> 3.17)
   - SwiftLint
   - SwiftMessages
   - SwiftSVG (from `https://github.com/matejukmar/SwiftSVG.git`, branch `cached_svg_layer_fix`)
@@ -55,8 +49,6 @@ SPEC REPOS:
     - Gloss
     - MARKRangeSlider
     - NVActivityIndicatorView
-    - Realm
-    - RealmSwift
     - SwiftLint
     - SwiftMessages
     - SwiftyBeaver
@@ -93,8 +85,6 @@ SPEC CHECKSUMS:
   Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
   MARKRangeSlider: ef7e1fe84d22996f47fd72dcb8de50b9410aac47
   NVActivityIndicatorView: d24b7ebcf80af5dcd994adb650e2b6c93379270f
-  Realm: 995d585bcf699aaff226715886c849a29dd3d07f
-  RealmSwift: 35f284a537989f2187b413e5917091948cb87a3f
   SwiftLint: 5553187048b900c91aa03552807681bb6b027846
   SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
   SwiftSVG: 564783017fd4aec7f6edf124f894b14d360c6bee
@@ -102,6 +92,6 @@ SPEC CHECKSUMS:
   SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
   TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: 5d1a6eac54093d7ff91cb12d937d94a710b554e2
+PODFILE CHECKSUM: a5fe7720c69f7aa354319cf9868d0424dfde8cf0
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4

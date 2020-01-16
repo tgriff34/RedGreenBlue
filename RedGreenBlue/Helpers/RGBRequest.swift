@@ -135,7 +135,7 @@ class RGBRequest {
         if ipAddress != UserDefaults.standard.object(forKey: "DefaultBridge") as? String {
             ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
 
-            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "RGBHueBridge")
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_HUE_BRIDGE)
             fetchRequest.predicate = NSPredicate(format: "ipAddress == %@", ipAddress!)
 
             rgbHueBridge = RGBDatabaseManager.fetch(fetchRequest: fetchRequest)[0] as? RGBHueBridge
@@ -166,7 +166,6 @@ class RGBRequest {
     // Sets connection observers so to know whether user is connected to the bridge or not
     private var isConnected: Bool = false
     func setUpConnectionListeners() {
-        isConnected = false
         NotificationCenter.default.addObserver(
             self, selector: #selector(onConnectionUpdate(_:)),
             name: NSNotification.Name(rawValue: BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
@@ -178,6 +177,7 @@ class RGBRequest {
     }
 
     func tearDownConnectionListeners() {
+        isConnected = false
         NotificationCenter.default.removeObserver(
             self, name: NSNotification.Name(BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
             object: nil)

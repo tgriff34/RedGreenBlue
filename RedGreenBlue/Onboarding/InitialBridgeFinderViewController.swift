@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 import SwiftyHue
-import RealmSwift
 import TORoundedButton
 import NVActivityIndicatorView
 import Canvas
@@ -24,8 +23,6 @@ class InitialBridgeFinderViewController: UIViewController {
     var bridgeFinder = BridgeFinder()
     var bridgeAuthenticators: [BridgeAuthenticator]?
     var foundBridges: [HueBridge]?
-
-    let realm: Realm? = RGBDatabaseManager.realm()
 
     var activityIndicatorView: NVActivityIndicatorView?
 
@@ -61,20 +58,13 @@ extension InitialBridgeFinderViewController {
             UserDefaults.standard.set(true, forKey: "isOnboard")
             UserDefaults.standard.set("system", forKey: "AppTheme")
             UserDefaults.standard.set("Unmuted", forKey: "SoundSetting")
-            RGBDatabaseManager.write(to: realm!, closure: {
-                let scene = RGBDynamicScene(name: "Christmas", timer: 10,
-                                            category: .default, lightsChangeColor: true,
-                                            displayMultipleColors: true,
-                                            sequentialLightChange: true,
-                                            randomColors: false, soundFile: "Default",
-                                            isBrightnessEnabled: false, brightnessTimer: 1,
-                                            minBrightness: 1, maxBrightness: 100)
-                scene.xys.append(XYColor([Double(0.1356), Double(0.0412)]))
-                scene.xys.append(XYColor([Double(0.6997), Double(0.3)]))
-                scene.xys.append(XYColor([Double(0), Double(1)]))
-                scene.xys.append(XYColor([Double(0.4944), Double(0.474)]))
-                realm!.add(scene, update: .all)
-            })
+            RGBDatabaseManager.addScene(name: "Christmas", timer: 10, category: .Default,
+                                        displayMultipleColors: true, isBrightnessEnabled: true,
+                                        lightsChangeColor: true, randomColors: false, sequentialLightChange: true,
+                                        brightnessTimer: 1, maxBrightness: 100, minBrightness: 1, soundFile: "Default",
+                                        colors: [UIColor.red,
+                                                 UIColor.green,
+                                                 UIColor.blue])
             let swiftyHue = RGBRequest.shared.getSwiftyHue()
             swiftyHue.startHeartbeat()
         default:

@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 import SwiftyHue
-import RealmSwift
 import SwiftMessages
 import TORoundedButton
 import NVActivityIndicatorView
@@ -45,7 +44,7 @@ class BridgesTableViewController: UIViewController, UITableViewDelegate, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "RGBHueBridge")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_HUE_BRIDGE)
         if let authorizedBridges = RGBDatabaseManager.fetch(fetchRequest: fetchRequest) as? [RGBHueBridge] {
             self.authorizedBridges = authorizedBridges
         }

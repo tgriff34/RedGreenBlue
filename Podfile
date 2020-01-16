@@ -8,7 +8,6 @@ target 'RedGreenBlue' do
 
   # Pods for RedGreenBlue
   pod 'SwiftyHue', :git => 'https://github.com/griffind/SwiftyHue.git', :tag => '0.5.5'
-  pod 'RealmSwift', '~> 3.17'
   pod 'SwiftMessages'
   pod 'SwiftLint'
   pod 'FlexColorPicker', :git => 'https://github.com/RastislavMirek/FlexColorPicker.git', :branch => 'master'

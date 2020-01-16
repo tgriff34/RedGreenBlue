@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SwiftyHue
+import CoreData
 import BTNavigationDropdownMenu
 import SwiftMessages
 import AVFoundation
@@ -23,7 +24,7 @@ class DynamicScenesViewController: UITableViewController {
     var selectedGroupIndex = 0
     var selectedRowIndex: IndexPath?
 
-    let realm = RGBDatabaseManager.realm()!
+    //let realm = RGBDatabaseManager.realm()!
 
     let resultSearchController = UISearchController(searchResultsController: nil)
     var searchedScenes: [RGBDynamicScene] = []
@@ -35,7 +36,7 @@ class DynamicScenesViewController: UITableViewController {
         resultSearchController.searchResultsUpdater = self
         resultSearchController.obscuresBackgroundDuringPresentation = false
         resultSearchController.searchBar.placeholder = "Search dynamic scenes"
-        resultSearchController.searchBar.scopeButtonTitles = RGBDynamicScene.Category.allCases.map { $0.stringValue }
+        resultSearchController.searchBar.scopeButtonTitles = Category.allCases.map({ "\($0)" })
         resultSearchController.searchBar.delegate = self
         navigationItem.searchController = resultSearchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -66,20 +67,23 @@ class DynamicScenesViewController: UITableViewController {
 
     // MARK: - Private Functions
     func fetchData() {
-        guard let results = RGBDatabaseManager.realm()?.objects(RGBDynamicScene.self).filter("category = 1") else {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_DYNAMIC_SCENE)
+
+        fetchRequest.predicate = NSPredicate(format: "categoryValue = %ld", Category.Default.rawValue)
+        guard let results = RGBDatabaseManager.fetch(fetchRequest: fetchRequest) as? [RGBDynamicScene] else {
             logger.error("could not retrieve results of RGBDynamicScenes from DB")
             return
         }
-        dynamicScenes.append(Array(results))
+        dynamicScenes.append(results)
 
-        if let userResults = RGBDatabaseManager.realm()?
-            .objects(RGBDynamicScene.self)
-            .filter("category = 2")
-            .sorted(by: { $0.name > $1.name }) {
-            dynamicScenes.append(Array(userResults))
+        fetchRequest.predicate = NSPredicate(format: "categoryValue = %ld", Category.Custom.rawValue)
+        if var userResults = RGBDatabaseManager.fetch(fetchRequest: fetchRequest) as? [RGBDynamicScene] {
+            userResults = userResults.sorted(by: { $0.name > $1.name })
+            dynamicScenes.append(userResults)
         } else {
             logger.warning("No user defined RGBDynamicScenes in DB")
         }
+
         self.tableView.reloadData()
         setupDropdownNavigationBar()
     }
@@ -221,13 +225,17 @@ extension DynamicScenesViewController {
             break
         case "EditDynamicSceneSegue":
             viewController?.title = "Edit Custom Scene"
-            let indexPath = self.tableView.indexPathForSelectedRow
-            if let cell = self.tableView.cellForRow(at: indexPath!) as? LightsDynamicSceneCustomCell,
+            guard let indexPath = self.tableView.indexPathForSelectedRow else {
+                logger.error("error editing scene at indexPath: ",
+                             "\(String(describing: self.tableView.indexPathForSelectedRow))")
+                return
+            }
+            if let cell = self.tableView.cellForRow(at: indexPath) as? LightsDynamicSceneCustomCell,
                 cell.switch.isOn {
                 RGBGroupsAndLightsHelper.shared.stopDynamicScene()
                 cell.switch.setOn(false, animated: true)
             }
-            viewController?.scene = dynamicScenes[1][indexPath!.row]
+            viewController?.scene = dynamicScenes[1][indexPath.row]
         default:
             logger.error("error performing segue with identifier: \(segue.identifier ?? "nil")")
         }
@@ -236,7 +244,7 @@ extension DynamicScenesViewController {
 
 // MARK: - Dynamic Scene added delegate
 extension DynamicScenesViewController: DynamicSceneAddDelegate {
-    func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
+    func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ updatedValues: [String: Any]) {
         // Get the old realm object from row selected
         let genericErrorAdding = RGBSwiftMessages.createAlertInView(type: .error,
                                                                     fromNib: .cardView,
@@ -247,38 +255,44 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             logger.error("Error receiving indexpath for selected row")
             return
         }
-        guard let oldScene = realm.object(ofType: RGBDynamicScene.self,
-                                          forPrimaryKey: dynamicScenes[1][indexPath.row].name) else {
+
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_DYNAMIC_SCENE)
+        fetchRequest.predicate = NSPredicate(format: "name == %@", dynamicScenes[1][indexPath.row].name)
+
+        guard let oldScene = RGBDatabaseManager.fetch(fetchRequest: fetchRequest)[0] as? RGBDynamicScene else {
             SwiftMessages.show(config: genericConfig, view: genericErrorAdding)
             logger.error("Error receiving object at selected row from Realm")
             return
         }
+
         // If the name is the same of another scene except the edited scene display error
-        if dynamicScenes[1].contains(where: { $0.name == scene.name }) && oldScene.name != scene.name {
+        if dynamicScenes[1].contains(where: { $0.name == updatedValues["name"] as? String }) &&
+            oldScene.name != updatedValues["name"] as? String {
             let sameNameErrorMessage = RGBSwiftMessages
                 .createAlertInView(type: .warning, fromNib: .cardView,
                                    content: ("", "A scene by that name already exists"))
             let sameNameErrorConfig = RGBSwiftMessages.createMessageConfig(windowLevel: .alert)
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
-        } else { // If the user edited the name or not, delete old scene and create a new scene in DB
-            RGBDatabaseManager.write(to: realm, closure: { // Deleting old scene
-                realm.delete(oldScene.xys)
-                realm.delete(oldScene)
+        } else {
+            RGBDatabaseManager.updateScene(scene: dynamicScenes[1][indexPath.row],
+                                           updatedValues: updatedValues, completion: { (newScene, error) in
+                if let error = error {
+                    logger.error("error updating scene. \(error)")
+                    return
+                }
+                // Setting edited scene on tableview to new scene
+                self.dynamicScenes[1][indexPath.row] = newScene
+                // Dismiss modal and reload changed row
+                sender.dismiss(animated: true, completion: nil)
+                self.tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
             })
-            dynamicScenes[1][indexPath.row] = scene // Setting edited scene on tableview to new scene
-            RGBDatabaseManager.write(to: realm, closure: { // Adding new scene to DB
-                realm.add(scene, update: .all)
-            })
-            // Dismiss modal and reload changed row
-            sender.dismiss(animated: true, completion: nil)
-            tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
         }
     }
 
-    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene) {
+    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: [String: Any]) {
         // If the name is the same as another scene display error
-        if dynamicScenes[1].contains(where: { $0.name == scene.name }) ||
-            dynamicScenes[0].contains(where: { $0.name == scene.name }) {
+        if dynamicScenes[1].contains(where: { $0.name == scene["name"] as? String }) ||
+            dynamicScenes[0].contains(where: { $0.name == scene["name"] as? String }) {
             let sameNameErrorMessage = RGBSwiftMessages
                 .createAlertInView(type: .warning, fromNib: .cardView,
                                    content: ("", "A scene by that name already exists"))
@@ -286,16 +300,21 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             SwiftMessages.show(config: sameNameErrorConfig, view: sameNameErrorMessage)
         } else { // Add to DB and insert row
             sender.dismiss(animated: true, completion: nil)
-            dynamicScenes[1].append(scene)
-            RGBDatabaseManager.write(to: realm, closure: {
-                realm.add(scene, update: .all)
+            RGBDatabaseManager.addScene(newValues: scene, completion: { (addedScene, error) in
+                if let error = error {
+                    logger.error("error adding scene. \(error)")
+                    return
+                }
+                self.dynamicScenes[1].append(addedScene)
+
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [IndexPath(row: self.dynamicScenes[1].count - 1, section: 1)],
+                                          with: .automatic)
+                if self.dynamicScenes[1].count == 1 {
+                    self.tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+                }
+                self.tableView.endUpdates()
             })
-            tableView.beginUpdates()
-            tableView.insertRows(at: [IndexPath(row: dynamicScenes[1].count - 1, section: 1)], with: .automatic)
-            if dynamicScenes[1].count == 1 {
-                tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
-            }
-            tableView.endUpdates()
         }
     }
 
@@ -311,10 +330,7 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
             logger.error("Error receiving indexpath for selected row")
             return
         }
-        RGBDatabaseManager.write(to: realm, closure: {
-            realm.delete(dynamicScenes[1][indexPath.row].xys)
-            realm.delete(dynamicScenes[1][indexPath.row])
-        })
+        RGBDatabaseManager.delete(dynamicScenes[1][indexPath.row])
         dynamicScenes[1].remove(at: indexPath.row)
         tableView.beginUpdates()
         tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .automatic)
@@ -327,16 +343,16 @@ extension DynamicScenesViewController: DynamicSceneAddDelegate {
 
 // MARK: - Search delegate
 extension DynamicScenesViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    func filterContentForSearchText(_ searchText: String, category: RGBDynamicScene.Category? = nil) {
+    func filterContentForSearchText(_ searchText: String, category: Category? = nil) {
         self.searchedScenes = []
-        if category == .all || category == .default {
+        if category == .All || category == .Default {
             searchedScenes += dynamicScenes[0].filter { (dynamicScene: RGBDynamicScene) -> Bool in
                 if searchText == "" { return true } else {
                     return dynamicScene.name.lowercased().contains(searchText.lowercased())
                 }
             }
         }
-        if category == .all || category == .custom {
+        if category == .All || category == .Custom {
             searchedScenes += dynamicScenes[1].filter { (dynamicScene: RGBDynamicScene) -> Bool in
                 if searchText == "" { return true } else {
                     return dynamicScene.name.lowercased().contains(searchText.lowercased())
@@ -353,14 +369,14 @@ extension DynamicScenesViewController: UISearchResultsUpdating, UISearchBarDeleg
 
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         guard let searchBarText = searchBar.text else { return }
-        let category = RGBDynamicScene.Category(rawValue: selectedScope)
+        let category = Category(rawValue: Int32(selectedScope))
         filterContentForSearchText(searchBarText, category: category)
     }
 
     func updateSearchResults(for searchController: UISearchController) {
         if isSearching() {
             guard let searchBarText = searchController.searchBar.text else { return }
-            let category = RGBDynamicScene.Category(rawValue: searchController.searchBar.selectedScopeButtonIndex)
+            let category = Category(rawValue: Int32(searchController.searchBar.selectedScopeButtonIndex))
             filterContentForSearchText(searchBarText, category: category)
         } else {
             tableView.reloadData()

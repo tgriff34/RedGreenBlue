@@ -7,25 +7,25 @@
 //
 
 import Foundation
-import RealmSwift
+import UIKit
 
 protocol DynamicSceneColorDelegate: AnyObject {
-    func dynamicSceneColorAdded(_ color: XYColor)
-    func dynamicSceneColorEdited(_ color: XYColor)
+    func dynamicSceneColorAdded(_ color: UIColor)
+    func dynamicSceneColorEdited(_ color: UIColor)
 }
 
 protocol DynamicSceneCustomColorDelegate: AnyObject {
-    func dynamicSceneColorAdded(_ colors: List<XYColor>)
-    func dynamicSceneColorEdited(_ color: XYColor)
+    func dynamicSceneColorAdded(_ colors: [UIColor])
+    func dynamicSceneColorEdited(_ color: UIColor)
 }
 
 protocol DynamicSceneAddAllColorsDelegate: AnyObject {
-    func dynamicSceneColorsAdded(_ colors: List<XYColor>)
+    func dynamicSceneColorsAdded(_ colors: [UIColor])
 }
 
 protocol DynamicSceneAddDelegate: AnyObject {
-    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene)
-    func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ scene: RGBDynamicScene)
+    func dynamicSceneAdded(_ sender: DynamicScenesAddViewController, _ newValues: [String: Any])
+    func dynamicSceneEdited(_ sender: DynamicScenesAddViewController, _ updatedValues: [String: Any])
     func dynamicSceneDeleted(_ sender: DynamicScenesAddViewController)
 }
 

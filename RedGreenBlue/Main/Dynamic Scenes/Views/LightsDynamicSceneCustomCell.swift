@@ -21,12 +21,7 @@ class LightsDynamicSceneCustomCell: UITableViewCell {
     var dynamicScene: RGBDynamicScene! {
         didSet {
             self.label.text = dynamicScene.name
-            var uiColors = [UIColor]()
-            let colors = dynamicScene.xys
-            for color in colors {
-                uiColors.append(HueUtilities.colorFromXY(CGPoint(x: color.xvalue, y: color.yvalue),
-                                                         forModel: "LCT016"))
-            }
+            var uiColors = dynamicScene.colors
             if uiColors.count > 1 {
                 subView.backgroundColor = nil
                 uiColors.sort(by: { $0.hue < $1.hue })

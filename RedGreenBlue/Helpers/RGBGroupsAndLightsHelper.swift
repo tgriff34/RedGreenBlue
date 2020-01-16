@@ -155,7 +155,7 @@ class RGBGroupsAndLightsHelper {
         // If the user doesn't have the colors of the lights changing, run it through the
         // setLightsForScene() once to get the colors associated with the scene.
         if !scene.lightsChangeColor {
-            self.setLightsForScene(group: group, numberOfColors: scene.xys.count,
+            self.setLightsForScene(group: group, numberOfColors: scene.colors.count,
                                    multiColors: scene.displayMultipleColors,
                                    isSequential: scene.sequentialLightChange,
                                    randomColors: scene.randomColors)
@@ -212,7 +212,7 @@ class RGBGroupsAndLightsHelper {
         // The colors need to change
         if remainderForColor == 0 && scene.lightsChangeColor && (lightsForScene.isEmpty || time != 0)
             && durationTime != time {
-            setLightsForScene(group: group, numberOfColors: scene.xys.count,
+            setLightsForScene(group: group, numberOfColors: scene.colors.count,
                               multiColors: scene.displayMultipleColors,
                               isSequential: scene.sequentialLightChange, randomColors: scene.randomColors)
         }
@@ -231,12 +231,14 @@ class RGBGroupsAndLightsHelper {
             console.debug("LightsForScene: \(lightsForScene)")
 
             // Set the color of the light based on the previous index
-            lightState.xy = [scene.xys[lightIndex].xvalue, scene.xys[lightIndex].yvalue]
+            let color = scene.colors[lightIndex]
+            let xyPoint: CGPoint = HueUtilities.calculateXY(color, forModel: "LCT016")
+            lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
 
             // Set the brightness for the light
             if remainderForBrightness == 0 && scene.isBrightnessEnabled {
-                lightState.brightness = genRandomNum(minBrightness: scene.minBrightness,
-                                                     maxBrightness: scene.maxBrightness)
+                lightState.brightness = genRandomNum(minBrightness: Int(scene.minBrightness),
+                                                     maxBrightness: Int(scene.maxBrightness))
             }
 
             // Send API request to change light

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 import MARKRangeSlider
 
 class DynamicScenesAddViewController: UITableViewController {
@@ -18,7 +17,7 @@ class DynamicScenesAddViewController: UITableViewController {
 
     var scene: RGBDynamicScene?
     var name: String = ""
-    var colors = List<XYColor>()
+    var colors = [UIColor]()
     // Light Color Options
     var lightsChangeColor: Bool = true
     var time: Int = 1
@@ -57,17 +56,21 @@ class DynamicScenesAddViewController: UITableViewController {
     }
 
     @objc func save() {
-        // Create new scene to populate DB with
-        let scene = RGBDynamicScene(
-            name: self.name, timer: Double(time), category: .custom,
-            lightsChangeColor: lightsChangeColor,
-            displayMultipleColors: multiColors,
-            sequentialLightChange: shiftRight,
-            randomColors: randomColors, soundFile: soundFileName,
-            isBrightnessEnabled: fluctuatingBrightness, brightnessTimer: Double(brightnessTime),
-            minBrightness: minBrightness, maxBrightness: maxBrightness)
+        let scene: [String: Any] =
+            [ "name": name,
+              "timer": Double(time),
+              "category": Category.Custom,
+              "lightsChangeColor": lightsChangeColor,
+              "displayMultipleColors": multiColors,
+              "sequentialLightChange": shiftRight,
+              "randomColors": randomColors,
+              "soundFile": soundFileName,
+              "isBrightnessEnabled": fluctuatingBrightness,
+              "brightnessTimer": Double(brightnessTime),
+              "minBrightness": minBrightness,
+              "maxBrightness": maxBrightness,
+              "colors": colors ]
 
-        scene.xys = self.colors
         // If the self.scene isn't nil then the user was editing a previous scene
         // and we should let the delegate know, otherwise the scene is new
         if self.scene != nil {
@@ -83,9 +86,7 @@ class DynamicScenesAddViewController: UITableViewController {
 
     private func setSceneIfEditing() {
         if let scene = scene {
-            for color in scene.xys { // needs to copy instead of assigning as reference
-                colors.append(XYColor([color.xvalue, color.yvalue]))
-            }
+            colors = scene.colors
             time = Int(scene.timer)
             name = String(scene.name)
             lightsChangeColor = scene.lightsChangeColor
@@ -95,8 +96,8 @@ class DynamicScenesAddViewController: UITableViewController {
             soundFileName = scene.soundFile
             fluctuatingBrightness = scene.isBrightnessEnabled
             brightnessTime = Int(scene.brightnessTimer)
-            minBrightness = scene.minBrightness
-            maxBrightness = scene.maxBrightness
+            minBrightness = Int(scene.minBrightness)
+            maxBrightness = Int(scene.maxBrightness)
             tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1),
                                       IndexPath(row: 0, section: 2), IndexPath(row: 0, section: 3)],
                                  with: .none)
@@ -282,7 +283,7 @@ DynamicSceneColorOptionsDelegate, DynamicSceneBrightnessOptionsDelegate {
         tableView.reloadRows(at: [IndexPath(row: 0, section: 3)], with: .none)
     }
 
-    func dynamicSceneColorsAdded(_ colors: List<XYColor>) {
+    func dynamicSceneColorsAdded(_ colors: [UIColor]) {
         self.colors = colors
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
         enableOrDisableSaveButton(IndexPath(row: 0, section: 1))
