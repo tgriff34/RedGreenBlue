@@ -7,7 +7,7 @@ target 'RedGreenBlue' do
   inhibit_all_warnings!
 
   # Pods for RedGreenBlue
-  pod 'SwiftyHue', :git => 'https://github.com/griffind/SwiftyHue.git', :tag => '0.5.5'
+  pod 'SwiftyHue', :git => 'https://github.com/griffind/SwiftyHue.git', :branch => 'master'
   pod 'SwiftMessages'
   pod 'SwiftLint'
   pod 'FlexColorPicker', :git => 'https://github.com/RastislavMirek/FlexColorPicker.git', :branch => 'master'
