@@ -52,7 +52,6 @@ class DynamicScenesColorsPickerViewController: UICollectionViewController {
             // Fallback on earlier versions
         }
         colors.append(UIColor.systemPink)
-        colors.append(UIColor.white)
     }
 }
 
