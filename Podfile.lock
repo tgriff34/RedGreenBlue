@@ -4,7 +4,7 @@ PODS:
   - Canvas (0.1.2)
   - CocoaAsyncSocket (7.6.3)
   - FlexColorPicker (1.3.1)
-  - Gloss (2.1.0)
+  - Gloss (3.1.0)
   - MARKRangeSlider (1.1.1)
   - NVActivityIndicatorView (4.8.0):
     - NVActivityIndicatorView/Presenter (= 4.8.0)
@@ -20,16 +20,16 @@ PODS:
   - SwiftMessages/App (7.0.1)
   - SwiftSVG (2.3.0)
   - SwiftyBeaver (1.8.2)
-  - SwiftyHue (0.5.2):
-    - SwiftyHue/Base (= 0.5.2)
-    - SwiftyHue/BridgeServices (= 0.5.2)
-  - SwiftyHue/Base (0.5.2):
+  - SwiftyHue (0.5.9):
+    - SwiftyHue/Base (= 0.5.9)
+    - SwiftyHue/BridgeServices (= 0.5.9)
+  - SwiftyHue/Base (0.5.9):
     - Alamofire (= 4.8.0)
-    - Gloss (= 2.1.0)
-  - SwiftyHue/BridgeServices (0.5.2):
+    - Gloss (= 3.1.0)
+  - SwiftyHue/BridgeServices (0.5.9):
     - Alamofire (= 4.8.0)
     - CocoaAsyncSocket (= 7.6.3)
-    - Gloss (= 2.1.0)
+    - Gloss (= 3.1.0)
   - TORoundedButton (1.1.2)
 
 DEPENDENCIES:
@@ -43,7 +43,7 @@ DEPENDENCIES:
   - SwiftMessages
   - SwiftSVG (from `https://github.com/matejukmar/SwiftSVG.git`, branch `cached_svg_layer_fix`)
   - SwiftyBeaver
-  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, tag `0.5.5`)
+  - SwiftyHue (from `https://github.com/griffind/SwiftyHue.git`, branch `master`)
   - TORoundedButton
 
 SPEC REPOS:
@@ -70,8 +70,8 @@ EXTERNAL SOURCES:
     :branch: cached_svg_layer_fix
     :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
+    :branch: master
     :git: https://github.com/griffind/SwiftyHue.git
-    :tag: 0.5.5
 
 CHECKOUT OPTIONS:
   FlexColorPicker:
@@ -81,8 +81,8 @@ CHECKOUT OPTIONS:
     :commit: 1287e7fd41d587f3d8c59daa93c9254294f9c937
     :git: https://github.com/matejukmar/SwiftSVG.git
   SwiftyHue:
+    :commit: c023e8c9520907bd2928eab19dc6c101a5f19011
     :git: https://github.com/griffind/SwiftyHue.git
-    :tag: 0.5.5
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
@@ -90,7 +90,7 @@ SPEC CHECKSUMS:
   Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   FlexColorPicker: e627af3d744786378ae65e53214528cc31105921
-  Gloss: 13ab6b4b0ff4cb2448466edc957479b1bccea8ba
+  Gloss: 2dbf87af0e4dd24753f7de933356ff6c5c012426
   MARKRangeSlider: ef7e1fe84d22996f47fd72dcb8de50b9410aac47
   NVActivityIndicatorView: d24b7ebcf80af5dcd994adb650e2b6c93379270f
   Realm: 995d585bcf699aaff226715886c849a29dd3d07f
@@ -99,9 +99,9 @@ SPEC CHECKSUMS:
   SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
   SwiftSVG: 564783017fd4aec7f6edf124f894b14d360c6bee
   SwiftyBeaver: aaf2ebd7dac2e952991f46a82ed24ad642867ae2
-  SwiftyHue: a710b406c931f84e626c5cfc47ce469d7ba01684
+  SwiftyHue: d76c2e48f342d47c17572b584d30984be35c3cc4
   TORoundedButton: d40dbf6f830dbe7a784a592d9f7933a3a49fd31e
 
-PODFILE CHECKSUM: 5d1a6eac54093d7ff91cb12d937d94a710b554e2
+PODFILE CHECKSUM: 3bedb7d13331a5950bd0a8b6a432399f834e4ed4
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
