@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import SwiftyHue
 import SwiftMessages
-import RealmSwift
+import CoreData
 
 class RGBRequest {
     static let shared = RGBRequest()
@@ -134,7 +134,11 @@ class RGBRequest {
                                             swiftyHue: inout SwiftyHue) -> Bool {
         if ipAddress != UserDefaults.standard.object(forKey: "DefaultBridge") as? String {
             ipAddress = UserDefaults.standard.object(forKey: "DefaultBridge") as? String
-            rgbHueBridge = RGBDatabaseManager.realm()?.object(ofType: RGBHueBridge.self, forPrimaryKey: ipAddress)
+
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: RGBDatabaseManager.KEY_RGB_HUE_BRIDGE)
+            fetchRequest.predicate = NSPredicate(format: "ipAddress == %@", ipAddress!)
+
+            rgbHueBridge = RGBDatabaseManager.fetch(fetchRequest: fetchRequest)[0] as? RGBHueBridge
 
             setBridgeConfiguration(for: rgbHueBridge!, with: swiftyHue)
 
@@ -145,9 +149,13 @@ class RGBRequest {
 
     // Sets bridge configuration for setCurrentlySelectedBridge
     private func setBridgeConfiguration(for RGBHueBridge: RGBHueBridge, with swiftyHue: SwiftyHue) {
-        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId",
-                                                    ipAddress: RGBHueBridge.ipAddress,
-                                                    username: RGBHueBridge.username)
+        guard let ipAddress = RGBHueBridge.value(forKeyPath: "ipAddress") as? String,
+            let username = RGBHueBridge.value(forKeyPath: "username") as? String else {
+            return
+        }
+
+        let bridgeAccessConfig = BridgeAccessConfig(bridgeId: "BridgeId", ipAddress: ipAddress, username: username)
+
         swiftyHue.stopHeartbeat()
         swiftyHue.removeLocalHeartbeat(forResourceType: .lights)
         swiftyHue.setBridgeAccessConfig(bridgeAccessConfig)
@@ -158,7 +166,6 @@ class RGBRequest {
     // Sets connection observers so to know whether user is connected to the bridge or not
     private var isConnected: Bool = false
     func setUpConnectionListeners() {
-        isConnected = false
         NotificationCenter.default.addObserver(
             self, selector: #selector(onConnectionUpdate(_:)),
             name: NSNotification.Name(rawValue: BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
@@ -170,6 +177,7 @@ class RGBRequest {
     }
 
     func tearDownConnectionListeners() {
+        isConnected = false
         NotificationCenter.default.removeObserver(
             self, name: NSNotification.Name(BridgeHeartbeatConnectionStatusNotification.localConnection.rawValue),
             object: nil)

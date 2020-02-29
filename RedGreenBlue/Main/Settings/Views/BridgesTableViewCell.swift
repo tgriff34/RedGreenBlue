@@ -8,14 +8,19 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class BridgesTableViewCell: UITableViewCell {
 
     var bridge: RGBHueBridge! {
         didSet {
-            let string = bridge.friendlyName.components(separatedBy: " (")
-            self.textLabel?.text = string[0]
-            self.detailTextLabel?.text = bridge.ipAddress
+            guard let ipAddress = bridge.value(forKeyPath: "ipAddress") as? String,
+                let friendlyName = bridge.value(forKeyPath: "friendlyName") as? String else {
+                return
+            }
+            let newFriendlyName = friendlyName.components(separatedBy: " (")
+            self.textLabel?.text = newFriendlyName[0]
+            self.detailTextLabel?.text = ipAddress
         }
     }
 

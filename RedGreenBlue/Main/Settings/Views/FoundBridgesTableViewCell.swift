@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import SwiftyHue
 
 class FoundBridgesTableViewCell: UITableViewCell {
-    var bridge: RGBHueBridge! {
+    var bridge: HueBridge! {
         didSet {
             let string = bridge.friendlyName.components(separatedBy: " (")
             self.textLabel?.text = string[0]
-            self.detailTextLabel?.text = bridge.ipAddress
+            self.detailTextLabel?.text = bridge.ip
         }
     }
 }

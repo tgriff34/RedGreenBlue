@@ -7,26 +7,22 @@
 //
 
 import UIKit
-import RealmSwift
 
 class DynamicScenesColorsPickerViewController: UICollectionViewController {
-    var colors = [XYColor]()
+    var colors = [UIColor]()
 
-    var selectedColors: List<XYColor>? {
+    var selectedColors: [UIColor]? {
         willSet(newColors) {
-            for color in colors where newColors!.contains(where: {
-                $0.xvalue == color.xvalue && $0.yvalue == color.yvalue }) {
+            for color in colors where newColors!.contains(where: { $0 == color }) {
                 collectionView.selectItem(at: IndexPath(row: colors.firstIndex(of: color)!, section: 0),
                                           animated: true, scrollPosition: [])
             }
         }
     }
 
-    var selectedColor: XYColor? {
+    var selectedColor: UIColor? {
         willSet(newColor) {
-            for color in colors where
-                color.xvalue == newColor?.xvalue &&
-                color.yvalue == newColor?.yvalue {
+            for color in colors where color == newColor {
                     collectionView.selectItem(at: IndexPath(row: colors.firstIndex(of: color)!, section: 0),
                                               animated: true,
                                               scrollPosition: [])
@@ -39,16 +35,23 @@ class DynamicScenesColorsPickerViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        colors.append(XYColor([0.7, 0.3]))
-        colors.append(XYColor([0.6, 0.37]))
-        colors.append(XYColor([0.5, 0.5]))
-        colors.append(XYColor([0.17, 0.72]))
-        colors.append(XYColor([0.2, 0.33]))
-        colors.append(XYColor([0.13, 0.044]))
-        colors.append(XYColor([0.23, 0.084]))
-        colors.append(XYColor([0.34, 0.13]))
-        colors.append(XYColor([0.45, 0.19]))
-        colors.append(XYColor([0.32, 0.32]))
+        colors.append(UIColor.red)
+        colors.append(UIColor.systemRed)
+        colors.append(UIColor.orange)
+        colors.append(UIColor.systemOrange)
+        colors.append(UIColor.yellow)
+        colors.append(UIColor.systemYellow)
+        colors.append(UIColor.green)
+        colors.append(UIColor.systemGreen)
+        colors.append(UIColor.blue)
+        colors.append(UIColor.systemBlue)
+        colors.append(UIColor.purple)
+        if #available(iOS 13.0, *) {
+            colors.append(UIColor.systemIndigo)
+        } else {
+            // Fallback on earlier versions
+        }
+        colors.append(UIColor.systemPink)
     }
 }
 
@@ -79,7 +82,7 @@ extension DynamicScenesColorsPickerViewController: UICollectionViewDelegateFlowL
     }
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if selectedColor == nil {
-            let index = selectedColors?.index(of: colors[indexPath.row])
+            let index = selectedColors?.firstIndex(of: colors[indexPath.row])
             selectedColors?.remove(at: index!)
             delegate?.dynamicSceneColorAdded(selectedColors!)
         }

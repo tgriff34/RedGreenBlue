@@ -19,6 +19,11 @@
 		462A5E4A23467D330088296B /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4923467D330088296B /* SSCheckMark.swift */; };
 		462A5E4D234794860088296B /* FeelinGood.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 462A5E4C234794860088296B /* FeelinGood.mp3 */; };
 		462A5E4F234839010088296B /* DynamicScenesAddSoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A5E4E234839010088296B /* DynamicScenesAddSoundViewController.swift */; };
+		4631BF2B23CD60F200748F04 /* RGBHueBridge+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631BF2723CD60F200748F04 /* RGBHueBridge+CoreDataClass.swift */; };
+		4631BF2C23CD60F200748F04 /* RGBHueBridge+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631BF2823CD60F200748F04 /* RGBHueBridge+CoreDataProperties.swift */; };
+		4631BF2D23CD60F200748F04 /* RGBDynamicScene+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631BF2923CD60F200748F04 /* RGBDynamicScene+CoreDataClass.swift */; };
+		4631BF2E23CD60F200748F04 /* RGBDynamicScene+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4631BF2A23CD60F200748F04 /* RGBDynamicScene+CoreDataProperties.swift */; };
+		4643456C23C1084300EC12AD /* RedGreenBlue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */; };
 		464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */; };
 		464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464F0E19233C17E400E33FA1 /* GroupProtocol.swift */; };
 		465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */; };
@@ -42,13 +47,11 @@
 		46AFC9B42354EEF0004888A4 /* FoundBridgesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFC9B32354EEF0004888A4 /* FoundBridgesTableViewCell.swift */; };
 		46B6423D232000800047F233 /* RGBGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B6423C232000800047F233 /* RGBGroup.swift */; };
 		46B642402321A7510047F233 /* BridgesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */; };
-		46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0A2307025C0054187A /* RGBHueBridge.swift */; };
 		46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */; };
 		46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */; };
 		46CCAA142307870B0054187A /* RGBRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA132307870B0054187A /* RGBRequest.swift */; };
 		46CCAA16230848F90054187A /* LightTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CCAA15230848F90054187A /* LightTableViewController.swift */; };
 		46D1544B23552093003196A5 /* RGBCellUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D1544A23552093003196A5 /* RGBCellUtilities.swift */; };
-		46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DABC222327ED4F00E8C81D /* RGBDynamicScene.swift */; };
 		46DABC272328286600E8C81D /* DynamicSceneCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */; };
 		46DC98FF2325559C00D939BF /* GroupSliderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */; };
 		46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DC9900232555AD00D939BF /* GroupCellProtocol.swift */; };
@@ -109,6 +112,11 @@
 		462A5E4923467D330088296B /* SSCheckMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
 		462A5E4C234794860088296B /* FeelinGood.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = FeelinGood.mp3; sourceTree = "<group>"; };
 		462A5E4E234839010088296B /* DynamicScenesAddSoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicScenesAddSoundViewController.swift; sourceTree = "<group>"; };
+		4631BF2723CD60F200748F04 /* RGBHueBridge+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RGBHueBridge+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4631BF2823CD60F200748F04 /* RGBHueBridge+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RGBHueBridge+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4631BF2923CD60F200748F04 /* RGBDynamicScene+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RGBDynamicScene+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4631BF2A23CD60F200748F04 /* RGBDynamicScene+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RGBDynamicScene+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RedGreenBlue.xcdatamodel; sourceTree = "<group>"; };
 		464F0E17233C125100E33FA1 /* LightsGroupAddNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupAddNameCell.swift; sourceTree = "<group>"; };
 		464F0E19233C17E400E33FA1 /* GroupProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProtocol.swift; sourceTree = "<group>"; };
 		465144602315C5F200156659 /* InitialBridgeFinderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialBridgeFinderViewController.swift; sourceTree = "<group>"; };
@@ -132,13 +140,11 @@
 		46AFC9B32354EEF0004888A4 /* FoundBridgesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundBridgesTableViewCell.swift; sourceTree = "<group>"; };
 		46B6423C232000800047F233 /* RGBGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBGroup.swift; sourceTree = "<group>"; };
 		46B6423F2321A7510047F233 /* BridgesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgesTableViewCell.swift; sourceTree = "<group>"; };
-		46CCAA0A2307025C0054187A /* RGBHueBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBHueBridge.swift; sourceTree = "<group>"; };
 		46CCAA0F23072F860054187A /* LightGroupsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightGroupsTableViewController.swift; sourceTree = "<group>"; };
 		46CCAA112307548B0054187A /* LightsGroupCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightsGroupCustomCell.swift; sourceTree = "<group>"; };
 		46CCAA132307870B0054187A /* RGBRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBRequest.swift; sourceTree = "<group>"; };
 		46CCAA15230848F90054187A /* LightTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTableViewController.swift; sourceTree = "<group>"; };
 		46D1544A23552093003196A5 /* RGBCellUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBCellUtilities.swift; sourceTree = "<group>"; };
-		46DABC222327ED4F00E8C81D /* RGBDynamicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBDynamicScene.swift; sourceTree = "<group>"; };
 		46DABC262328286600E8C81D /* DynamicSceneCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSceneCellProtocol.swift; sourceTree = "<group>"; };
 		46DC98FE2325559C00D939BF /* GroupSliderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSliderProtocol.swift; sourceTree = "<group>"; };
 		46DC9900232555AD00D939BF /* GroupCellProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCellProtocol.swift; sourceTree = "<group>"; };
@@ -387,9 +393,11 @@
 		46CCAA0C2307058A0054187A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				46CCAA0A2307025C0054187A /* RGBHueBridge.swift */,
+				4631BF2723CD60F200748F04 /* RGBHueBridge+CoreDataClass.swift */,
+				4631BF2823CD60F200748F04 /* RGBHueBridge+CoreDataProperties.swift */,
+				4631BF2923CD60F200748F04 /* RGBDynamicScene+CoreDataClass.swift */,
+				4631BF2A23CD60F200748F04 /* RGBDynamicScene+CoreDataProperties.swift */,
 				46B6423C232000800047F233 /* RGBGroup.swift */,
-				46DABC222327ED4F00E8C81D /* RGBDynamicScene.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -448,6 +456,7 @@
 				462A5E4B2347946F0088296B /* Supporting Files */,
 				6FA9CDF223062EF30011A2F8 /* Assets.xcassets */,
 				6FA9CDF723062EF30011A2F8 /* Info.plist */,
+				4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */,
 			);
 			path = RedGreenBlue;
 			sourceTree = "<group>";
@@ -790,16 +799,19 @@
 				6FA9CE1A230635E70011A2F8 /* BridgesTableViewController.swift in Sources */,
 				46EF2DAF230F0A010021B28B /* ColorPickerViewController.swift in Sources */,
 				46CCAA1023072F860054187A /* LightGroupsTableViewController.swift in Sources */,
+				4631BF2C23CD60F200748F04 /* RGBHueBridge+CoreDataProperties.swift in Sources */,
 				46B642402321A7510047F233 /* BridgesTableViewCell.swift in Sources */,
 				46F42E082326BDA300FB73FA /* DynamicScenesViewController.swift in Sources */,
 				46736545233A598D00DA33AA /* DynamicScenesAddViewController.swift in Sources */,
 				46D1544B23552093003196A5 /* RGBCellUtilities.swift in Sources */,
 				462A5E3C2343CE960088296B /* ThemeTableViewController.swift in Sources */,
 				462A5E4323462C1F0088296B /* ColorDynamicSceneCustomCell.swift in Sources */,
+				4643456C23C1084300EC12AD /* RedGreenBlue.xcdatamodeld in Sources */,
 				46CCAA122307548B0054187A /* LightsGroupCustomCell.swift in Sources */,
 				462984A923609979009A43ED /* DynamicScenesBrightnessViewController.swift in Sources */,
-				46DABC232327ED4F00E8C81D /* RGBDynamicScene.swift in Sources */,
+				4631BF2B23CD60F200748F04 /* RGBHueBridge+CoreDataClass.swift in Sources */,
 				46EF2DAC230ED09C0021B28B /* LightsCustomCell.swift in Sources */,
+				4631BF2E23CD60F200748F04 /* RGBDynamicScene+CoreDataProperties.swift in Sources */,
 				464F0E1A233C17E400E33FA1 /* GroupProtocol.swift in Sources */,
 				6FA9CDEA23062EF20011A2F8 /* AppDelegate.swift in Sources */,
 				464F0E18233C125100E33FA1 /* LightsGroupAddNameCell.swift in Sources */,
@@ -807,13 +819,13 @@
 				46736549233A78EC00DA33AA /* DynamicSceneProtocol.swift in Sources */,
 				460F71FC230CA01D008EE24C /* RGBGroupsAndLightsHelper.swift in Sources */,
 				465144612315C5F200156659 /* InitialBridgeFinderViewController.swift in Sources */,
+				4631BF2D23CD60F200748F04 /* RGBDynamicScene+CoreDataClass.swift in Sources */,
 				46637A4A234E483D0000E8CB /* TabBarViewController.swift in Sources */,
 				46DC9901232555AD00D939BF /* GroupCellProtocol.swift in Sources */,
 				4673654D233BBCFA00DA33AA /* DynamicScenesAddTimeViewController.swift in Sources */,
 				46E22733233270E40031CE0C /* LightsDynamicSceneCustomCell.swift in Sources */,
 				46A8C0CE231889A6002DE3C2 /* LightsSceneCustomCell.swift in Sources */,
 				6F58BB7F23529CA10000D673 /* RGBSwiftMessages.swift in Sources */,
-				46CCAA0B2307025C0054187A /* RGBHueBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -998,7 +1010,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1017,7 +1029,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue123;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RedGreenBlue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1150,6 +1162,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4643456A23C1084300EC12AD /* RedGreenBlue.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */,
+			);
+			currentVersion = 4643456B23C1084300EC12AD /* RedGreenBlue.xcdatamodel */;
+			path = RedGreenBlue.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6FA9CDDE23062EF20011A2F8 /* Project object */;
 }

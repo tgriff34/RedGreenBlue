@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import RealmSwift
 import SwiftyHue
 
 class DynamicScenesColorsViewController: UICollectionViewController {
-    var colors = List<XYColor>()
+    var colors = [UIColor]()
     var selectedIndexPath: IndexPath?
     weak var addColorsDelegate: DynamicSceneAddAllColorsDelegate?
 
@@ -152,19 +151,19 @@ extension DynamicScenesColorsViewController {
 
 // MARK: - Delegate
 extension DynamicScenesColorsViewController: DynamicSceneColorDelegate, DynamicSceneCustomColorDelegate {
-    func dynamicSceneColorAdded(_ colors: List<XYColor>) {
-        self.colors.append(objectsIn: colors)
+    func dynamicSceneColorAdded(_ colors: [UIColor]) {
+        self.colors.append(contentsOf: colors)
         addColorsDelegate?.dynamicSceneColorsAdded(self.colors)
         collectionView.reloadData()
     }
 
-    func dynamicSceneColorAdded(_ color: XYColor) {
+    func dynamicSceneColorAdded(_ color: UIColor) {
         self.colors.append(color)
         addColorsDelegate?.dynamicSceneColorsAdded(self.colors)
         collectionView.reloadData()
     }
 
-    func dynamicSceneColorEdited(_ color: XYColor) {
+    func dynamicSceneColorEdited(_ color: UIColor) {
         if let selectedIndexPath = selectedIndexPath {
             colors[selectedIndexPath.row] = color
             collectionView.reloadItems(at: [selectedIndexPath])

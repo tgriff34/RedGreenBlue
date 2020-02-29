@@ -9,14 +9,13 @@
 import UIKit
 import FlexColorPicker
 import SwiftyHue
-import RealmSwift
 import SwiftMessages
 
 class DynamicScenesAddColorViewController: UIViewController {
     var swiftyHue: SwiftyHue?
-    var colorToEdit: XYColor?
-    var color: XYColor?
-    var colors = List<XYColor>()
+    var colorToEdit: UIColor?
+    var color: UIColor?
+    var colors = [UIColor]()
 
     @IBOutlet weak var containerView: UIView!
 
@@ -89,8 +88,7 @@ class DynamicScenesAddColorViewController: UIViewController {
             remove(asChildViewController: defaultColorPickerViewController)
             add(asChildViewController: customColorPickerViewController)
             if let color = colorToEdit {
-                customColorPickerViewController.colorPicker.selectedColor = HueUtilities.colorFromXY(
-                    CGPoint(x: color.xvalue, y: color.yvalue), forModel: "LCT016")
+                customColorPickerViewController.colorPicker.selectedColor = color
             }
         } else {
             remove(asChildViewController: customColorPickerViewController)
@@ -115,7 +113,7 @@ class DynamicScenesAddColorViewController: UIViewController {
                 if let color = color {
                     addColorDelegate?.dynamicSceneColorAdded(color)
                 } else {
-                    addColorDelegate?.dynamicSceneColorAdded(convertColorFromPicker())
+                    addColorDelegate?.dynamicSceneColorAdded(customColorPickerViewController.colorPicker.selectedColor)
                 }
             } else {
                 customColorDelegate?.dynamicSceneColorAdded(colors)
@@ -132,12 +130,6 @@ class DynamicScenesAddColorViewController: UIViewController {
         }
     }
 
-    private func convertColorFromPicker() -> XYColor {
-        let xyPoint: CGPoint = HueUtilities.calculateXY(
-            customColorPickerViewController.colorPicker.selectedColor, forModel: "LCT016")
-        return XYColor([Double(xyPoint.x), Double(xyPoint.y)])
-    }
-
     private func disableOrEnableAddButton() {
         navigationItem.rightBarButtonItem?.isEnabled = !(colorToEdit == nil &&
             ((segmentedControl?.selectedSegmentIndex == 0 && color == nil) ||
@@ -146,19 +138,19 @@ class DynamicScenesAddColorViewController: UIViewController {
 }
 
 extension DynamicScenesAddColorViewController: ColorPickerDelegate, DynamicSceneCustomColorDelegate {
-    func dynamicSceneColorEdited(_ color: XYColor) {
+    func dynamicSceneColorEdited(_ color: UIColor) {
         self.colorToEdit = color
         disableOrEnableAddButton()
     }
-    func dynamicSceneColorAdded(_ colors: List<XYColor>) {
+    func dynamicSceneColorAdded(_ colors: [UIColor]) {
         self.colors = colors
         disableOrEnableAddButton()
     }
     func colorPicker(_ colorPicker: ColorPickerController, selectedColor: UIColor, usingControl: ColorControl) {
         if colorToEdit != nil {
-            colorToEdit = convertColorFromPicker()
+            colorToEdit = customColorPickerViewController.colorPicker.selectedColor
         } else {
-            color = convertColorFromPicker()
+            color = customColorPickerViewController.colorPicker.selectedColor
         }
         disableOrEnableAddButton()
     }

@@ -9,7 +9,6 @@
 import UIKit
 import FlexColorPicker
 import SwiftyHue
-import RealmSwift
 
 class ColorPickerViewController: UIViewController {
     var swiftyHue: SwiftyHue!
@@ -20,7 +19,7 @@ class ColorPickerViewController: UIViewController {
     weak var addColorDelegate: DynamicSceneColorDelegate?
     weak var customColorDelegate: DynamicSceneCustomColorDelegate?
 
-    var selectedColor: XYColor?
+    var selectedColor: UIColor?
 
     var segmentedControl: UISegmentedControl?
 
@@ -47,7 +46,9 @@ class ColorPickerViewController: UIViewController {
             withIdentifier: "DefaultColorPickerStoryboard") as? DynamicScenesColorsPickerViewController
         viewController?.delegate = self
         viewController?.collectionView.allowsMultipleSelection = false
-        viewController?.selectedColor = XYColor([lights[0].state.xy![0], lights[0].state.xy![1]])
+        viewController?.selectedColor = HueUtilities.colorFromXY(CGPoint(x: lights[0].state.xy![0],
+                                                                         y: lights[0].state.xy![1]),
+                                                                 forModel: lights[0].modelId)
         self.add(asChildViewController: viewController!)
         return viewController!
     }()
@@ -66,7 +67,8 @@ class ColorPickerViewController: UIViewController {
         customColorPickerViewController.colorPicker.radialHsbPalette?.addTarget(
             self, action: #selector(colorPickerTouchUpInside(_:)), for: .valueChanged)
 
-        selectedColor = XYColor([lights[0].state.xy![0], lights[0].state.xy![1]])
+        selectedColor = HueUtilities.colorFromXY(CGPoint(x: lights[0].state.xy![0], y: lights[0].state.xy![1]),
+                                                 forModel: lights[0].modelId)
     }
 
     @objc func segmentedControlChanged(_ sender: UISegmentedControl) {
@@ -74,9 +76,7 @@ class ColorPickerViewController: UIViewController {
             remove(asChildViewController: defaultColorPickerViewController)
             add(asChildViewController: customColorPickerViewController)
             if let selectedColor = selectedColor {
-                customColorPickerViewController.selectedColor = HueUtilities.colorFromXY(
-                    CGPoint(x: selectedColor.xvalue, y: selectedColor.yvalue),
-                    forModel: "LCT016")
+                customColorPickerViewController.selectedColor = selectedColor
             }
         } else {
             remove(asChildViewController: customColorPickerViewController)
@@ -106,7 +106,7 @@ class ColorPickerViewController: UIViewController {
     }
 
     // Setting light colors
-    private func setLightColor(color: UIColor? = nil, xyColor: XYColor? = nil) {
+    private func setLightColor(color: UIColor) {
         var turnOnLights: Bool = false
         if RGBGroupsAndLightsHelper.shared.getNumberOfLightsOnInGroup(lights) == 0 {
             turnOnLights = true
@@ -114,14 +114,9 @@ class ColorPickerViewController: UIViewController {
 
         for light in self.lights where light.state.on! || turnOnLights {
             var lightState = LightState()
-            if let color = color {
-                let xyPoint: CGPoint = HueUtilities.calculateXY(color, forModel: light.modelId)
-                lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
-                selectedColor = XYColor(lightState.xy!)
-            } else if let xyColor = xyColor {
-                lightState.xy = [xyColor.xvalue, xyColor.yvalue]
-                selectedColor = xyColor
-            }
+            let xyPoint: CGPoint = HueUtilities.calculateXY(color, forModel: light.modelId)
+            lightState.xy = [Double(xyPoint.x), Double(xyPoint.y)]
+            selectedColor = color
             if turnOnLights { lightState.on = true }
             RGBGroupsAndLightsHelper.shared.setLightState(for: light, using: self.swiftyHue,
                                                           with: lightState, completion: nil)
@@ -130,10 +125,10 @@ class ColorPickerViewController: UIViewController {
 }
 
 extension ColorPickerViewController: DynamicSceneCustomColorDelegate {
-    func dynamicSceneColorAdded(_ colors: List<XYColor>) {
+    func dynamicSceneColorAdded(_ colors: [UIColor]) {
     }
 
-    func dynamicSceneColorEdited(_ color: XYColor) {
-        self.setLightColor(xyColor: color)
+    func dynamicSceneColorEdited(_ color: UIColor) {
+        self.setLightColor(color: color)
     }
 }

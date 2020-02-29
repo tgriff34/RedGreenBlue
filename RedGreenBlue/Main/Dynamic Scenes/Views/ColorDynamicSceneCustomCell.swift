@@ -13,11 +13,9 @@ class ColorDynamicSceneCustomCell: UICollectionViewCell {
     @IBOutlet weak var subView: UIView!
     @IBOutlet weak var checkmarkView: SSCheckMark!
 
-    var color: XYColor! {
+    var color: UIColor! {
         didSet {
-            self.subView.backgroundColor = HueUtilities.colorFromXY(CGPoint(x: color.xvalue,
-                                                                            y: color.yvalue),
-                                                                    forModel: "LCT016")
+            self.subView.backgroundColor = color
         }
     }
 
