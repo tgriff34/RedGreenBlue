@@ -1,9 +1,9 @@
 # RedGreenBlue
 
-RedGreenBlue is a native iOS application I developed which works with Philips Hue lights.  The application allows the user to create what are called 'Dynamic Scenes' which allows users to pick colors, time interval between changing, and more.  The best part is, is that the lights change between these colors automatically.
+RedGreenBlue is a native iOS application I developed which works with Philips Hue lights (https://www.philips-hue.com/en-us).  The application allows the user to create what are called 'Dynamic Scenes', allowing the lights to be change colors automatically without user interaction! Users can pick which colors they want, the time interval between color changes, and more.
 
 ## Initial startup
-During initial startup the user needs to connect to their Hue Bridge.  First the user must be connected to the same WiFi that the Hue Bridge is connected to in order for the application to find it. Once the application finds the Hue Bridge, the user then presses the physical button on it to connect to that specific bridge.
+During initial startup the user needs to connect the app to their Hue Bridge.  First, the user's phone must be connected to the same WiFi that the Hue Bridge is connected to in order for the application to find it. Once the application finds the Hue Bridge, the user then presses the physical button on the bridge to connect to that specific bridge.  Users may have multiple bridges in their home which have different lights registered to them. Connecting to multiple bridges is supported after intial startup as well as the ability to change between them.
 <p align=center>
 <img src=https://github.com/user-attachments/assets/82bcf329-a955-42b5-8632-6ed4e58508ad width=225 height=487.2/>
 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -11,7 +11,7 @@ During initial startup the user needs to connect to their Hue Bridge.  First the
 </p>
 
 ## Home Screen
-The home screen displays your light groups!  These groups are divided into 'Rooms' which are created when adding Philips Hue lights to the bridge in the official app, and 'Groups' which are custom subsets of all of your Philips Hue lights. You are able to turn on light groups, adjust brightness levels, and navigate into groups to change individual light colors.
+The home screen displays your light groups!  These groups are divided into two categories. 'Rooms' which are created when registering Philips Hue lights for the first time to the bridge using the official Philips Hue app. And 'Groups' which are custom subsets of all of your Philips Hue lights. For instance you may two rooms, living room and family room, you can create a group which has lights from both, or one, or the other.  Here you are able to turn on light groups, adjust brightness levels, and navigate into groups to change individual light colors.
 
 <p align=center>
 <img src=https://github.com/user-attachments/assets/9eda5e04-b407-4f01-8a53-c5c53c4d5930 width=225 height=487.2/>
@@ -22,7 +22,7 @@ The home screen displays your light groups!  These groups are divided into 'Room
 </p>
 
 ## Changing colors
-Changing colors is done using the color wheel! There are also numerous preset color swatches that the user can pick from.
+Changing colors is done using the color wheel! There are also numerous preset color swatches that the user can pick from. You can get to this view by navigating to a particular light, or tapping on the color wheel to change all lights of a group to the same color.  This same color picker is used when adding colors to Dynamic Scenes.
 <p align=center>
 <img src=https://github.com/user-attachments/assets/36b2e5fc-bd22-4d2c-82c8-54404c79fc21 width=225 height=487.2/>
   &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
