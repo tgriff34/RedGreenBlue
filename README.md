@@ -1,6 +1,6 @@
 # RedGreenBlue
 
-RedGreenBlue is a native iOS application I developed which works with Philips Hue lights (https://www.philips-hue.com/en-us).  The application allows the user to create what are called 'Dynamic Scenes', allowing the lights to be change colors automatically without user interaction! Users can pick which colors they want, the time interval between color changes, and more.
+RedGreenBlue is a native iOS application I developed which works with Philips Hue lights (https://www.philips-hue.com/en-us).  The application allows the user to create what are called 'Dynamic Scenes', allowing the lights to change colors automatically without user interaction! Users can pick which colors they want, the time interval between color changes, and more.
 
 ## Initial startup
 During initial startup the user needs to connect the app to their Hue Bridge.  First, the user's phone must be connected to the same WiFi that the Hue Bridge is connected to in order for the application to find it. Once the application finds the Hue Bridge, the user then presses the physical button on the bridge to connect to that specific bridge.  Users may have multiple bridges in their home which have different lights registered to them. Connecting to multiple bridges is supported after intial startup as well as the ability to change between them.
